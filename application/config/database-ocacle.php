@@ -73,30 +73,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
-// $db['default'] = array(
-// 	'dsn'	=> 'SAPHANA',
-// 	// 'hostname' => '10.255.0.5:1521/nsdb',
-// 	// 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.255.0.5)(PORT=1521))(CONNECT_DATA=(SID=nsdb)))',
-// 	'username' => 'HRISVISMA2',
-// 	'password' => 'Vishma@1234567',
-// 	// 'port'     => '1521',
-// 	'database' => 'HRIS',
-// 	'dbdriver' => 'odbc',
-// 	'dbprefix' => '',
-// 	'pconnect' => FALSE,
-// 	'db_debug' => (ENVIRONMENT !== 'production'),
-// 	'cache_on' => FALSE,
-// 	'cachedir' => '',
-// 	'char_set' => 'utf8',
-// 	'dbcollat' => 'utf8_general_ci',
-// 	'swap_pre' => '',	
-// 	'encrypt' => FALSE,
-// 	'compress' => FALSE,
-// 	'stricton' => FALSE,
-// 	'failover' => array(),
-// 	'save_queries' => TRUE
-// );
-
 $db['default'] = array(
 	'dsn'	=> '',
 	// 'hostname' => '10.255.0.5:1521/nsdb',
