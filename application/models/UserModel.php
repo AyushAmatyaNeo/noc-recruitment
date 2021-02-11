@@ -14,7 +14,8 @@ class UserModel extends CI_Model{
      */ 
     function getRows($params = array()){ 
         $this->db->select('*'); 
-        $this->db->from($this->table); 
+        $this->db->from($this->table)
+                ->join('HRIS_GENDERS','HRIS_GENDERS.GENDER_ID = HRIS_NOC_VACANCY_USERS.GENDER','left');
          
         if(array_key_exists("conditions", $params)){ 
             foreach($params['conditions'] as $key => $val){ 
@@ -42,7 +43,7 @@ class UserModel extends CI_Model{
                 $result = ($query->num_rows() > 0)?$query->result_array():FALSE; 
             } 
         } 
-        //  print_r($result); die;
+        //  echo '<pre>'; print_r($result); die;
         // Return fetched data 
         return $result; 
     } 
@@ -55,18 +56,37 @@ class UserModel extends CI_Model{
         if(!empty($data)){ 
             // Add created and modified date if not included 
             if(!array_key_exists("CREATED_DT", $data)){ 
-                $data['CREATED_DT'] = date("Y-m-d H:i:s"); 
+                // $data['CREATED_DT'] = date("Y-m-d");
+                $data['CREATED_DT'] = DATE('d-M-Y'); 
             } 
-            if(!array_key_exists("MODIFIED_DT", $data)){ 
-                $data['MODIFIED_DT'] = date("Y-m-d H:i:s"); 
-            } 
-             
+            // if(!array_key_exists("MODIFIED_DT", $data)){ 
+            //     $data['MODIFIED_DT'] = date("Y-m-d"); 
+            // } 
+            // echo '<pre>'; print_r($data); die;
             // Insert member data 
             $insert = $this->db->insert($this->table, $data); 
-             
+             return redirect('users/login');
             // Return the status 
-            return $insert?$this->db->insert_id():false; 
+            // return $insert?$this->db->insert_id():false; 
         } 
         return false; 
-    } 
+    }
+
+    public function updateuser($userData,$uid)
+    {
+        $this->db->where('USER_ID', $uid);
+        $userData['MODIFIED_DT'] = DATE('d-M-Y'); 
+        $update = $this->db->update($this->table, $userData);
+        return $update;
+    }
+
+    public function getMaxId()
+    {
+        $this->db->select('MAX(USER_ID) AS MAXID')
+                ->from('HRIS_NOC_VACANCY_USERS');
+        $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
+    
 }

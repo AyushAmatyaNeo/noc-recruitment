@@ -1,9 +1,21 @@
 .sec-padd{
 	padding: 50px 0;
 }
+.text-center{
+	text-align: center;
+}
 .main-title{
 	color: #575655;
 	margin-bottom: 30px;
+}
+.cstm-navbar{
+	box-shadow: 0 2px 4px 0 rgb(0 0 0 / 25%);
+}
+.cstm-navbar img{
+	height: 80px;
+}
+.cstm-noc-footer a{
+	color: #fff;
 }
 .btn-noc{
 	background-color: #006699;
@@ -33,6 +45,9 @@
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0;
 }
+.cstm-form-check:not(:last-child){
+	margin-right: 96px;
+}
 .btn-apply{
 	background-color: #f5f5f5;
     border-color: #e1e1e1;
@@ -55,7 +70,7 @@
 .main-registration .right-content{
 	background-image: url(../images/noc-Building1.png);
 	color: #fff;
-	height: 780px;
+	height: 820px;
 	overflow: hidden;
 }
 .main-registration .right-content h5{
@@ -70,6 +85,9 @@
 .login-main .right-content{
 	height: auto;
 }
-.error{
+.error {
 	color: red;
 }
+
+/*recruit-application page starts*/
+

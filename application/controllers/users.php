@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 Class Users extends CI_Controller 
@@ -11,6 +12,7 @@ Class Users extends CI_Controller
         // Load form validation Library & user model 
         $this->load->library('form_validation'); 
         $this->load->model('UserModel'); 
+        // $this->load->library('noc_validation');
          
         // User login status 
         $this->isUserLoggedIn = $this->session->userdata('isUserLoggedIn');
@@ -20,29 +22,29 @@ Class Users extends CI_Controller
     public function index()
     { 
         if($this->isUserLoggedIn){ 
-            redirect('users/account'); 
+            redirect('users/vacancylist'); 
         }else{ 
             redirect('users/login'); 
         } 
     } 
 
-    public function account()
-    { 
-        $data = array(); 
-        if($this->isUserLoggedIn){ 
-            $con = array( 
-                'id' => $this->session->userdata('userId') 
-            ); 
-            $data['user'] = $this->UserModel->getRows($con); 
+    // public function profile()
+    // { 
+    //     $data = array(); 
+    //     if($this->isUserLoggedIn){ 
+    //         $con = array( 
+    //             'id' => $this->session->userdata('userId') 
+    //         ); 
+    //         $data['user'] = $this->UserModel->getRows($con); 
             
-            // Pass the user data and load view 
-            $this->load->view('templates/header', $data); 
-            $this->load->view('users/account', $data); 
-            $this->load->view('templates/footer'); 
-        }else{ 
-            redirect('users/login'); 
-        } 
-    } 
+    //         // Pass the user data and load view 
+    //         $this->load->view('templates/header', $data); 
+    //         $this->load->view('users/profile', $data); 
+    //         $this->load->view('templates/footer'); 
+    //     }else{ 
+    //         redirect('users/login'); 
+    //     } 
+    // } 
 
     public function login()
     { 
@@ -87,12 +89,12 @@ Class Users extends CI_Controller
                 $data['error_msg'] = 'Please fill all the mandatory fields.'; 
             } 
         } 
-     
+        
         // Load view 
         $this->load->view('templates/header', $data); 
         $this->load->view('users/login', $data); 
         $this->load->view('templates/footer'); 
-    } 
+    }
 
     public function registration()
     { 
@@ -105,19 +107,21 @@ Class Users extends CI_Controller
             $this->form_validation->set_rules('FIRST_NAME', 'First Name', 'required'); 
             $this->form_validation->set_rules('LAST_NAME', 'Last Name', 'required'); 
             $this->form_validation->set_rules('EMAIL_ID', 'Email', 'required|valid_email|callback_email_check');
-            $this->form_validation->set_rules('password', 'password', 'required'); 
+            $this->form_validation->set_rules('password', 'password', 'required|callback_valid_password'); 
             $this->form_validation->set_rules('conf_password', 'confirm password', 'required|matches[password]');
             $this->form_validation->set_rules('MOBILE_NO', 'Mobile No', 'required');
-            // $this->form_validation->set_rules('GENDER', 'Gender', 'required');
+            $this->form_validation->set_rules('GENDER', 'Gender', 'required');
+            $UserId = $this->UserModel->getMaxId();
+            $userData = array(
 
-            $userData = array( 
+                'USER_ID' => $UserId['MAXID']+1,
                 'SR_NO' => strip_tags($this->input->post('SR_NO')),
                 'FIRST_NAME' => strip_tags($this->input->post('FIRST_NAME')),
                 'MIDDLE_NAME' => strip_tags($this->input->post('MIDDLE_NAME')), 
                 'LAST_NAME' => strip_tags($this->input->post('LAST_NAME')), 
                 'EMAIL_ID' => strip_tags($this->input->post('EMAIL_ID')), 
-                'PASSWORD' => ($this->input->post('PASSWORD')), 
-                // 'GENDER' => $this->input->post('GENDER'), 
+                'PASSWORD' => $this->input->post('password'), 
+                'GENDER' => $this->input->post('GENDER'), 
                 'MOBILE_NO' => strip_tags($this->input->post('MOBILE_NO')) 
             ); 
             // echo '<pre>'; print_r($userData); die;
@@ -169,14 +173,69 @@ Class Users extends CI_Controller
                 return TRUE; 
             } 
     }
+    public function valid_password($password = '')
+    {
+        $password = trim($password);
+        $regex_lowercase = '/[a-z]/';
+        $regex_uppercase = '/[A-Z]/';
+        $regex_number = '/[0-9]/';
+        $regex_special = '/[!@#$%^&*()\-_=+{};:,<.>§~]/';
+        if (empty($password))
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field is required.');
+            return FALSE;
+        }
+        if (preg_match_all($regex_lowercase, $password) < 3)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must be at least three lowercase letter.');
+            return FALSE;
+        }
+        if (preg_match_all($regex_uppercase, $password) < 1)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must be at least one uppercase letter.');
+            return FALSE;
+        }
+        if (preg_match_all($regex_number, $password) < 1)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must have at least one number.');
+            return FALSE;
+        }
+        if (preg_match_all($regex_special, $password) < 1)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must have at least one special character.' . ' ' .htmlentities('!@#$%^&*()\-_=+{};:,<.>§~'));
+            return FALSE;
+        }
+        if (strlen($password) < 5)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must be at least 5 characters in length.');
+            return FALSE;
+        }
+        if (strlen($password) > 32)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field cannot exceed 32 characters in length.');
+            return FALSE;
+        }
+            return TRUE;
+    }
+
     public function vacancylist()
     {
+        if($this->isUserLoggedIn){ 
+            $con = array( 
+                'id' => $this->session->userdata('userId')
+            );
+            // print_r($con); die;
         $this->load->database();
         $this->load->model('VacancyModel');
         $data['vacancylist'] = $this->VacancyModel->fetchvacancy();
-        $this->load->view('templates/header');
+        $data['user'] = $this->UserModel->getRows($con);
+        $this->load->view('templates/header',$data);
         $this->load->view('pages/vacancylist', $data);
+        // echo '<pre>';print_r($data['user']); die;
         $this->load->view('templates/footer');
+    }else{ 
+        redirect('users/login'); 
+    }
     }
 
 }

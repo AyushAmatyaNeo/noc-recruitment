@@ -1,4 +1,4 @@
-	<main class="main-registration sec-padd bg-light">
+<main class="main-registration sec-padd bg-light">
 		<section class="registration-sec">
 			<div class="container">
 				<div class="card-body">
@@ -44,15 +44,18 @@
 									</div>
 									<div class="form-row col-md-12">
 										<div class="form-group form-check cstm-form-check form-check-inline">
-											<input class="form-check-input" name='GENDER' type="radio" name="gender" id="inlineRadio1" value="1">
+                                        <?php $checked = $user['GENDER'] == 1 ? 'checked' : '' ; ?>
+											<input class="form-check-input" name='GENDER' type="radio" id="inlineRadio1" <?=$checked?> value="1">
 											<label class="form-check-label" for="GENDER">Male</label>
 										</div>
 										<div class="form-group form-check cstm-form-check form-check-inline">
-											<input class="form-check-input" name='GENDER' type="radio" name="gender" id="inlineRadio2" value="2">
+                                        <?php $checked = $user['GENDER'] == 2 ? 'checked' : '' ; ?>
+											<input class="form-check-input" name='GENDER' type="radio" id="inlineRadio2" <?=$checked?> value="2">
 											<label class="form-check-label" for="GENDER">Female</label>
 										</div>
 										<div class="form-group form-check cstm-form-check form-check-inline">
-											<input class="form-check-input" name='GENDER' type="radio" name="gender" id="inlineRadio2" value="3">
+                                        <?php $checked = $user['GENDER'] == 3 ? 'checked' : '' ; ?>
+											<input class="form-check-input" name='GENDER' type="radio" id="inlineRadio2" <?=$checked?> value="3">
 											<label class="form-check-label" for="GENDER">Others</label>
 										</div>
 									</div>
@@ -69,16 +72,6 @@
 											<input type="number" name="MOBILE_NO" class="form-control" id="inputMobile" placeholder="Mobile No (NTC/Ncell)" value="<?php echo !empty($user['MOBILE_NO'])?$user['MOBILE_NO']:''; ?>" required>	
 										</div>
 										<?php echo form_error('MOBILE_NO','<p class="help-block">','</p>'); ?>
-										<div class="form-group col-md-12 cstm-form-grp">
-											<i class="fa fa-lock" aria-hidden="true"></i>
-											<input type="password" name="password" class="form-control" id="inputPassword" placeholder="Create a Password" required>
-										</div>
-										<?php echo form_error('password','<p class="help-block">','</p>'); ?>
-										<div class="form-group col-md-12 cstm-form-grp">
-											<i class="fa fa-lock" aria-hidden="true"></i>
-											<input type="password" name="conf_password" class="form-control" id="inputPassword2" placeholder="Retype Password" required>
-										</div>
-										<?php echo form_error('conf_password','<p class="help-block error">','</p>'); ?>
 										<div class="form-group col-md-12">
 											<div class="confirm-red d-md-flex d-sm-block">
 												<div class="confirm1" style="margin-right: 10px;">
@@ -127,16 +120,8 @@
 											</div>
 											<!-- PW Error Type TYPE END-->
 										</div>
-										<!-- <div class="form-group col-md-7">
-											<a href="" style="font-size: 11px;"><i class="fa fa-refresh" aria-hidden="true" style="padding-right: 10px;"></i>Click here to refresh code</a>
-											<img src="<?php echo base_url() ?>assets/images/CaptchaImage.jpeg" class="ing-fluid">
-										</div> -->
-										<!-- <div class="form-group col-md-6">
-											<input type="text" class="form-control" id="captaText" placeholder="Enter above code">
-										</div> -->
-										<!-- <button type="submit" class="btn btn-primary btn-noc" style="width: 100%;" name="signupSubmit">Continue</button> -->
 										<div class="send-button">
-											<input type="submit" class="btn btn-primary btn-noc" name="signupSubmit" value="CREATE ACCOUNT">
+											<input type="submit" class="btn btn-primary btn-noc" name="signupSubmit" value="Update">
 										</div>
 									</div>
 									<p style="padding-top: 10px;">If you already have an account, please login from <a href="<?php echo base_url('users/login'); ?>">here</a></p>
@@ -191,14 +176,3 @@
 	</main>
 	
 	<script href="<?php base_url() ?>assets/js/bootstrap.min.js"></script>
-
-	<script>
-      function onClick(e) {
-        e.preventDefault();
-        grecaptcha.ready(function() {
-          grecaptcha.execute('6Lcf41EaAAAAAKaeYIHJ6Z25c6xBNUS7dqgHtt5A', {action: 'submit'}).then(function(token) {
-              // Add your logic to submit to your backend server here.
-          });
-        });
-      }
-  </script>

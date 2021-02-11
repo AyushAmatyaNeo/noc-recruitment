@@ -1,9 +1,7 @@
+
 <main class="main-vacancies bg-light">
 		<section class="applied-vacancies-sec sec-padd">
 			<div class="container-fluid">
-                <div style="float: right">
-                <a href="<?php echo base_url('users/logout'); ?>" class="logout">Logout</a>
-                </div>
 				<h5 class="main-title">Applied Vacancies</h5>
 				<table class="table table-striped table-bordered table-sm table-responsive-lg tbl-applied-vacancies">
 					<thead style="font-size: 13px; color: #fff; background-color: #47759E; text-align: center;">
