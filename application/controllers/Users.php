@@ -11,9 +11,7 @@ Class Users extends CI_Controller
          
         // Load form validation Library & user model 
         $this->load->library('form_validation'); 
-        $this->load->model('UserModel'); 
-        // $this->load->library('noc_validation');
-         
+        $this->load->model('UserModel');         
         // User login status 
         $this->isUserLoggedIn = $this->session->userdata('isUserLoggedIn');
     }
@@ -22,34 +20,15 @@ Class Users extends CI_Controller
     public function index()
     { 
         if($this->isUserLoggedIn){ 
-            redirect('users/vacancylist'); 
+            redirect('vacancy/vacancylist'); 
         }else{ 
             redirect('users/login'); 
         } 
     } 
-
-    // public function profile()
-    // { 
-    //     $data = array(); 
-    //     if($this->isUserLoggedIn){ 
-    //         $con = array( 
-    //             'id' => $this->session->userdata('userId') 
-    //         ); 
-    //         $data['user'] = $this->UserModel->getRows($con); 
-            
-    //         // Pass the user data and load view 
-    //         $this->load->view('templates/header', $data); 
-    //         $this->load->view('users/profile', $data); 
-    //         $this->load->view('templates/footer'); 
-    //     }else{ 
-    //         redirect('users/login'); 
-    //     } 
-    // } 
-
     public function login()
     { 
         $data = array(); 
-     
+
         // Get messages from the session 
         if($this->session->userdata('success_msg'))
         { 
@@ -73,15 +52,15 @@ Class Users extends CI_Controller
                     'returnType' => 'single', 
                     'conditions' => array( 
                         'EMAIL_ID'=> $this->input->post('email'), 
-                        'PASSWORD' => ($this->input->post('password')) 
-                        // 'status' => 1 
+                        'PASSWORD' => ($this->input->post('password'))
                     ) 
                 ); 
-                $checkLogin = $this->UserModel->getRows($con); 
+                $checkLogin = $this->UserModel->getRows($con);
+                // echo '<pre>'; print_r($checkLogin); die;
                 if($checkLogin){ 
                     $this->session->set_userdata('isUserLoggedIn', TRUE); 
                     $this->session->set_userdata('userId', $checkLogin['USER_ID']); 
-                    redirect('users/vacancylist/'); 
+                    redirect('vacancy/vacancylist'); 
                 }else{ 
                     $data['error_msg'] = 'Wrong email or password, please try again.'; 
                 } 
@@ -89,7 +68,9 @@ Class Users extends CI_Controller
                 $data['error_msg'] = 'Please fill all the mandatory fields.'; 
             } 
         } 
-        
+        $data['meta'] = array(
+            'title' => 'Noc | Login'
+        );
         // Load view 
         $this->load->view('templates/header', $data); 
         $this->load->view('users/login', $data); 
@@ -98,8 +79,7 @@ Class Users extends CI_Controller
 
     public function registration()
     { 
-        $data = $userData = array(); 
-        // echo '<pre>'; print_r($data); die;
+        $data = $userData = array();
         // If registration request is submitted 
         if($this->input->post('signupSubmit'))
         { 
@@ -112,25 +92,26 @@ Class Users extends CI_Controller
             $this->form_validation->set_rules('MOBILE_NO', 'Mobile No', 'required');
             $this->form_validation->set_rules('GENDER', 'Gender', 'required');
             $UserId = $this->UserModel->getMaxId();
+            // print_r($UserId); die;
             $userData = array(
-
-                'USER_ID' => $UserId['MAXID']+1,
+                'USER_ID' => $UserId['MAXID'] +1,
                 'SR_NO' => strip_tags($this->input->post('SR_NO')),
                 'FIRST_NAME' => strip_tags($this->input->post('FIRST_NAME')),
                 'MIDDLE_NAME' => strip_tags($this->input->post('MIDDLE_NAME')), 
                 'LAST_NAME' => strip_tags($this->input->post('LAST_NAME')), 
-                'EMAIL_ID' => strip_tags($this->input->post('EMAIL_ID')), 
+                'EMAIL_ID' => strip_tags($this->input->post('EMAIL_ID')),
+                'MOBILE_NO' => strip_tags($this->input->post('MOBILE_NO')),
+                'GENDER' => $this->input->post('GENDER'),
                 'PASSWORD' => $this->input->post('password'), 
-                'GENDER' => $this->input->post('GENDER'), 
-                'MOBILE_NO' => strip_tags($this->input->post('MOBILE_NO')) 
+                 
             ); 
             // echo '<pre>'; print_r($userData); die;
             if($this->form_validation->run() == true)
             { 
-                // echo $userData; die;
+                // print_r($userData); die;
                 $insert = $this->UserModel->insert($userData); 
                 if($insert){ 
-                    $this->session->set_userdata('success_msg', 'Your account registration has been successful. Please login to your account.'); 
+                    $this->session->set_flashdata('success_msg', 'Your account registration has been successful. Please login to your account.'); 
                     redirect('users/login'); 
                 }else{ 
                     $data['error_msg'] = 'Some problems occured, please try again.'; 
@@ -141,22 +122,17 @@ Class Users extends CI_Controller
         } 
      
         // Posted data 
-        $data['user'] = $userData; 
+        $data['user'] = $userData;
+        $data['meta'] = array(
+            'title' => 'Noc | Registration'
+        );
         // echo '<pre>'; print_r($data['user']); die;
         // Load view 
         $this->load->view('templates/header', $data); 
         $this->load->view('users/registration', $data); 
         $this->load->view('templates/footer'); 
     }
- 
-    public function logout()
-    { 
-        $this->session->unset_userdata('isUserLoggedIn'); 
-        $this->session->unset_userdata('userId'); 
-        $this->session->sess_destroy(); 
-        redirect('users/login/'); 
-    } 
-        // Existing email check during validation 
+    // Existing email check during validation 
     public function email_check($str)
     {
         $con = array( 
@@ -166,6 +142,7 @@ Class Users extends CI_Controller
             ) 
         ); 
         $checkEmail = $this->UserModel->getRows($con); 
+        // echo '<pre>'; print_r($checkEmail); die;
             if($checkEmail > 0){ 
                 $this->form_validation->set_message('email_check', 'The given email already exists.'); 
                 return FALSE; 
@@ -217,26 +194,44 @@ Class Users extends CI_Controller
         }
             return TRUE;
     }
+    // Forgot password --
+    public function ForgotPassword()
+   {
+        $data = array();
+        if($this->session->userdata('success_msg'))
+        { 
+            $data['success_msg'] = $this->session->userdata('success_msg'); 
+            $this->session->unset_userdata('success_msg'); 
+        } 
+        if($this->session->userdata('error_msg'))
+        { 
+            $data['error_msg'] = $this->session->userdata('error_msg'); 
+            $this->session->unset_userdata('error_msg'); 
+        }
+        $data['meta'] = array(
+            'title' => 'Noc | Forgot Password'
+        );
 
-    public function vacancylist()
-    {
-        if($this->isUserLoggedIn){ 
-            $con = array( 
-                'id' => $this->session->userdata('userId')
-            );
-            // print_r($con); die;
-        $this->load->database();
-        $this->load->model('VacancyModel');
-        $data['vacancylist'] = $this->VacancyModel->fetchvacancy();
-        $data['user'] = $this->UserModel->getRows($con);
-        $this->load->view('templates/header',$data);
-        $this->load->view('pages/vacancylist', $data);
-        // echo '<pre>';print_r($data['user']); die;
+        if($this->input->post('resetPassword'))
+        {
+            $email = $this->input->post('EMAIL_ID');
+            // print_r($email); die;  
+            $findemail = $this->UserModel->forgotPassword($email); 
+            // print_r($findemail); die;
+            if($findemail)
+            {
+                // echo 'Here'; die;
+            $this->UserModel->sendpassword($findemail);
+            }else{
+            $this->session->set_flashdata('msg','Given Email doesn\'t match with the database');
+            redirect(base_url().'users/forgotpassword','refresh');
+            }
+        }
+        $this->load->view('templates/header',$data); 
+        $this->load->view('users/forgotpassword',$data); 
         $this->load->view('templates/footer');
-    }else{ 
-        redirect('users/login'); 
-    }
-    }
+        
+   }
 
 }
 

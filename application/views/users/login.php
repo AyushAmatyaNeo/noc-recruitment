@@ -7,6 +7,15 @@
 						<div class="col-lg-6 offset-lg-3 col-md-12 card">
 							<div class="left-form p-5">
 								<div class="main-title">
+								<?php
+								// Reset Password Notification message!
+									if($this->session->flashdata('msg') == 'Password sent to your email!') {
+								?>
+									<div class="status-msg success"><?php echo $this->session->flashdata('msg'); ?></div>
+
+								<?php } else { ?>
+									<div class="status-msg error"><?php echo $this->session->flashdata('msg'); ?></div>
+										<?php }	?>
 									<h5>User Login</h5>
 									<p>Login with your registered Email & Password.</p>
 								</div>
@@ -34,7 +43,7 @@
 											<label class="form-check-label" for="rememberMe">Remember me</label>
 										</div>	
 										<div class=" form-group col-md-12">
-											<a href="" style="font-style:italic;font-size:13px;color:#ff1901;padding-bottom:1rem">Forgot password?</a>
+											<a href="<?php echo base_url('users/forgotpassword'); ?>" style="font-style:italic;font-size:13px;color:#0749ab;padding-bottom:1rem">Forgot password?</a>
 										</div>
 										<div class="send-button">
 											<input type="submit" class="btn btn-primary btn-noc" name="loginSubmit" value="LOGIN">

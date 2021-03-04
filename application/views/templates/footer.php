@@ -33,7 +33,7 @@
 		        <div class="col-md-2 col-lg-3 col-xl-2 mb-4">
 		            <!-- Content -->
 		            <h6 class="text-uppercase font-weight-bold">Nepal Oil Corporation</h6>
-		            <img src="http://noc.org.np/assets/noc-f4bc4277383043f1536e899f46af9498.png" class="footer-image" height="150px">
+		            <img src="<?php echo  base_url(); ?>assets/images/noc-logo-footer.png" class="footer-image" height="150px">
 		        </div>
 		        <!-- Grid column -->
 		        <!-- Grid column -->
@@ -107,5 +107,9 @@
 		</div>
 		<!-- Copyright -->
 	</footer>
+	
+	<script src="<?php echo base_url();?>assets/js/apply.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
+	
 </body>
 </html>

@@ -30,7 +30,10 @@ Class Profile extends CI_Controller
             'id' => $this->session->userdata('userId') 
         ); 
         $data['user'] = $this->UserModel->getRows($con); 
-        
+        // echo '<pre>'; print_r($data); die;
+        $data['meta'] = array(
+            'title' => 'Noc | Profile View'
+        );
         // Pass the user data and load view 
         $this->load->view('templates/header', $data); 
         $this->load->view('profile/view', $data); 
@@ -50,7 +53,10 @@ Class Profile extends CI_Controller
             ); 
             $data['user'] = $this->UserModel->getRows($con); 
             // echo '<pre>'; print_r($data); die;
-            // Pass the user data and load view 
+            // Pass the user data and load view
+            $data['meta'] = array(
+                'title' => 'Noc | Profile Edit'
+            );
             $this->load->view('templates/header', $data); 
             $this->load->view('profile/edit', $data); 
             $this->load->view('templates/footer');
@@ -68,9 +74,9 @@ Class Profile extends CI_Controller
                 'FIRST_NAME' => strip_tags($this->input->post('FIRST_NAME')),
                 'MIDDLE_NAME' => strip_tags($this->input->post('MIDDLE_NAME')), 
                 'LAST_NAME' => strip_tags($this->input->post('LAST_NAME')), 
-                'EMAIL_ID' => strip_tags($this->input->post('EMAIL_ID')), 
+                'EMAIL_ID' => strip_tags($this->input->post('EMAIL_ID')),
+                'MOBILE_NO' => strip_tags($this->input->post('MOBILE_NO')),
                 'GENDER' => $this->input->post('GENDER'), 
-                'MOBILE_NO' => strip_tags($this->input->post('MOBILE_NO')) 
             ); 
             $update = $this->UserModel->updateuser($userData,$uid);
             if($update){ 

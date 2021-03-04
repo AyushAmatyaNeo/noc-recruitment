@@ -5,7 +5,7 @@
 					<div class="row">
 						<div class="col-lg-6 col-md-12 card">
 							<div class="left-form p-5">
-								<h5 class="main-title">New Registration</h5>
+								<h5 class="main-title">Edit Profile</h5>
 								<?php  
 									if(!empty($success_msg)){ 
 										echo '<p class="status-msg success">'.$success_msg.'</p>'; 
@@ -43,17 +43,17 @@
 										</div>
 									</div>
 									<div class="form-row col-md-12">
-										<div class="form-group form-check cstm-form-check form-check-inline">
+										<div class="form-group form-check cstm-form-check form-check-inline col-md-2">
                                         <?php $checked = $user['GENDER'] == 1 ? 'checked' : '' ; ?>
 											<input class="form-check-input" name='GENDER' type="radio" id="inlineRadio1" <?=$checked?> value="1">
 											<label class="form-check-label" for="GENDER">Male</label>
 										</div>
-										<div class="form-group form-check cstm-form-check form-check-inline">
+										<div class="form-group form-check cstm-form-check form-check-inline col-md-2">
                                         <?php $checked = $user['GENDER'] == 2 ? 'checked' : '' ; ?>
 											<input class="form-check-input" name='GENDER' type="radio" id="inlineRadio2" <?=$checked?> value="2">
 											<label class="form-check-label" for="GENDER">Female</label>
 										</div>
-										<div class="form-group form-check cstm-form-check form-check-inline">
+										<div class="form-group form-check cstm-form-check form-check-inline col-md-2">
                                         <?php $checked = $user['GENDER'] == 3 ? 'checked' : '' ; ?>
 											<input class="form-check-input" name='GENDER' type="radio" id="inlineRadio2" <?=$checked?> value="3">
 											<label class="form-check-label" for="GENDER">Others</label>
@@ -71,60 +71,13 @@
 											<i class="fa fa-phone" aria-hidden="true"></i>
 											<input type="number" name="MOBILE_NO" class="form-control" id="inputMobile" placeholder="Mobile No (NTC/Ncell)" value="<?php echo !empty($user['MOBILE_NO'])?$user['MOBILE_NO']:''; ?>" required>	
 										</div>
-										<?php echo form_error('MOBILE_NO','<p class="help-block">','</p>'); ?>
-										<div class="form-group col-md-12">
-											<div class="confirm-red d-md-flex d-sm-block">
-												<div class="confirm1" style="margin-right: 10px;">
-													<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;font-size: 10px;"></i>
-													<span style="color: red; padding-top: 10px; font-size: 10px;">1 Capital Letter</span>
-												</div>
-												<div class="confirm2" style="margin-right: 10px;">
-													<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;font-size: 10px;"></i>
-													<span style="color: red; padding-top: 10px; font-size: 10px;">1 Symbol</span>
-												</div>
-												<div class="confirm3" style="margin-right: 10px;">
-													<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;font-size: 10px;"></i>
-													<span style="color: red; padding-top: 10px; font-size: 10px;">1 Number</span>
-												</div>
-												<div class="confirm4" style="margin-right: 10px;">
-													<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;font-size: 10px;"></i>
-													<span style="color: red; padding-top: 10px; font-size: 10px;">5 Characters in length</span>
-												</div>
-												<div class="confirm4" style="margin-right: 10px;">
-													<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;font-size: 10px;"></i>
-													<span style="color: red; padding-top: 10px; font-size: 10px;">Match</span>
-												</div>
-											</div>
-											<!-- PW Error Type TYPE START -->
-											<div class="confirm-green d-none">
-												<div class="confirm1" style="margin-right: 10px;">
-													<i class="fa fa-check" aria-hidden="true" style="color: green;font-size: 10px;"></i>
-													<span style="color: green; padding-top: 10px; font-size: 10px;">Capital Letter</span>
-												</div>
-												<div class="confirm2" style="margin-right: 10px;">
-													<i class="fa fa-check" aria-hidden="true" style="color: green;font-size: 10px;"></i>
-													<span style="color: green; padding-top: 10px; font-size: 10px;">Symbol</span>
-												</div>
-												<div class="confirm3" style="margin-right: 10px;">
-													<i class="fa fa-check" aria-hidden="true" style="color: green;font-size: 10px;"></i>
-													<span style="color: green; padding-top: 10px; font-size: 10px;">Number</span>
-												</div>
-												<div class="confirm4" style="margin-right: 10px;">
-													<i class="fa fa-check" aria-hidden="true" style="color: green;font-size: 10px;"></i>
-													<span style="color: green; padding-top: 10px; font-size: 10px;">6 Characters</span>
-												</div>
-												<div class="confirm5" style="margin-right: 10px;">
-													<i class="fa fa-check" aria-hidden="true" style="color: green;font-size: 10px;"></i>
-													<span style="color: green; padding-top: 10px; font-size: 10px;">Match</span>
-												</div>
-											</div>
-											<!-- PW Error Type TYPE END-->
-										</div>
+										<?php echo form_error('MOBILE_NO','<p class="help-block">','</p>'); ?>									
+										
 										<div class="send-button">
 											<input type="submit" class="btn btn-primary btn-noc" name="signupSubmit" value="Update">
 										</div>
 									</div>
-									<p style="padding-top: 10px;">If you already have an account, please login from <a href="<?php echo base_url('users/login'); ?>">here</a></p>
+									<!-- <p style="padding-top: 10px;">If you already have an account, please login from <a href="<?php echo base_url('users/login'); ?>">here</a></p> -->
 								</form>
 							</div>
 						</div>

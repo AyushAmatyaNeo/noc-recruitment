@@ -422,4 +422,19 @@ class CI_DB_odbc_driver extends CI_DB_driver {
 	{
 		odbc_close($this->conn_id);
 	}
+	/**
+	 * Update statement
+	 *
+	 * Generates a platform-specific update string from the supplied data
+	 *
+	 * @param	string	$table
+	 * @param	array	$values
+	 * @return	string
+	 */
+	protected function _update($table, $values)
+	{
+		$this->qb_limit = FALSE;
+		$this->qb_orderby = array();
+		return parent::_update($table, $values);
+	}
 }
