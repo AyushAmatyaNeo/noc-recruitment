@@ -51,7 +51,7 @@
 
 										<!-- <button type="submit" class="btn btn-primary btn-noc" style="width: 100%;">Login</button> -->
 									</div>
-									<p style="padding-top: 10px;">If you are not yet registered, <a href="<?php echo base_url('users/registration'); ?>">please click here</a></p>
+									<p style="padding-top: 10px;">If you are not yet registered, <a href="<?php echo base_url('users/signup'); ?>">please click here</a></p>
 								</form>
 							</div>
 						</div>

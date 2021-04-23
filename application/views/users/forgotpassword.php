@@ -13,8 +13,9 @@
 
 										</div>
 										<?php } ?>
-									<h5>Forgot Password</h5>
+									<h5>Update your Password</h5>
 									<p>Enter your registered Email.</p>
+									<p style="font-size: 14px;">We will send your new password in your registred Email.</p>
 								</div>
 								<?php  
 									if(!empty($success_msg)){ 

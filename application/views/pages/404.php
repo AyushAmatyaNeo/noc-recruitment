@@ -8,7 +8,9 @@
                         <h4>Error 404: Page Not Found</h4>
                         <p>Sorry but the page you are looking for doesnot exist , 
                         have been removed, name changed or temporarily unavailable.</p>
-                        <button class="btn btn-primary btn-noc" type="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>Back To Home</button>
+                        <a href="<?php echo base_url(); ?>">
+                            <button class="btn btn-primary btn-noc" type="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>Back To Home</button>
+                        </a>
                     </div>
                 </div>
             </div>		

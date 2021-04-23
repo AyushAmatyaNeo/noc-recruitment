@@ -56,8 +56,6 @@
 		                <a href="old.nepaloil.com.np" class="white-text" target="_blank">Old Website</a>
 		            </p>
 		        </div>
-		        <!-- Grid column -->
-		        <!-- Grid column -->
 		        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-4">
 		            <!-- Links -->
 		            <h6 class="text-uppercase font-weight-bold">Useful links</h6>
@@ -108,8 +106,11 @@
 		<!-- Copyright -->
 	</footer>
 	
-	<script src="<?php echo base_url();?>assets/js/apply.js"></script>
+	
 	<script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/nepali-date-picker.js"></script>
+
+
 	
 </body>
 </html>

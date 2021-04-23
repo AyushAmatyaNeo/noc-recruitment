@@ -12,3 +12,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/userguide3/general/profiling.html
 |
 */
+// $config['config']          = TRUE;
+// $config['queries']         = TRUE;

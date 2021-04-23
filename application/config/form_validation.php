@@ -1,24 +1,31 @@
 <?php
 
 $config=[
-    'add_noc_docs_rules' => [
+    'noc_apply_form' => [
             [
-                'field' => 'FULL_NAME_NP',
-                'label' => 'Full Name (In Devnagari)',
+                'field' => 'marital',
+                'label' => 'Marital Status',
                 'rules' => 'required'
             ],
-            [
-                'field' => 'FULL_NAME_EN',
-                'label' => 'Full Name (In English)',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'AGE',
-                'label' => 'Age',
-                'rules' => 'required'
-            ]
+            // [
+            //     'field' => 'grandfather_name',
+            //     'label' => 'Grandfather Name',
+            //     'rules' => 'required'
+            // ],
+            // [
+            //     'field' => 'AGE',
+            //     'label' => 'Age',
+            //     'rules' => 'required'
+            // ]
 
     ],
+    'noc_signup_form' => [
+        [
+            'field' => 'first_name',
+            'label' => 'first_name',
+            'rules' => 'required'
+        ]
+    ]
     ];
 
                 // $this->form_validation->set_rules('FULL_NAME_NP', 'Full Name (In Devnagari)', 'required');

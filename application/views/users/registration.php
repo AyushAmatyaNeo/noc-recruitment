@@ -1,4 +1,4 @@
-	<main class="main-registration sec-padd bg-light">
+<main class="main-registration sec-padd bg-light">
 		<section class="registration-sec">
 			<div class="container">
 				<div class="card-body">
