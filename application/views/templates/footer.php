@@ -79,7 +79,6 @@
 		            </p>
 		        </div>
 		        <!-- Grid column -->
-		        <!-- Grid column -->
 		        <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-md-0 mb-4">
 		            <!-- Links -->
 		            <h6 class="text-uppercase font-weight-bold">Contact</h6>
@@ -109,7 +108,8 @@
 	
 	<script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/nepali-date-picker.js"></script>
-
+	<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+	<script src="<?php echo base_url(); ?>assets/js/jbox/jBox.all.min.js"></script>
 
 	
 </body>

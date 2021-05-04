@@ -354,13 +354,6 @@ class UserModel extends CI_Model{
             }
             return true;
         }
-        // $userData['MODIFIED_DT'] = DATE("Y-m-d"); 
-        // $akey = array_keys($userData);
-        // $keydata = implode(',', $akey);
-        // $aval = array_values($userData);
-        // $valdata = implode('\',\'', $aval);
-        // echo "<pre>"; print_r($valdata); die;
-        // $update = $this->db->query("UPDATE  $this->table  SET ($keydata) = ('$valdata')  where USER_ID = $uid");
         return false;
     }
 
@@ -395,14 +388,10 @@ class UserModel extends CI_Model{
     public function userRegistred($uid)
     {
         $query  = $this->db->query("SELECT * FROM HRIS_REC_USERS_REGISTRATION where USER_ID = '$uid' AND PROFILE_STATUS = '1'");
-        // echo $this->db->last_query();
-        if( $query->num_rows() > 0 )
-        { 
-        return TRUE; 
-        } 
-        else 
-        { 
-        return FALSE; 
+        if( $query->num_rows() > 0 ){ 
+            return TRUE; 
+        }else{ 
+            return FALSE; 
         }
     }
     public function userApplied()
@@ -449,6 +438,13 @@ class UserModel extends CI_Model{
         // $uid = ($uid )? '0': '';
         $query = $this->db->query("SELECT $column FROM $table WHERE USER_ID = $uid");
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+        return $result;
+    }
+    public function checkattributes($table, $column,$aid,$wid)
+    {
+        // $uid = ($uid )? '0': '';
+        $query = $this->db->query("SELECT $column FROM $table WHERE $aid = '$wid'");
+        $result = ($query->num_rows() > 0)?TRUE:FALSE;
         return $result;
     }
 }

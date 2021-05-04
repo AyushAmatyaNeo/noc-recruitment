@@ -130,11 +130,21 @@ class VacancyModel extends CI_Model
     public function updateapplication($data,$uid,$appid)
     {
         if(!empty($data)){
+            $details    = $data['details'];
             $personal    = $data['personal'];
             $educations  = $data['educations'];
             $inclusion   = $data['inclusion_updated'];
             $experiences = $data['experiences'];
             $trainings   = $data['trainings'];
+            if(!empty($personal))
+            {
+                $details['modified_date'] = DATE("Y-m-d");
+                $akey    = array_keys($details);
+                $keydata = implode(',', $akey);
+                $aval    = array_values($details);
+                $valdata = implode('\',\'', $aval);
+                $update = $this->db->query("UPDATE HRIS_REC_VACANCY_APPLICATION  SET ($keydata) = ('$valdata')  where APPLICATION_ID = $appid AND USER_ID = $uid");
+            }
             if(!empty($personal))
             {
                 $personal['modified_date'] = DATE("Y-m-d");
@@ -210,6 +220,24 @@ class VacancyModel extends CI_Model
             return true;
         }
         return false;
+    }
+    //Update Application Edit images:
+    public function updateimg($image,$imageId)
+    {
+        if(!empty($image)){ 
+            // $image = implode('\',\'', $image);
+            // echo '<pre>'; print_r(($image)); die;
+            $image['modified_date'] = DATE("Y-m-d");
+            $akey    = array_keys($image);
+            $keydata = implode(',', $akey);
+            $aval    = array_values($image);
+            $valdata = implode('\',\'', $aval);
+            $insert = $this->db->query("UPDATE HRIS_REC_APPLICATION_DOCUMENTS SET ($keydata) = ('$valdata') WHERE REC_DOC_ID = '$imageId'");
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     //INclusion selection Amount:
     public function inclusionamount($position,$level)
@@ -388,25 +416,33 @@ class VacancyModel extends CI_Model
         return $result;
     }
     //Success page data
-    public function successdata()
+    public function successdata($id)
     {
-        $query = $this->db->query("SELECT VA.APPLICATION_ID,HV.AD_NO,VA.CREATED_DATE,DESIGNATION_TITLE,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME FROM HRIS_REC_VACANCY_APPLICATION VA
+        $query = $this->db->query("SELECT VA.APPLICATION_ID,HV.AD_NO,VA.CREATED_DATE,DESIGNATION_TITLE,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,APPLICATION_AMOUNT,VACANCY_ID FROM HRIS_REC_VACANCY_APPLICATION VA
         LEFT JOIN HRIS_REC_APPLICATION_PERSONAL VAP ON  VAP.APPLICATION_ID = VA.APPLICATION_ID
         LEFT JOIN HRIS_REC_VACANCY HV ON HV.VACANCY_ID = VA.AD_NO
         LEFT JOIN HRIS_DESIGNATIONS HD ON HV.POSITION_ID = HD.DESIGNATION_ID
         LEFT JOIN HRIS_DEPARTMENTS HVD ON HV.DEPARTMENT_ID = HVD.DEPARTMENT_ID
         LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = HV.LEVEL_ID
         LEFT JOIN HRIS_SERVICE_TYPES  HST ON HST.SERVICE_TYPE_ID = HV.SERVICE_TYPES_ID
-        WHERE VA.APPLICATION_ID = (SELECT MAX(APPLICATION_ID) from HRIS_REC_VACANCY_APPLICATION)");
+        WHERE VA.APPLICATION_ID = (SELECT MAX(APPLICATION_ID) from HRIS_REC_VACANCY_APPLICATION) AND VA.USER_ID = '$id'");
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         return $result;
+    }
+    public function payment_insert($esewa)
+    {
+            $esewa = implode('\',\'', $esewa);
+            // echo '<pre>'; print_r($esewa); die;
+            $sql = "INSERT INTO HRIS_REC_APPLICATION_PAYMENT values ('$esewa')";
+            $insert = $this->db->query($sql);
+            return true;
     }
     // Applied vacnacy Details
     public function applicationDetails($uid)
     {
         // echo $uid['id']; die; 
         $uid = $uid['id'];
-        $query  = $this->db->query("SELECT NV.APPLICATION_ID,HV.AD_NO, HD.DESIGNATION_TITLE, HFL.FUNCTIONAL_LEVEL_EDESC,STAGE_NAME FROM HRIS_REC_VACANCY_APPLICATION AS NV 
+        $query  = $this->db->query("SELECT NV.APPLICATION_ID,HV.AD_NO, HD.DESIGNATION_TITLE, HFL.FUNCTIONAL_LEVEL_EDESC,STAGE_NAME,APPLICATION_AMOUNT,VACANCY_ID FROM HRIS_REC_VACANCY_APPLICATION AS NV 
         LEFT JOIN HRIS_REC_VACANCY AS HV ON NV.AD_NO = HV.VACANCY_ID
         LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = HV.LEVEL_ID
         LEFT JOIN HRIS_DESIGNATIONS HD ON HV.POSITION_ID = HD.DESIGNATION_ID
@@ -418,6 +454,17 @@ class VacancyModel extends CI_Model
     //Get data for edit applied vacancy
     public function applicationById($vid,$uid, $table)
     {
+        if($uid == '')
+        {
+            $col = $vid['columnid'];
+            $val = $vid['valueid'];
+            $field = $vid['field'];
+
+            $query  = $this->db->query("SELECT $field FROM $table WHERE $col = $val");
+            // print_r($this->db->last_query()); die;
+            $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            return $result;
+        }
         $query  = $this->db->query("SELECT * FROM $table AS AA
         LEFT JOIN HRIS_REC_VACANCY_APPLICATION AS VA ON VA.APPLICATION_ID = AA.APPLICATION_ID
         WHERE VA.AD_NO = $vid AND VA.USER_ID = $uid");

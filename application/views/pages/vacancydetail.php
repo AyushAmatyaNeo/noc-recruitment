@@ -6,7 +6,7 @@
                     <div class="vacancy-detail-inner card">
                         <div class="card-body">
                             <div class="vacancy-detail-top">
-                                लोक सेवा आयोगबाट लिइने निगमको आन्तरिक तथा खुला प्रतियोगितात्मक लिखित परीक्षा कार्यक्रम र परीक्षा भवन कायम गरिएको सूचना (सूचना नम्वरः ६/२०७६-७७)
+                            <?php echo $details[0]['VACANCY_NDESC'] ?>
                                 <div class="vacancy-date">
                                     <small><i class="fa fa-calendar" aria-hidden="true"></i> Last Date: <?php echo $details[0]['END_DATE'] ?></small>
                                     <small><i class="fa fa-calendar" aria-hidden="true"></i> Extended Date: <?php echo $details[0]['EXTENDED_DATE'] ?></small>
@@ -16,7 +16,6 @@
                             <div class="vacancy-detail-content">
                                 <h6 class="vacancy-subTitle">Vacancy Description</h6>
                                 <p><?php echo $details[0]['VACANCY_EDESC'] ?></p>
-                                <p><?php echo $details[0]['VACANCY_NDESC'] ?></p>
                                 <h6 class="vacancy-subTitle">Basic Job Information</h6>
                                 <table class="table table-responsive">
                                     <tr>

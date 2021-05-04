@@ -155,7 +155,7 @@
 	</section>
 	<!-- Application Details -->
 	<section class="recruitment-form-sec">
-		<?php echo form_open_multipart('', ['name' => 'applyForm', 'id' => 'applyForm']); ?>
+		<?php echo form_open_multipart('', ['name' => 'EditapplyForm', 'id' => 'EditapplyForm']); ?>
 		<input type="hidden" name="base" id="baseurl" value="<?php echo base_url(); ?>" />
 		<h2>Application Form</h2>
 		<!-- Circles which indicates the steps of the form: -->
@@ -333,19 +333,19 @@
 								</tr>
 							</thead>
 							<tbody id="educationalbody">
-							<?php if(!empty($educations)){ ?>
-								<?php foreach($educations as $education ) { ?>
+							<?php if(!empty($educations)){  $counter = 0; ?>
+								<?php foreach($educations as $education ) { $counter++?>
 								<tr>
 									<td>
 										<div for="edu_institute" class="form-group">
-											<input type="text" name="edu_institute[]" id="edu_institute" class="form-control form-control-sm" value="<?php echo $education['EDUCATION_INSTITUTE']  ?>">
+											<input type="text" name="edu_institute[]" id="edu_institute<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['EDUCATION_INSTITUTE']  ?>">
 											<input type="hidden" name="education_id[]" value="<?php echo $education['EDUCATION_ID'] ?>" class="form-control form-control-sm" >
 										</div>
 										<?php echo form_error('edu_institute', '<p class="help-block error">', '</p>'); ?>
 									</td>
 									<td>
 										<div for="level_id" class="form-group">
-											<select class="form-control form-control-sm" name="level_id[]" id="level_id">
+											<select class="form-control form-control-sm" name="level_id[]" id="level_id<?php echo $counter;?>">
 												<option value="">-- Select -- </option>
 												<?php foreach ($degrees as $degree) { ?>
 													<?php $selected = ($education['LEVEL_ID'] == $degree['ACADEMIC_DEGREE_ID'])? 'selected': '' ?>
@@ -357,13 +357,13 @@
 									</td>
 									<td>
 										<div for="facalty" class="form-group">
-											<input type="text" name="facalty[]" id="facalty" class="form-control form-control-sm" value="<?php echo $education['FACALTY'] ?>">
+											<input type="text" name="facalty[]" id="facalty<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['FACALTY'] ?>">
 											<?php echo form_error('facalty', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
 										<div class="form-group">
-											<select class="form-control form-control-sm" id="rank_type" name="rank_type[]">
+											<select class="form-control form-control-sm" id="rank_type<?php echo $counter;?>" name="rank_type[]">
 												<option value="">---</option>
 												<option <?php if($education['RANK_TYPE'] === 'GPA') { echo 'selected';} ?> value="GPA">GPA</option>
 												<option <?php if($education['RANK_TYPE'] === 'Percentage'){ echo 'selected';} ?> value="Percentage">Percentage</option>
@@ -372,19 +372,19 @@
 									</td>
 									<td>
 										<div for="rank_value" class="form-group">
-											<input type="text" name="rank_value[]" id="rank_value" class="form-control form-control-sm" value="<?php echo $education['RANK_VALUE'] ?>">
+											<input type="text" name="rank_value[]" id="rank_value<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['RANK_VALUE'] ?>">
 											<?php echo form_error('rank_value', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
 										<div for="major_subject" class="form-group">
-											<input type="text" name="major_subject[]" id="major_subject" class="form-control form-control-sm" value="<?php echo $education['MAJOR_SUBJECT'] ?>">
+											<input type="text" name="major_subject[]" id="major_subject<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['MAJOR_SUBJECT'] ?>">
 											<?php echo form_error('major_subject', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
 										<div for="passed_year" class="form-group">
-											<input type="text" name="passed_year[]" id="passed_year" class="form-control form-control-sm" value="<?php echo $education['PASSED_YEAR'] ?>">
+											<input type="text" name="passed_year[]" id="passed_year<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['PASSED_YEAR'] ?>">
 											<?php echo form_error('passed_year', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
@@ -670,6 +670,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="recent_photo" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents[2]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="recent_photo1" id="recent_photo" onchange="return fileValidation($id = 'recent_photo')">
 							<p class="size"></p>
 							<?php if (isset($upload_error_photo)) {
@@ -680,6 +681,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="signature" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents[3]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="signature1" id="signature" onchange="return fileValidation($id = 'signature')">
 							<p class="size"></p>
 						</div>
@@ -687,6 +689,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="right_finger_scan" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents[4]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="right_finger_scan1" id="right_finger_scan" onchange="return fileValidation($id = 'right_finger_scan')">
 							<p class="size"></p>
 						</div>
@@ -694,6 +697,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="left_finger_scan" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents[5]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="left_finger_scan1" id="left_finger_scan" onchange="return fileValidation($id = 'left_finger_scan')">
 							<p class="size"></p>
 						</div>

@@ -16,8 +16,10 @@
 	<!-- <script src="http://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v3.5.min.js" type="text/javascript"></script> -->
 	<link href="<?php echo base_url(); ?>assets/css/nepali.datepicker.v3.5.min.css" rel="stylesheet" type="text/css" />
 	<script src="<?php echo base_url(); ?>assets/js/nepali.datepicker.v3.5.min.js" type="text/javascript"></script>
+	<link href="<?php echo base_url(); ?>assets/css/transactionFailed.css" rel="stylesheet" />
+	<!-- Vendor -->
+	<link href="<?php echo base_url() ?>assets/css/jbox/jBox.all.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-	
 	<script src="https://www.google.com/recaptcha/api.js?render=6Lcf41EaAAAAAKaeYIHJ6Z25c6xBNUS7dqgHtt5A"></script>
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 	<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>

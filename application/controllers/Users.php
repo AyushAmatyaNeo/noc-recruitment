@@ -464,13 +464,14 @@ Class Users extends CI_Controller
             // Captcha
             $config = array(
                 'img_path'      => 'assets/captcha/',
-                'img_url'       => base_url().'assets/captcha/',
-                'font_path'     => 'system/fonts/texb.ttf',
+                'img_url'       => base_url('assets/captcha/'),
+                'font_path'     => '../../system/fonts/texb.ttf',
                 'img_width'     => '160',
                 'img_height'    => 50,
                 'word_length'   => 8,
                 'font_size'     => 18
             );
+            // echo '<pre>'; print_r($config); die;
             $captcha = create_captcha($config);
             
             // Unset previous captcha and set new captcha word
@@ -480,7 +481,7 @@ Class Users extends CI_Controller
             // Pass captcha image to view
             $data['captchaImg'] = $captcha['image'];
 
-            // echo '<pre>'; print_r($data['user']); die;
+            // echo '<pre>'; print_r($data['captchaImg']); die;
             // Load view 
             $this->load->view('templates/header', $data); 
             $this->load->view('users/signup', $data); 
@@ -493,7 +494,7 @@ Class Users extends CI_Controller
         $config = array(
             'img_path'      => 'assets/captcha/',
             'img_url'       => base_url().'assets/captcha/',
-            'font_path'     => 'system/fonts/texb.ttf',
+            'font_path'     => '../../system/fonts/texb.ttf',
             'img_width'     => '160',
             'img_height'    => 50,
             'word_length'   => 8,

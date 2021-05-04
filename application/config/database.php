@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'Driver={/home/neo/sap/hdbclient/libodbcHDB.so};ServerNode=10.10.11.92:30015;UID=HRISVISMA2;PWD=Vishma@1234567;Database=NDB;',
+	'hostname' => 'Driver={HDBODBC};ServerNode=10.10.11.92:30015;UID=HRISVISMA2;PWD=Vishma@1234567;Database=NDB;',
 	'username' => 'HRISVISMA2',
 	'password' => 'Vishma@1234567',
 	// 'port'     => '1521',
