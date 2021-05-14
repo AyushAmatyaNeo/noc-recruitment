@@ -467,7 +467,7 @@ class VacancyModel extends CI_Model
         }
         $query  = $this->db->query("SELECT * FROM $table AS AA
         LEFT JOIN HRIS_REC_VACANCY_APPLICATION AS VA ON VA.APPLICATION_ID = AA.APPLICATION_ID
-        WHERE VA.AD_NO = $vid AND VA.USER_ID = $uid");
+        WHERE VA.AD_NO = $vid AND VA.USER_ID = $uid AND AA.STATUS = 'E'");
         // print_r($this->db->last_query()); die;
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         return $result;
@@ -503,6 +503,12 @@ class VacancyModel extends CI_Model
         $query = $this->db->query("SELECT * FROM HRIS_REC_VACANCY_APPLICATION WHERE AD_NO = $vid AND USER_ID = $uid");
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         return $result;
-
+    }
+    public function DeleteEdu($edid)
+    {   
+        $MODIFIED_DATE = DATE('Y-m-d');
+        $query = $this->db->query("UPDATE HRIS_REC_APPLICATION_EDUCATION SET STATUS = 'D' , MODIFIED_DATE = '$MODIFIED_DATE' WHERE EDUCATION_ID = '$edid'");
+        $result = ($this->db->affected_rows() > 0)?TRUE:FALSE;
+        return $result;
     }
 }

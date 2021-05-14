@@ -9,7 +9,7 @@
 		<div class="container-fluid">
 			<?php
 			// Reset Password Notification message!
-			if ($this->session->flashdata('msg')) {
+			if (($this->session->flashdata('msg') || $this->session->flashdata('error_msg'))) {
 			?>
 				<div class="status-msg success" style="text-align: center;"><?php echo $this->session->flashdata('msg'); ?></div>
 				<div class="status-msg error" style="text-align: center;"><?php echo $this->session->flashdata('error_msg'); ?></div>

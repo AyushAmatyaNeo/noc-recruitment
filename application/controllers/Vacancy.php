@@ -36,7 +36,6 @@ class Vacancy extends CI_Controller
             $this->session->set_flashdata('msg', 'You have not registred yet! Please register to apply.');
             redirect('users/registration');
         }
-
         if ($this->isUserLoggedIn) {
             $con = array(
                 'id' => $this->session->userdata('userId')
@@ -577,9 +576,9 @@ class Vacancy extends CI_Controller
                     'user_id'        => $this->session->userdata('userId'),
                     'vacancy_id'     => $vacancy_id, 
                     'payment_type'   => 'Esewa',
-                    'payment_amt'    => $_GET['amt'],
-                    'payment_oid'    => $_GET['oid'],
-                    'payment_refid'  => $_GET['refId'],
+                    'payment_npr'    => $_GET['amt'],
+                    'payment_eid'    => $_GET['oid'],
+                    'payment_rfid'  => $_GET['refId'],
                     'status'         => '1',
                     'created_date'   => date('Y-m-d')
                 ];
@@ -598,7 +597,7 @@ class Vacancy extends CI_Controller
                 // echo $response;
                 curl_close($curl);
                 if(strpos($response , 'Success') !== false){
-                    if($this->UserModel->checkattributes('hris_rec_application_payment','*','payment_oid',$_GET['oid']) == false){
+                    if($this->UserModel->checkattributes('hris_rec_application_payment','*','payment_eid',$_GET['oid']) == false){
                         $payment_status = $this->VacancyModel->payment_insert($esewa);
                         if($payment_status == true)
                     {
@@ -607,12 +606,11 @@ class Vacancy extends CI_Controller
                         $this->load->view('templates/footer');
                     }
                     }else{
-                        $this->load->view('templates/header', $data);
-                        $this->load->view('pages/payment/failed', $esewa);
-                        $this->load->view('templates/footer');
+                        $this->session->set_flashdata('error_msg',"Some Error Occured!");
+                        redirect('vacancy/vacancylist');
                     }                
                 }else{
-                    echo "Some Error Occureddd!";
+                    echo "Some Error Occured!";
                 }                
             }else
             {
@@ -663,6 +661,7 @@ class Vacancy extends CI_Controller
                 'id' => $this->session->userdata('userId')
             );
             $data['vacancylists'] = $this->VacancyModel->fetchvacancy();
+            // echo '<pre>'; print_r($data['vacancylists']); die;
             if($data['vacancylists'] != '')
             {            
                 for($i=0; $i < count($data['vacancylists']); $i++)
@@ -695,8 +694,12 @@ class Vacancy extends CI_Controller
             redirect('users/login');
         }
     }
-    public function vacancyDetail()
-    {
+    public function DeleteEdu(){
+        if ($this->input->post('edid')) {
+            echo $this->VacancyModel->DeleteEdu($this->input->post('edid'));
+        }
+    }
+    public function vacancyDetail(){
         if ($this->isUserLoggedIn) {
             $con = array(
                 'id' => $this->session->userdata('userId')
@@ -719,23 +722,20 @@ class Vacancy extends CI_Controller
         // echo 'vacancy Details'; die;
     }
     // Fetch district & vdc list as per options for registration page - Address Fields
-    public function fetch_district()
-    {
+    public function fetch_district(){
 
         if ($this->input->post('province_id')) {
             echo $this->VacancyModel->fetch_district($this->input->post('province_id'));
         }
     }
-    public function fetch_vdc()
-    {
+    public function fetch_vdc(){
 
         if ($this->input->post('district_id')) {
             echo $this->VacancyModel->fetch_vdc($this->input->post('district_id'));
         }
     }
     // Applied Details for vacancy
-    public function appliedDetails()
-    {
+    public function appliedDetails(){
         if ($this->isUserLoggedIn) {
             $con = array(
                 'id' => $this->session->userdata('userId')

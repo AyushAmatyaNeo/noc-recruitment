@@ -14,10 +14,10 @@
                     </svg>
                     <h6 class="success-top">Your Payment has been successful!</h6>
                 <div class="alert alert-success" role="alert">
-                    <label>Application paid amount : Rs. <?php echo $payment_amt ?></label>
+                    <label>Application paid amount : Rs. <?php echo $payment_npr ?></label>
                 </div>
-                <p>Order Id: <?php echo $payment_oid ?></p>
-                <p>Reference Id: <?php echo $payment_refid ?></p>
+                <p>Order Id: <?php echo $payment_eid ?></p>
+                <p>Reference Id: <?php echo $payment_rfid ?></p>
             </div>
 
         </div>

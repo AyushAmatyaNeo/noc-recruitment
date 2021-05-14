@@ -25,11 +25,10 @@ class UserModel extends CI_Model{
             foreach($params['conditions'] as $key => $val){ 
                 
                 $where.= " $key = '$val' ";
-                if($key == 'EMAIL_ID')
+                if($key == 'PASSWORD')
                 {
                     $where.= 'and';
-                }
-                 
+                }                 
             }
         }
         if(array_key_exists("returnType",$params) && $params['returnType'] == 'count')
@@ -43,7 +42,6 @@ class UserModel extends CI_Model{
                      $pid = $params['id'];
                     $where.= "USER_ID = $pid";
                 } 
-                // $query  = $this->db->query("SELECT * FROM $this->table NU LEFT JOIN HRIS_GENDERS HG ON HG.GENDER_ID = NU.GENDER where 1=1 $where "); where 1=1 $where ");
                 $query  = $this->db->query("SELECT * FROM $this->table 
                  where $where ");
                 // print_r($this->db->last_query()); die;

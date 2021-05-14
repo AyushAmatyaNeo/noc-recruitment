@@ -57,17 +57,25 @@ Class Users extends CI_Controller
         // If login request submitted 
         if($this->input->post('loginSubmit'))
         { 
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email'); 
+            $this->form_validation->set_rules('email', 'email/Username', 'required'); 
             $this->form_validation->set_rules('password', 'password', 'required'); 
             
-            if($this->form_validation->run() == true){ 
+            if($this->form_validation->run() == true){                 
                 $con = array( 
                     'returnType' => 'single', 
                     'conditions' => array( 
-                        'EMAIL_ID'=> $this->input->post('email'), 
+                        
+                        // 'USERNAME'=> $this->input->post('email'),
                         'PASSWORD' => ($this->input->post('password'))
-                    ) 
-                ); 
+                    )
+                );
+                $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';     
+                if (preg_match($regex, $this->input->post('email'))) {
+                    $con['conditions']['EMAIL_ID']= $this->input->post('email');
+                }else{
+                    $con['conditions']['USERNAME']= $this->input->post('email');
+                }
+                
                 $checkLogin = $this->UserModel->getRows($con);
                 if($checkLogin){ 
                     $this->session->set_userdata('isUserLoggedIn', TRUE); 

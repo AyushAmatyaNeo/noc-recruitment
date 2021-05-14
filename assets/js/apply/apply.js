@@ -186,7 +186,25 @@ $(document).ready(function(){
 
     $(t_education).on("click", ".btn-edu-remove", function(e){
         e.preventDefault();
-        $(this).closest('tr').remove();
+        var tr = this;
+        var conf = confirm("Are you sure?");
+        var edid = $('.btn-remove-edu').val();
+        var baseurl = $('#baseurl').val();
+        // console.log(edid);
+        if(conf == true){
+        $.ajax({
+          type: 'POST',
+          url: baseurl+'vacancy/DeleteEdu',
+          data:{edid:edid},
+          success: function(response){
+            if(response == true){
+              $(tr).closest('tr').remove();
+            }
+          }
+        });
+
+      }
+        // $(this).closest('tr').remove();
         x--;
     });
     // Educational Qualification Section END-------------------------------xxxxxxxxxxxxx-----------------------
@@ -471,7 +489,6 @@ $(document).ready(function(){
               {
                 // console.log(normal_amount.END_DATE >= today);
                 if(normal_amount.END_DATE >= today){
-                  // alert(parseInt(normal_amount.NORMAL_AMOUNT));
                   $('#inclusion_amount').val(normal_amount.NORMAL_AMOUNT);
                   // alert('Normal');
                 }else

@@ -291,9 +291,8 @@
 		<div class="tab">
 			<!-- G. Educational Qualification -->
 			<div class="card mt-3">
-				<h6 class="form-table-title">Educational Qualification</h6>
-				<div class="card-body">
-					<div class="col-lg-12 my-3">
+			<h6 class="form-table-title">Education Description</h6>
+			<div class="col-lg-12 my-3">
 						<div class="form-check form-check-inline">
 							<input class="form-check-input" type="checkbox" name="education" value="option1">
 							<label class="form-check-label">SLC</label>
@@ -315,6 +314,11 @@
 							<label class="form-check-label">Others</label>
 						</div>
 					</div>
+			</div>
+			<div class="card mt-3">
+				<h6 class="form-table-title">Educational Qualification</h6>
+				<div class="card-body">
+					
 					<div class="col-md-12">
 						<table class="table table-responsive-md table-striped table-bordered table-sm" id="education">
 							<thead>
@@ -389,13 +393,11 @@
 										</div>
 									</td>
 									<td> <?php if(($educations[0] == $education )) {
-											echo '<i class="fa fa-plus-circle btn-add-edu" aria-hidden="true" style="color: green; cursor: pointer"></i>';
-											
+											echo '<i class="fa fa-plus-circle btn-add-edu" aria-hidden="true" style="color: green; cursor: pointer"></i>';											
 									} else 
 									{
-										echo '<i class="fa fa-minus-circle btn-edu-remove" aria-hidden="true" style="color: red; cursor: pointer"></i>';
+										echo '<i class="fa fa-minus-circle btn-edu-remove" aria-hidden="true" style="color: red; cursor: pointer"></i><input type="hidden" class="btn-edu-remove btn-remove-edu" value="'.$education["EDUCATION_ID"].'"/>';
 									} ?>
-										<!-- <i class="fa fa-plus-circle btn-add-edu" aria-hidden="true" style="color: green; cursor: pointer"></i> -->
 									</td>
 								</tr>
 								<?php } } else{ ?>
@@ -749,10 +751,6 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
-				<div class="form-group col-md-3 mb-3 mt-3">
-					<label for="">Voucher/Receipt Number</label>
-					<input type="text" name="" class="form-control form-control-sm">
 				</div>
 			</div>
 		</div>

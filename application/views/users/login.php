@@ -30,8 +30,8 @@
 									<div class="form-row">
 										<div class="form-group col-md-12 cstm-form-grp">
 											<i class="fa fa-envelope" aria-hidden="true"></i>
-											<input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email">
-											<?php echo form_error('email','<p class="help-block">','</p>'); ?>
+											<input type="text" name="email" class="form-control" id="inputEmail" placeholder="Email | Username">
+											<?php echo form_error('text','<p class="help-block">','</p>'); ?>
 										</div>
 										<div class="form-group col-md-12 cstm-form-grp">
 											<i class="fa fa-lock" aria-hidden="true"></i>
