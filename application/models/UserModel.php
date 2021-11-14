@@ -20,6 +20,7 @@ class UserModel extends CI_Model{
      */ 
     function getRows($params = array())
     {
+        // echo '<pre>'; print_r($params); die;
         $where = "";
         if(array_key_exists("conditions", $params)){ 
             foreach($params['conditions'] as $key => $val){ 
@@ -31,6 +32,7 @@ class UserModel extends CI_Model{
                 }                 
             }
         }
+        // echo '<pre>'; print_r($where); die;
         if(array_key_exists("returnType",$params) && $params['returnType'] == 'count')
         { 
             $rawquery = $this->db->query("SELECT COUNT('*') FROM $this->table");
@@ -41,9 +43,10 @@ class UserModel extends CI_Model{
                 { 
                      $pid = $params['id'];
                     $where.= "USER_ID = $pid";
-                } 
-                $query  = $this->db->query("SELECT * FROM $this->table 
-                 where $where ");
+                }
+                // print_r($this->db->last_query()); die;
+                $query  = $this->db->query("SELECT USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMAIL_ID,USERNAME,MOBILE_NO FROM $this->table 
+                  where $where 1=1");
                 // print_r($this->db->last_query()); die;
                 $result = $query->row_array();
             }else{ 

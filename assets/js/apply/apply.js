@@ -25,10 +25,10 @@ $(document).ready(function(){
     var data	=	{
         // Specify validation rules
         rules: {
-            marital          :  "required",
-            disability       : "required",
-            employment       : "required",
-            'inclusion[]'    : "required",
+            // marital          :  "required",
+            // disability       : "required",
+            // employment       : "required",
+            // 'inclusion[]'    : "required",
             'inclusion_id[]'    : "required",
             'org_name[]'     : "required",
             'post_name[]'    : "required",
@@ -464,7 +464,6 @@ $(document).ready(function(){
     });
 
     $('.inclusion').on('change', function(){
-      // alert('Hello');
       var val = [];
         $(':checkbox:checked').each(function(i){
           val[i] = $(this).val();
@@ -523,14 +522,54 @@ $(document).ready(function(){
     
     
     $("#expcalculate").on('click', function(){
-      let fromDate = $('#from_date').val();
-      let toDate = $('#to_date').val();
-      let diff = parseInt(toDate) - parseInt(fromDate);
+      var fromDate = new Date($('.fromDate').val());
+      let fDateYear = fromDate.getFullYear();
+      let fDateMonth = fromDate.getMonth();
+      let fDateDay = fromDate.getDay();
 
-      alert (parseInt(toDate));
+      var toDate = new Date($('.toDate').val());
+      let tDateYear = toDate.getFullYear();
+      let tDateMonth = toDate.getMonth();
+      let tDateDay = toDate.getDay();
+
+      // var diff = toDate - fromDate;
+      var totalDays = parseInt((toDate-fromDate)/(24*3600*1000));
+      var Days,Months,years;
+      if(totalDays <= 365){
+        years = 0;
+        Months = parseInt(totalDays/30);
+        if(Months == 12){
+          Months = 0;
+        }
+        Days = parseInt((totalDays*12)/365);
+      }else{
+        years = (tDateYear - fDateYear);
+        Months = parseInt(totalDays/30.417)  ; //parseInt((toDate-fromDate)/(24*3600*1000*30*12));
+        if(totalDays <= 359){
+          Months = 0;
+        }
+        Days = parseInt((totalDays*12)/365);
+        
+      }
+     
+      $('.years').val(years);
+      $('.months').val(Months);
+      $('.days').val(Days);
+
+      console.log(totalDays);
+      console.log((tDateMonth+12*tDateYear)-(fDateMonth+12*fDateYear));
+
+
+      // console.log(years);
+      // console.log(Months);
+      // console.log(Days);
+      // console.log(checkClass());
     });
 
-
+function checkClass(originalName,newName){
+  elems = document.getElementsByClassName(originalName);
+  console.log(elems.length)
+}
 
 });
 

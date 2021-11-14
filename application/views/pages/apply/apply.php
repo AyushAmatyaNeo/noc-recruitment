@@ -442,13 +442,13 @@
 								<td>
 									<div for="from_date" class="form-group">
 										<!-- <input name="from_date" type="text" class="date-picker form-control form-control-sm"> -->
-										<input type="text" class="date-picker form-control selectNepaliDate" id="from_date" name="from_date[]" data-single="true" placeholder="Select Date(s)">
+										<input type="text" class="date-picker form-control selectNepaliDate fromDate" name="from_date[]" data-single="true" placeholder="Select Date(s)">
 									</div>
 								</td>
 								<td>
 									<div for="to_date" class="form-group">
 										<!-- <input name="to_date" type="text" class="form-control form-control-sm"> -->
-										<input type="text" class="date-picker form-control selectNepaliDate" id="to_date" name="to_date[]" data-single="true" placeholder="Select Date(s)">
+										<input type="text" class="date-picker form-control selectNepaliDate toDate" name="to_date[]" data-single="true" placeholder="Select Date(s)">
 									</div>
 								</td>
 								<td>
@@ -463,9 +463,9 @@
 										<label class="col-lg-4">Total Experience</label>
 										<div class="col-lg-8 d-flex">
 											<button type="button" class="btn btn-primary" id="expcalculate">Calculate</button>
-											<input type="number" class="form-control form-control-sm mr-1" placeholder="Years" readonly>
-											<input type="number" class="form-control form-control-sm mr-1" placeholder="Months" readonly>
-											<input type="number" class="form-control form-control-sm" placeholder="Days" readonly>
+											<input type="number" class="form-control form-control-sm mr-1 years" placeholder="Years" readonly>
+											<input type="number" class="form-control form-control-sm mr-1 months" placeholder="Months" readonly>
+											<input type="number" class="form-control form-control-sm days" placeholder="Days" readonly>
 										</div>
 									</div>
 								</td>

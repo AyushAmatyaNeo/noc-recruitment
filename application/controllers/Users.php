@@ -89,7 +89,7 @@ Class Users extends CI_Controller
                     }
                     redirect('vacancy/vacancylist'); 
                 }else{ 
-                    $data['error_msg'] = 'Wrong email or password, please try again.'; 
+                    $data['error_msg'] = 'Wrong <strong>Email/Username</strong> or <strong>password</strong>, please try again.'; 
                 } 
             }else{ 
                 $data['error_msg'] = 'Please fill all the mandatory fields.'; 
@@ -317,8 +317,10 @@ Class Users extends CI_Controller
             }
         }
         $con = array(
-            'id' => $this->session->userdata('userId')
+            'id' => $this->session->userdata('userId'),
+            'returnType' => 'single',
         );
+        // print_r($con);die;  
             $data['user'] = $this->UserModel->getRows($con);
             $data['meta'] = array(
                 'title' => 'NOC | Forgot Password',
