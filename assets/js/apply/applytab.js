@@ -66,4 +66,6 @@
         }
         return form;
     };
+    // Tab validation for Dates picker
+
   }( jQuery ));

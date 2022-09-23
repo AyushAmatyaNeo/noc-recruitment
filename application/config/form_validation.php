@@ -3,8 +3,8 @@
 $config=[
     'noc_apply_form' => [
             [
-                'field' => 'marital',
-                'label' => 'Marital Status',
+                'field' => 'max_education',
+                'label' => 'Qualification Status',
                 'rules' => 'required'
             ],
             // [

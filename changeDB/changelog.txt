@@ -1,0 +1,5 @@
+-- 9/21/2022
+
+alter table HRIS_REC_APPLICATION_PERSONAL add (roll_no varchar(20));
+
+--

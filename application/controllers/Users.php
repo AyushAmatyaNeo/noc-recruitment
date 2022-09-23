@@ -33,7 +33,6 @@ Class Users extends CI_Controller
         
         if($this->isUserLoggedIn){ 
             $checkpwStatus = $this->UserModel->checkpwResetstatus($this->session->userdata('userId'));
-                // echo '<pre>'; print_r(($checkpwStatus[0]['RESET_STATUS'])); die;
                 if($checkpwStatus == 1)
                 {
                     $this->session->set_flashdata('msg', 'Please update your password before enter!');
@@ -41,7 +40,6 @@ Class Users extends CI_Controller
                 }
             redirect('vacancy/vacancylist'); 
         }else{ 
-
         // Get messages from the session 
         if($this->session->userdata('success_msg'))
         { 
@@ -53,18 +51,29 @@ Class Users extends CI_Controller
             $data['error_msg'] = $this->session->userdata('error_msg'); 
             $this->session->unset_userdata('error_msg'); 
         } 
-        // print_r($_POST); die;
         // If login request submitted 
         if($this->input->post('loginSubmit'))
-        { 
+        {   
             $this->form_validation->set_rules('email', 'email/Username', 'required'); 
-            $this->form_validation->set_rules('password', 'password', 'required'); 
+            $this->form_validation->set_rules('password', 'password', 'required');
             
-            if($this->form_validation->run() == true){                 
+            if($this->form_validation->run() == true){     
+                // check active status
+                $regef = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';     
+                if (preg_match($regef, $this->input->post('email'))) {
+                    $cond['email']['EMAIL_ID']= $this->input->post('email');
+                }else{
+                    $cond['email']['USERNAME']= $this->input->post('email');
+                }
+                $checkactiveStatus = $this->UserModel->checkactivestatus($cond);
+                // echo '<pre>'; print_r($checkactiveStatus); die;
+                if($checkactiveStatus['ACTIVE_STATUS'] == 'D'){
+                    $this->session->set_flashdata('msg', 'Please verify your Email before enter!');
+                    redirect('users/login');
+                }    
                 $con = array( 
                     'returnType' => 'single', 
-                    'conditions' => array( 
-                        
+                    'conditions' => array(
                         // 'USERNAME'=> $this->input->post('email'),
                         'PASSWORD' => ($this->input->post('password'))
                     )
@@ -81,7 +90,6 @@ Class Users extends CI_Controller
                     $this->session->set_userdata('isUserLoggedIn', TRUE); 
                     $this->session->set_userdata('userId', $checkLogin['USER_ID']); 
                     $checkpwStatus = $this->UserModel->checkpwResetstatus($this->session->userdata('userId'));
-                    // echo '<pre>'; print_r(($checkpwStatus[0]['RESET_STATUS'])); die;
                     if($checkpwStatus[0]['RESET_STATUS'] == 1)
                     {
                         $this->session->set_flashdata('msg', 'Please update your password before enter!');
@@ -109,6 +117,7 @@ Class Users extends CI_Controller
     {
         // If registration request is submitted 
         $userRegistred = $this->UserModel->userRegistred($this->session->userdata('userId'));
+        // $userRegistred = false;
         if($userRegistred == true)
         {
             $this->session->set_flashdata('msg', 'You have already registred! Please view or edit your details from here.');
@@ -118,7 +127,6 @@ Class Users extends CI_Controller
             if($this->input->post('registration'))
             {
                 $this->form_validation->set_rules('religion', 'religion', 'required');
-                // echo '<pre>'; print_r($_POST) ; die;
                 $userId = $this->UserModel->getMaxUserId();
                 $registrationId = $this->UserModel->getMaxIdReg();
                 $addressId = $this->UserModel->getMaxIdaddress();
@@ -149,10 +157,17 @@ Class Users extends CI_Controller
                     'grandfather_nationality'  => strip_tags($this->input->post('grandfather_nationality')),
                     'spouse_name'              => strip_tags($this->input->post('spouse_name')),
                     'spouse_nationality'       => strip_tags($this->input->post('spouse_nationality')),
-                    'profile_status'            => '1',
+                    'profile_status'           => '1',
+                    'MARITAL_STATUS'           => strip_tags($this->input->post('marital')),     
+                    'EMPLOYMENT_STATUS'        => strip_tags($this->input->post('employment')),
+                    'EMPLOYMENT_INPUT'         => strip_tags($this->input->post('employment_input')),
+                    'DISABILITY'               => strip_tags($this->input->post('disability')),
+                    'DISABILITY_INPUT'         => strip_tags($this->input->post('disability_input')),   
                     'status'                   => 'D',
                     'created_dt'               => date('Y-m-d'),                    
-                    'modified_dt'              =>' '
+                    'modified_dt'              =>' ',
+                    'blood_group'              => strip_tags($this->input->post('blood_group')),
+                    'in_service'              => strip_tags($this->input->post('in_service')),   
 
                 );                 
                 // echo '<pre>'; print_r($userData) ; die;
@@ -171,36 +186,56 @@ Class Users extends CI_Controller
                     'mail_tole' => strip_tags($this->input->post('mail_tole')),
                     'status' => 'E',
                     'created_dt' => date('Y-m-d'),
-                    'modified_dt' =>' '
+                    'modified_dt' =>' ',
+                    'per_house_no' => strip_tags($this->input->post('per_house_no')),
+                    'mail_house_no' => strip_tags($this->input->post('mail_house_no'))
                     
                 );
-                // echo '<pre>'; print_r($userData) ; die;
+                // echo '<pre>'; print_r($_FILES) ; die;
                 if($this->form_validation->run() == true){
-                    // echo '<pre>'; print_r($userData) ; die;
                     $insert = $this->UserModel->registerUser($userData);
+                    // $insert = true;
                     if($insert == true)
                     {
-                        $this->session->set_flashdata('success_msg', 'Your account registration has been successful. Please Check your Information.'); 
-                        redirect('profile/view');
+                        // echo '<pre>' ;print_r($_FILES); die;
+                        $_FILES['ethnicity_file']['folders'] = 'ethnicity';
+                        $_FILES['disability_file']['folders'] = 'disability';
+                        $_FILES['inservice_file']['folders'] = 'in_service';
+                        $_FILES['ethnicity_file']['input_names'] = 'ethnicity_file';
+                        $_FILES['disability_file']['input_names'] = 'disability_file';
+                        $_FILES['inservice_file']['input_names'] = 'inservice_file';
+                        $files = array_chunk($_FILES,1);
+                        // echo '<pre>' ;print_r($files); die;
+                        foreach($files as $file){
+                            // echo '<pre>' ;print_r($file[0]); die;
+                            if(!empty($file[0]['name'])){
+                                // echo '<pre>';print_r($file); die;
+                                $upload_fun = $this->file_upload($file[0]['input_names'],$file[0]['folders']); 
+                                if($upload_fun == true){
+                                    $this->session->set_flashdata('success_msg', 'Your account registration has been successful. Please Check your Information.'); 
+                                    
+                                }else{
+                                    $this->session->set_flashdata('error_msg', 'Your account registration has been successful but image upload failed.');
+                                }
+                            }
+                        }
+                        redirect('profile/view');                    
                     }
                     else{
                         $data['error_msg'] = 'Some problems occured, please try again.';
                         // echo 'Insert fails';
                     }
-
                 }
-
-                // echo '<pre>'; print_r($userData) ; die;
-                }
-                
+                }                
      
             // Posted data 
             $data['proviences'] = $this->VacancyModel->fetch_provience();
             $data['districts'] = $this->VacancyModel->districts();
+            $data['blood_groups'] = $this->VacancyModel->fetch_bloodGroup();
             $con = array(
                 'id' => $this->session->userdata('userId')
             );
-            // print_r($con); die;
+            // echo '<pre>'; print_r($data['blood_groups']); die;
             $data['user'] = $this->UserModel->getRows($con);
             // print_r($userData); die;
             $data['meta'] = array(
@@ -219,6 +254,43 @@ Class Users extends CI_Controller
             redirect('users/login');
         }
              
+    }
+    public function file_upload($input_id,$folder_name)
+    {
+        // echo'<pre>'; print_r($folder_name) ; die; 
+        $config = [
+            'upload_path' => './uploads/noc_documents/users/registration/'.$folder_name.'/',
+            'allowed_types' => 'jpg|png|jpeg|pdf',
+            'encrypt_name' => TRUE,
+            'max_size'   => 1024,
+            'file_ext_tolower' => TRUE,
+        ];
+        $this->load->library('upload',$config, $folder_name);
+        $this->$folder_name->initialize($config);
+        // echo $folder_name; die;
+        if($this->$folder_name->do_upload($input_id))
+        {
+            $imageMaxId              = $this->VacancyModel->getMaxIds('REC_DOC_ID','HRIS_REC_APPLICATION_DOCUMENTS');
+            $uploadData              = $this->$folder_name->data();
+            $image['REC_DOC_ID']     = $imageMaxId['MAXID'] +1;
+            $image['USER_ID']        = $this->session->userdata('userId');
+            $image['oldname']        = $uploadData['orig_name'];
+            $image['newname']        = $uploadData['raw_name'];
+            $image['fullpath']       = base_url('uploads/noc_documents/users/registration/'.$folder_name.'/'.$uploadData['raw_name'].$uploadData['file_ext']);
+            $image['type']           = ltrim($uploadData['file_ext'], '.'); 
+            $image['folder']         = $folder_name;
+            // echo'<pre>'; print_r($image) ; die;
+            $insert_img = $this->UserModel->insertimg($image);
+            if($insert_img == true)
+            {
+                return true;
+            }
+            // echo'<pre>'; print_r($image) ; die;          
+        }
+        else{
+            echo $this->$folder_name->display_errors('<p>', '</p>');
+            return false;
+        }
     }
     // Existing email check during validation 
     public function email_check($str)
@@ -287,50 +359,42 @@ Class Users extends CI_Controller
    {
 
         $data = array();
-        if($this->session->userdata('success_msg'))
-        { 
-            $data['success_msg'] = $this->session->userdata('success_msg'); 
-            $this->session->unset_userdata('success_msg'); 
-        } 
-        if($this->session->userdata('error_msg'))
-        { 
-            $data['error_msg'] = $this->session->userdata('error_msg'); 
-            $this->session->unset_userdata('error_msg'); 
-        }
-        $data['meta'] = array(
-            'title' => 'Noc | Forgot Password'
-        );
+        if(empty($this->session->userdata('userId'))) {
 
-        if($this->input->post('resetPassword'))
-        {
-            $email = $this->input->post('EMAIL_ID');
-            // print_r($email); die;  
-            $findemail = $this->UserModel->forgotPassword($email); 
-            // print_r($findemail); die;
-            if($findemail)
-            {
-                // echo 'Here'; die;
-            $this->UserModel->sendpassword($findemail);
-            }else{
-            $this->session->set_flashdata('msg','Given Email doesn\'t match with the System');
-            redirect(base_url().'users/forgotpassword','refresh');
+            if($this->session->userdata('success_msg'))        { 
+                $data['success_msg'] = $this->session->userdata('success_msg'); 
+                $this->session->unset_userdata('success_msg'); 
+            } 
+            if($this->session->userdata('error_msg'))        { 
+                $data['error_msg'] = $this->session->userdata('error_msg'); 
+                $this->session->unset_userdata('error_msg'); 
             }
-        }
-        $con = array(
-            'id' => $this->session->userdata('userId'),
-            'returnType' => 'single',
-        );
-        // print_r($con);die;  
-            $data['user'] = $this->UserModel->getRows($con);
             $data['meta'] = array(
-                'title' => 'NOC | Forgot Password',
-                'Description' => 'Forgot Password'
+                'title' => 'Noc | Forgot Password'
             );
-
-        $this->load->view('templates/header',$data); 
-        $this->load->view('users/forgotpassword',$data); 
-        $this->load->view('templates/footer');
-        
+            if($this->input->post('resetPassword'))        {
+                $email = $this->input->post('EMAIL_ID');
+                $findemail = $this->UserModel->forgotPassword($email); 
+                if($findemail)
+                {
+                $this->UserModel->sendpassword($findemail);
+                }else{
+                $this->session->set_flashdata('msg','Given Email doesn\'t match with the System');
+                redirect(base_url().'users/forgotpassword','refresh');
+                }
+            }           
+            // print_r($con);die;  
+                // $data['user'] = $this->UserModel->getRows($con);
+                $data['meta'] = array(
+                    'title' => 'NOC | Forgot Password',
+                    'Description' => 'Forgot Password'
+                );
+            $this->load->view('templates/header',$data); 
+            $this->load->view('users/forgotpassword',$data); 
+            $this->load->view('templates/footer');
+        }else {
+            redirect('users/updatepassword');
+        }
    }
    //Update password
    public function UpdatePassword()
@@ -459,8 +523,16 @@ Class Users extends CI_Controller
                 // echo '<pre>'; print_r($userData); die;
                 $insert = $this->UserModel->insert($userData); 
                 if($insert){ 
-                    $this->session->set_flashdata('success_msg', 'Your account registration has been successful. Please login to your account.'); 
-                    redirect('users/login'); 
+                    //Send Email to user
+                    // $this->sendVerificationEmail($userData['EMAIL_ID']);
+                    $emailsend = $this->UserModel->sendVerificationEmail($userData['EMAIL_ID']);
+                    if($emailsend){
+                        $this->session->set_flashdata('success_msg', 'Account Signup successful , Verification Email sent.');
+                        redirect('users/login');
+                    } else{
+                        $this->session->set_flashdata('error_msg', 'Account Signup successful , Verification Email Failed to send.'); 
+                        redirect('users/login'); 
+                    }
                 }else{ 
                     $data['error_msg'] = 'Some problems occured, please try again.'; 
                 } 
@@ -475,14 +547,15 @@ Class Users extends CI_Controller
             $config = array(
                 'img_path'      => 'assets/captcha/',
                 'img_url'       => base_url('assets/captcha/'),
-                'font_path'     => '../../system/fonts/texb.ttf',
-                'img_width'     => '160',
-                'img_height'    => 50,
-                'word_length'   => 8,
-                'font_size'     => 18
+                'font_path'     => '../../assets/fonts/OpenSans.ttf', 
+                'font_size'     => 100,
+                'img_width'     => '150',
+                'img_height'    => 30,
+                'word_length'   => 4,
+                'expiration'    => 7200
             );
-            // echo '<pre>'; print_r($config); die;
             $captcha = create_captcha($config);
+            // echo '<pre>'; print_r($captcha); die;
             
             // Unset previous captcha and set new captcha word
             $this->session->unset_userdata('captchaCode');
@@ -504,18 +577,18 @@ Class Users extends CI_Controller
         $config = array(
             'img_path'      => 'assets/captcha/',
             'img_url'       => base_url().'assets/captcha/',
-            'font_path'     => '../../system/fonts/texb.ttf',
+            'font_path'     => '../../system/fonts/ttfont.ttf',
             'img_width'     => '160',
             'img_height'    => 50,
-            'word_length'   => 8,
-            'font_size'     => 18
+            'word_length'   => 4,
+            'font_size'     => 72
         );
         $captcha = create_captcha($config);
         
         // Unset previous captcha and set new captcha word
         $this->session->unset_userdata('captchaCode');
         $this->session->set_userdata('captchaCode',$captcha['word']);
-        
+         
         // Display captcha image
         echo $captcha['image'];
     }
@@ -555,5 +628,19 @@ Class Users extends CI_Controller
             echo $this->UserModel->fetch_user_vdc($mail_district_id,$mail_vdc_id);
         }
     }
+    // Email Verification
 
+    function verify(){ 
+        // echo '<pre>'; print_r($_GET); die;
+        $evc = $_GET['evc'];
+        $email = $_GET['email'];
+        $noRecords = $this->UserModel->verifyEmailAddress($evc,$email);  
+        if ($noRecords){
+         $this->session->set_flashdata('success_msg', 'Email Verified Successfully!');
+         redirect('users/login'); 
+        }else{
+         $this->session->set_flashdata('error_msg', 'Sorry Unable to Verify Your Email!');
+         redirect('users/login'); 
+        }         
+    }
 }

@@ -22,7 +22,9 @@ $(document).ready(function () {
 	var val = {
 		// Specify validation rules
 		rules: {
-			
+			marital: "required",
+			disability: "required",
+			employment: "required",
 			father_name: "required",
 			mother_name: "required",
 			gender: "required",
@@ -50,6 +52,8 @@ $(document).ready(function () {
 			motherEdu: "required",
 			fmoccupation: "required",
 			grandfather_nationality: "required",
+			blood_group : "required",
+			in_service		: "required",
 			Citizenship_no: {
 				required: true,
 				minlength: 3,
@@ -60,13 +64,14 @@ $(document).ready(function () {
 				maxlength: 9,
 				digits: true
 			},
-			age : "required",
-			// age: {
-			// 	required: true,
-			// 	min: 16,
-			// 	max: 60,
-			// 	digits: true
-		},	// },
+			// age : "required",
+			age: {
+				required: true,
+				min: 16,
+				max: 60,
+				digits: true
+		},	 
+	},
 		// Specify validation error messages
 		messages: {
 			
@@ -76,7 +81,12 @@ $(document).ready(function () {
 			Issued_date: "Issue Date is required",
 			Issuedistrict: "Issue District is required",
 			dateOfBirth: "Date of Birth is required",
-			age:		"Age is required",
+			age: {
+				required: "Age is required",
+				min: "Age must be greater than 16",
+				max: "Age must be less than 60",
+				digits: "Please enter number only."
+			},
 			dateOfBirth: "Date of Birth is required",
 			per_province: "province is required",
 			per_district: "District is required",
@@ -116,7 +126,6 @@ $(document).ready(function () {
 		}
 
 	}
-
 	$("#myForm").multiStepForm(
 		{
 			defaultStep: 0,
@@ -130,16 +139,50 @@ $(document).ready(function () {
 	).navigateTo(0);
 
 	// Input Age after dob selected
-	$('input[id=age]').click(function(){
-		var dob = $('#dateOfBirth').val();
-		// console.log(dob);
-		var d = new Date(dob).getFullYear();
-		var today = new Date().getFullYear();
-		var age = today+56-d;
-		// console.log(age);
-		$('#age').val(age);		
-		// console.log(today.getFullYear());
+	$('#dateOfBirth_ad').on('change',function(){
+		var dob = $('#dateOfBirth_ad').val();
+		var d = new Date(dob);
+		var today = new Date();
+		var Difference_In_Time = today.getTime() - d.getTime();
+		var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+		var age = Math.floor((Math.floor(Difference_In_Days)) / 365)
+		$('#age').val(age);	
 	});
 
+	$('#disability_yes').on('click',function(){
+		// console.log('Yes selected');
+		$('#disability_file').css('display','block');
+		$('#disability_file').prop('required',true);
+		$('#disability_input').prop('required',true);
+	});
+	$('#disability_no').on('click',function(){
+		// console.log('Yes selected');
+		$('#disability_file').css('display','none');
+		$('#disability_file').prop('required',false);
+		$('#disability_input').prop('required',false);
+	});
+	$('#ethnicity').on('click',function(){
+		
+		var a = $('input[name=ethnicity]:checked', '#myForm').val();
+		if(a == 'Aadibasi/Janajati' || a == 'Dalit' || a == 'Vaishya' || a == 'Madhesi'){
+			$('#ethnicity_file').css('display','block');
+			$('#ethnicity_file').prop('required',true);
+		}else{
+			$('#ethnicity_file').css('display','none');
+			$('#ethnicity_file').prop('required',false);
+		}
+	});
+	// In Service
+	$('#in_service').on('change',function(){		
+		var selected = $('#in_service').val();		
+		if(selected === 'Y'){
+			// console.log(selected);
+			$('#inservice_file').css('display','block');
+			$('#inservice_file').prop('required' , true);
+		}else{
+			$('#inservice_file').css('display','none');
+			$('#inservice_file').prop('required' , false);
+		}
+	});
 
 });

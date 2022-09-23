@@ -27,4 +27,12 @@
     <p class="lead">
         <a class="btn btn-primary btn-sm" href="<?php echo base_url(); ?>vacancy" role="button">Continue to Vacancy Page</a>
     </p>
+    <p class="lead">        
+        <button class="btn btn-primary btn-sm" onclick="window.print()">Print this page</button>
+    </p>
 </div>
+
+<!-- 
+http://erecruitment.nepaloil.org.np/vacancy/payment_success?q=su&oid=ztiSaOj1rfHKJG25aid2vid1&amt=600.0&refId=0002J2P
+
+http://localhost/noc-recruitment/vacancy/payment_success?q=su&oid=7UDGhfaKgd0s2BpSaid6vid4&amt=2500.0&refId=0002J2R -->

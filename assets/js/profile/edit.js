@@ -78,14 +78,14 @@ $(document).ready(function(){
     });
     // District & VDC Selected for edit page END ------------------------------
     // Input Age after dob changed
-	$('input[id=age]').click(function(){
-		var dob = $('#dob').val();
-		var d = new Date(dob).getFullYear();
-		var today = new Date().getFullYear();
-		var age = today+56-d;
-		$('#age').val(age);		
-		// console.log(today.getFullYear());
-	});
+	// $('input[id=age]').click(function(){
+	// 	var dob = $('#dob').val();
+	// 	var d = new Date(dob).getFullYear();
+	// 	var today = new Date().getFullYear();
+	// 	var age = today+56-d;
+	// 	$('#age').val(age);		
+	// 	// console.log(today.getFullYear());
+	// });
     // Validation
     jQuery.validator.addMethod("exactlength", function (value, element, param) {
 		return this.optional(element) || value.length == param;
@@ -96,9 +96,9 @@ $(document).ready(function(){
             first_name: {
                 required: true,
             },
-            middle_name: {
-                required: true,
-            },
+            // middle_name: {
+            //     required: true,
+            // },
             last_name: {
                 required: true,
             },
@@ -122,7 +122,7 @@ $(document).ready(function(){
             },
             ctz_issue_date: {
                 required: true,
-                exactlength:10,
+                // exactlength:10,
             },
             // ctz_issue_district_id: {
             //     required: true,
@@ -210,4 +210,43 @@ $(document).ready(function(){
 
     });
 
+    $('#ethnicity').on('click',function(){
+		
+		var a = $('#ethnicity').find(":selected").text();
+        console.log(a);
+		if(a == 'Aadibasi/Janajati' || a == 'Dalit' || a == 'Vaishya' || a == 'Madhesi'){
+			$('#ethnicity_file').css('display','block');
+			$('#ethnicity_file').prop('required',true);
+		}else{
+			$('#ethnicity_file').css('display','none');
+			$('#ethnicity_file').prop('required',false);
+		}
+	});
+
+    $('#dob').on('change',function(){
+		var dob = $('#dob').val();
+        console.log(dob);
+		var d = new Date(dob);
+		var today = new Date();
+		var Difference_In_Time = today.getTime() - d.getTime();
+		var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+		var age = Math.floor((Math.floor(Difference_In_Days)) / 365)
+		$('#age').val(age);	
+	});
+
+    $('#in_service').on('change',function(){
+        var option = $('#in_service').val();
+        if(option == 'N'){
+            $('#inservice_view').css('display','none');
+            $('#inservice_file').css('display','none');
+            $('#inservice_file').prop('required',false);
+        }else if(option == 'Y'){
+            $('#inservice_file').css('display','block');
+            $('#inservice_file').prop('required',true);
+        }else{
+            $('#inservice_view').css('display','none');
+            $('#inservice_file').css('display','none');
+            $('#inservice_file').prop('required',false);
+        }
+    })
 });

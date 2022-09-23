@@ -4,10 +4,12 @@
 
 body {background-color: #f1f1f1;}
 
-#applyForm {background-color: #ffffff; margin: 100px auto; font-family: Raleway; padding: 40px; width: 60%; min-width: 300px;margin-top: 0px; }
+#applyForm {background-color: #ffffff; margin: 100px auto; font-family: Raleway; padding: 40px; width: 70%; min-width: 300px;margin-top: 0px; }
 #EditapplyForm {background-color: #ffffff; margin: 100px auto; font-family: Raleway; padding: 40px; width: 73%; min-width: 300px;margin-top: 0px; }
 
 h2 {text-align: center; margin-bottom: 2rem; }
+
+.container, .container-lg, .container-md, .container-sm, .container-xl { max-width: 1365px;}
 
 input {
     padding: 10px;
@@ -42,4 +44,13 @@ button:hover {opacity: 0.8; }
     font-style: italic;
     color: #47759e;
     font-weight: bold;
+}
+.UploadDoc td{
+    text-align: center;
+    background: #47759e;
+    color: white;
+}
+.certificate td{
+    text-align: center;
+    padding-top: 10px;
 }

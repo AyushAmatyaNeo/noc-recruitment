@@ -1,4 +1,5 @@
 <link href="<?= base_url(); ?>assets/css/apply.css" rel="stylesheet">
+<link href="<?= base_url(); ?>assets/global/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
 <main class="main-recruit-application bg-light sec-padd">
 	<section class="top-info-sec">
 		<div class="container-fluid">
@@ -20,7 +21,7 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<a href="">
-						<p>View all vacancies</p>
+						<!-- <p>View all vacancies</p> -->
 					</a>
 					<div class="card">
 						<button type="button" class="btn form-table-title" data-toggle="collapse" data-target="#apply">Personal Details of applicant (Note: please edit the informations from <a href="<?php echo base_url('profile/edit') ?>" style="color: #fff;"> <i class="fa fa-pencil-square-o" aria-hidden="true" aria-expanded="false"></i> here</a> if required) <i class="fa fa-chevron-down float-right" aria-hidden="true"></i></button>
@@ -52,6 +53,14 @@
 													<th><label class="col-form-label">Father's Name</label></th>
 													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['FATHER_NAME'] ?>"></td>
 												</tr>
+												<tr>
+													<th><label class="col-form-label">Marital status</label></th>
+													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['MARITAL_STATUS'] ?>"></td>
+												</tr>
+												<tr>
+													<th><label class="col-form-label">Disability status</label></th>
+													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['DISABILITY']; if($user_detail['DISABILITY'] == 'Yes' && !empty($user_detail['DISABILITY_INPUT'])){ echo ' - '. $user_detail['DISABILITY_INPUT']; } ?>"></td>
+												</tr>
 											</table>
 										</div>
 										<div class="col-lg-6">
@@ -76,6 +85,10 @@
 												<tr>
 													<th><label class="col-form-label">Mother's Name</label></th>
 													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['MOTHER_NAME'] ?>"></td>
+												</tr>
+												<tr>
+													<th><label class="col-form-label">Employment Status</label></th>
+													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['EMPLOYMENT_STATUS']; if($user_detail['EMPLOYMENT_STATUS'] == 'others' && !empty($user_detail['EMPLOYMENT_INPUT'])){ echo  ' - '.$user_detail['EMPLOYMENT_INPUT']; } ?>"></td>
 												</tr>
 											</table>
 										</div>
@@ -141,7 +154,7 @@
 										<table>
 											<tr>
 												<th><label class="col-form-label"></label>Other Details</th>
-												<td class="col-lg-6"><textarea name="message" readonly class="form-control form-control-sm" rows="4"><?php echo $vacancylist['INSTRUCTION_EDESC'] ?></textarea>
+												<td class="col-lg-12"><textarea name="message" readonly class="form-control form-control-sm" rows="4"><?php echo $vacancylist['INSTRUCTION_EDESC'] ?></textarea>
 											</tr>
 										</table>
 									</div>
@@ -160,115 +173,29 @@
 		<h2>Application Form</h2>
 		<!-- Circles which indicates the steps of the form: -->
 		<div style="text-align:center;margin-top:40px;margin-bottom:40px;">
-			<span class="step">Personal Details</span>
-			<span class="step">Qualifications</span>
+			<span class="step">Details & Qualifications</span>
 			<span class="step">Documents</span>
-		</div>
-		<!-- Personal Details -->
+		</div>		
+		<!-- Qualification -->
 		<div class="tab">
-			<h6 class="form-table-title">Tick any one of the options given below</h6>
-			<!-- Marital -->
-			<div class="col-md-12">
-				<div class="row card-inner">
-					<div class="col-lg-2">
-						<p class="sm-bold-text">Marital status</p>
-					</div>
-					<div class="col-lg-10">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Married" <?php echo ($applications[0]['MARITAL_STATUS'] =='Married')?'checked':'' ?>>
-							<label class="form-check-label">Married</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Unmarried" <?php echo ($applications[0]['MARITAL_STATUS'] =='Unmarried')?'checked':'' ?>>
-							<label class="form-check-label">Unmarried</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Widow" <?php echo ($applications[0]['MARITAL_STATUS'] =='Widow')?'checked':'' ?>>
-							<label class="form-check-label">Widow/widower</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Divorcee" <?php echo ($applications[0]['MARITAL_STATUS'] =='Divorcee')?'checked':'' ?>>
-							<label class="form-check-label">Divorcee</label>
-						</div>
-					</div>
-				</div>
-				<?php echo form_error('marital', '<p class="help-block error">', '</p>');  ?>
-			</div>
-			<hr>
+		<h6 class="blockquote text-center">Please check above personal details to match vacancy description</h6>			
 			<?php foreach ($vacancylists as $vacancylist) { ?>
 				<?php echo form_hidden('vacancy_id', $vacancylist['VACANCY_ID']); ?>
 				<?php echo form_hidden('ad_no', $vacancylist['AD_NO']); ?>
 				<?php echo form_hidden('application', $vacancylist['AD_NO']); ?>
 			<?php } ?>
 			<?php echo form_hidden('application_id', $applications[0]['APPLICATION_ID']) ?>
-			<!-- Employment status -->
-			<div class="col-md-12">
-				<div class="row card-inner">
-					<div class="col-lg-2">
-						<p class="sm-bold-text">Employment status</p>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="employment" value="Unmployed" <?php echo ($applications[0]['EMPLOYMENT_STATUS'] =='Unmployed')?'checked':'' ?>>
-							<label class="form-check-label">Unmployed</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="employment" value="Government Service" <?php echo ($applications[0]['EMPLOYMENT_STATUS'] =='Government Service')?'checked':'' ?>>
-							<label class="form-check-label">Government Service</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" id="others-req" type="radio" name="employment" value="others" <?php echo ($applications[0]['EMPLOYMENT_STATUS'] =='others')?'checked':'' ?>>
-							<label class="form-check-label"> Others</label>
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-group row">
-							<label class="col-lg-5">Specify if any other</label>
-							<div class="col-lg-7">
-								<input type="text" class="form-control form-control-sm" name="employment_input" <?php if($applications[0]['EMPLOYMENT_STATUS'] == 'others') { echo 'value="'. $applications[0]['EMPLOYMENT_INPUT'].'"';}?>>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr>
-			<!-- Physical disability -->
-			<div class="col-md-12">
-				<div class="row card-inner">
-					<div class="col-lg-2">
-						<p class="sm-bold-text">Physical disability</p>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="disability" value="Yes" <?php echo ($applications[0]['DISABILITY'] == 'Yes')? 'checked':'' ?>>
-							<label class="form-check-label">Yes</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="disability" value="No" <?php echo ($applications[0]['DISABILITY'] == 'No')? 'checked':'' ?>>
-							<label class="form-check-label">No</label>
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-group row">
-							<label class="col-lg-5">Specify the type if any</label>
-							<div class="col-lg-7">
-								<input type="text" class="form-control form-control-sm" name="disability_input">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr>
+		
 			<h6 class="form-table-title">Select inclusion</h6>
 			<div class="col-md-12">
 				<div class="row card-inner">
 					<div class="col-lg-2">
 						<p class="sm-bold-text">Inclusion</p>
 					</div>
-					<?php foreach($inclusions as $inclusion) {?>
+					<?php foreach($vacancylists[0]['INCLUSION_ID'] as $inclusion) {?>
 					<div class="col-lg-2">
 						<div class="form-check form-check-inline">
-							<input <?php foreach($inclusionValue as $inclusionvalue) { $checked = ($inclusion['INCLUSION_ID'] == $inclusionvalue['INCLUSION_ID']) ? 'checked' :'' ;  echo $checked; } ?> 
+							<input <?php foreach($Selectedinclusions as $Selectedinclusion){ $checked = ($Selectedinclusion == $inclusion['INCLUSION_ID']) ? 'checked' :'' ;  echo $checked; }?> 
 							class="form-check-input inclusion" type="checkbox" name="inclusion_id[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>" >
 							<label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
 							
@@ -283,35 +210,66 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Select Skills -->
+			<h6 class="form-table-title">Select Skills (Choose from the list below )</h6>
+			<?php $s=0; foreach($vacancylists[0]['SKILL_ID'] as $Skills) {?>
+			<div class="col-md-12">
+				<div class="row card-inner">									
+					<div class="col-md-8">
+						<div class="form-check form-check-inline">
+							<input  <?php foreach($selectedskills as $selectedskill) {$checked = ($selectedskill == $Skills['SKILL_ID']) ? 'checked' :'' ; echo $checked;}?> 
+							class="form-check-input skills" type="checkbox" name="skills[]" value="<?php echo $Skills['SKILL_ID'] ?>" skillname="<?php echo $Skills['SKILL_NAME']; ?>" />
+							<label class="form-check-label"><?php echo $Skills['SKILL_NAME']; ?></label>			
+						</div>
+						<?php if($Skills['UPLOAD_FLAG'] == 'Y'){ ?>
+							<div class="col-md-8 form-check-inline">
+							<input type="file" class="form-control-file skill_name"  name="<?php echo $Skills['SKILL_NAME'];?>" />
+							<div class="col-md-4">
+								<?php if(!empty($documents['skills'][$s]['DOC_PATH'])) { ?>
+							<input type="hidden" name="skill_id[]" value="<?php  echo $documents['skills'][$s]['REC_DOC_ID']; ?>" />
+							<?php } ?>
+							<?php if(!empty($documents['skills'][$s]['DOC_PATH'])) { ?>
+							<a href="<?php echo $documents['skills'][$s]['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">View</a>
+							<?php } ?>
+							</div>
+							</div>								
+							<p style="color: #47759e;">Only choose new file to update previous one.</p>							
+							<?php $s++; } ?>
+							
+					</div>					
 				</div>				
 			</div>
-		</div>
-		<hr>
-		<!-- Qualification -->
-		<div class="tab">
+			<?php } ?>
 			<!-- G. Educational Qualification -->
 			<div class="card mt-3">
 			<h6 class="form-table-title">Education Description</h6>
-			<div class="col-lg-12 my-3">
+					<div class="col-lg-12 my-3" id="max_education">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option1">
+							<input class="form-check-input" type="radio" name="max_education" value="1" <?php $checked =  ($applications[0]['MAX_QUALIFICATION_ID'] == '1') ? 'checked' : ''; echo $checked; ?> />
 							<label class="form-check-label">SLC</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option2">
-							<label class="form-check-label">+2</label>
+							<input class="form-check-input" type="radio" name="max_education" value="2" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '2') ? 'checked' : ''; echo $checked; ?> />
+							<label class="form-check-label">+2 / Intermediate</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option3">
+							<input class="form-check-input" type="radio" name="max_education" value="3" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '3') ? 'checked' : ''; echo $checked; ?>>
 							<label class="form-check-label">Bachelors</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option4">
+							<input class="form-check-input" type="radio" name="max_education" value="4" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '4') ? 'checked' : ''; echo $checked; ?>>
 							<label class="form-check-label">Masters</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option4">
-							<label class="form-check-label">Others</label>
+							<input class="form-check-input" type="radio" name="max_education" value="5" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '5') ? 'checked' : ''; echo $checked; ?>>
+							<label class="form-check-label">M.phil</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="max_education" value="11" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '11') ? 'checked' : ''; echo $checked; ?>>
+							<label class="form-check-label">others</label>
 						</div>
 					</div>
 			</div>
@@ -327,8 +285,9 @@
 									<th rowspan="2">Level</th>
 									<th rowspan="2">Faculty</th>
 									<th colspan="2">Division</th>
+									<th rowspan="2">University/Board</th>
 									<th rowspan="2">Major Subject</th>
-									<th rowspan="2" width="10%">Passed Year</th>
+									<th rowspan="2" width="10%">Passed Year (AD)</th>
 									<th rowspan="2"></th>
 								</tr>
 								<tr>
@@ -371,6 +330,7 @@
 												<option value="">---</option>
 												<option <?php if($education['RANK_TYPE'] === 'GPA') { echo 'selected';} ?> value="GPA">GPA</option>
 												<option <?php if($education['RANK_TYPE'] === 'Percentage'){ echo 'selected';} ?> value="Percentage">Percentage</option>
+												<option <?php if($education['RANK_TYPE'] === 'Division/grade'){ echo 'selected';} ?> value="Division/grade">Division/grade</option>
 											</select>
 										</div>
 									</td>
@@ -378,6 +338,12 @@
 										<div for="rank_value" class="form-group">
 											<input type="text" name="rank_value[]" id="rank_value<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['RANK_VALUE'] ?>">
 											<?php echo form_error('rank_value', '<p class="help-block error">', '</p>'); ?>
+										</div>
+									</td>
+									<td>
+										<div for="university_board" class="form-group" id="rank_value_error">
+											<input type="text" name="university_board[]" id="university_board" class="form-control form-control-sm" value="<?php echo $education['UNIVERSITY_BOARD'] ?>">
+											<?php echo form_error('university_board', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
@@ -476,10 +442,11 @@
 								<th width="12%">Employee Type</th>
 								<th>Start From</th>
 								<th>Till Date</th>
-								<th></th>
+								<th><?php if(empty($experiences)){ ?> <i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i> <?php } ?></th>
 							</tr>
 						</thead>
 						<tbody id="experiancebody">
+						<?php if(!empty($experiences)){  ?>
 						<?php foreach($experiences as $experience ) { ?>
 							<tr>
 								<td>
@@ -516,23 +483,25 @@
 								<td>
 									<div for="from_date" class="form-group">
 										<!-- <input name="from_date" type="text" class="date-picker form-control form-control-sm"> -->
-										<input type="text" class="date-picker form-control selectNepaliDate" id="from_date" name="from_date[]" data-single="true" placeholder="Select Date(s)" value="<?php echo $experience['FROM_DATE'] ?>">
+										
+										<input type="text" class="date-picker form-control selectNepaliDate1 fromDate" name="from_date[]" id="from_date_ad" data-single="true" placeholder="Date(AD)" value="<?php echo $experience['FROM_DATE'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="to_date" class="form-group">
 										<!-- <input name="to_date" type="text" class="form-control form-control-sm"> -->
-										<input type="text" class="date-picker form-control selectNepaliDate" id="to_date" name="to_date[]" data-single="true" placeholder="Select Date(s)" value="<?php echo $experience['TO_DATE'] ?>">
+										
+										<input type="text" class="date-picker form-control selectNepaliDate1 toDate" name="to_date_bs[]" id="to_date_ad" data-single="true" placeholder=" Date(AD)" value="<?php echo $experience['TO_DATE'] ?>">
 									</div>
 								</td>
 								<td>
 									<i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i>
 								</td>
 							</tr>
-							<?php } ?>
+							<?php } } ?>
 						</tbody>
 						<tfoot>
-							<tr>
+							<!-- <tr>
 								<td colspan="8">
 									<div class="form-group row">
 										<label class="col-lg-4">Total Experience</label>
@@ -543,7 +512,7 @@
 										</div>
 									</div>
 								</td>
-							</tr>
+							</tr> -->
 						</tfoot>
 					</table>
 				</div>
@@ -561,10 +530,11 @@
 								<th>To Date</th>
 								<th width="12%">Period (Days)</th>
 								<th>Description</th>
-								<th></th>
+								<th><?php if(empty($trainings)) { echo '<i class="fa fa-plus-circle btn-add-tr" aria-hidden="true" style="color: green; cursor: pointer"></i>'; } ?></th>
 							</tr>
 						</thead>
 						<tbody id="trainingbody">
+						<?php if(!empty($trainings)){  ?>
 						<?php foreach($trainings as $training ) { ?>
 							<tr>
 								<td>
@@ -602,7 +572,7 @@
 									<i class="fa fa-plus-circle btn-add-tr" aria-hidden="true" style="color: green; cursor: pointer"></i>
 								</td>
 							</tr>
-							<?php } ?>
+							<?php } } ?>
 						</tbody>
 					</table>
 				</div>
@@ -615,13 +585,15 @@
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
+						<p>Front citizenship</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="nagrita_front" src="<?php if (!empty($documents)){ echo $documents[0]['DOC_PATH']; } else { echo base_url('assets/images/ctz_front.png');} ?>" alt="nagrita_front" />
+							<img style="width: 100%; height: 100%" id="nagrita_front" src="<?php if (!empty($documents)){ echo $documents['userdoc'][0]['DOC_PATH']; } else { echo base_url('assets/images/ctz_front.png');} ?>" alt="nagrita_front" />
 						</div>
 					</td>
 					<td>
+						<p>Back citizenship</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="nagrita_back" src="<?php if (!empty($documents)){ echo $documents[1]['DOC_PATH']; } else { echo base_url('assets/images/ctz_back.png');} ?>" alt="nagrita_back" />
+							<img style="width: 100%; height: 100%" id="nagrita_back" src="<?php if (!empty($documents)){ echo $documents['userdoc'][1]['DOC_PATH']; } else { echo base_url('assets/images/ctz_back.png');} ?>" alt="nagrita_back" />
 						</div>
 					</td>
 				</tr>
@@ -629,7 +601,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="nagrita_frontimg" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents[0]['REC_DOC_ID']; ?>" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][0]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="nagrita_front1" id="nagrita_frontimg" onchange="return fileValidation($id = 'nagrita_frontimg')" />
 							<p class="size"></p>
 						</div>
@@ -637,7 +609,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="nagrita_backimg" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents[1]['REC_DOC_ID']; ?>" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][1]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="nagrita_back1" id="nagrita_backimg" onchange="return fileValidation($id = 'nagrita_backimg')" />
 							<p class="size"></p>
 						</div>
@@ -648,23 +620,27 @@
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
+						<p>Photograph</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="photograph" src="<?php if (!empty($documents)){ echo $documents[2]['DOC_PATH']; } else { echo base_url('assets/images/recent_ph2.png');} ?>" alt="photograph" />
+							<img style="width: 100%; height: 100%" id="photograph" src="<?php if (!empty($documents)){ echo $documents['userdoc'][2]['DOC_PATH']; } else { echo base_url('assets/images/recent_ph2.png');} ?>" alt="photograph" />
 						</div>
 					</td>
 					<td>
+						<p>Signature</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="recent_sign" src="<?php if (!empty($documents)){ echo $documents[3]['DOC_PATH']; } else { echo base_url('assets/images/recent_sign.png');} ?>" alt="Signature" />
+							<img style="width: 100%; height: 100%" id="recent_sign" src="<?php if (!empty($documents)){ echo $documents['userdoc'][3]['DOC_PATH']; } else { echo base_url('assets/images/recent_sign.png');} ?>" alt="Signature" />
 						</div>
 					</td>
 					<td>
+						<p>Right finger thumb</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="right_finger" src="<?php if (!empty($documents)){ echo $documents[4]['DOC_PATH']; } else { echo base_url('assets/images/recent_right_finger.png');} ?>" alt="finger_right" />
+							<img style="width: 100%; height: 100%" id="right_finger" src="<?php if (!empty($documents)){ echo $documents['userdoc'][4]['DOC_PATH']; } else { echo base_url('assets/images/recent_right_finger.png');} ?>" alt="finger_right" />
 						</div>
 					</td>
 					<td>
+						<p>Left finger thumb</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="left_finger" src="<?php if (!empty($documents)){ echo $documents[5]['DOC_PATH']; } else { echo base_url('assets/images/recent_left_finger.png');} ?>" alt="finger_left" />
+							<img style="width: 100%; height: 100%" id="left_finger" src="<?php if (!empty($documents)){ echo $documents['userdoc'][5]['DOC_PATH']; } else { echo base_url('assets/images/recent_left_finger.png');} ?>" alt="finger_left" />
 						</div>
 					</td>
 				</tr>
@@ -672,7 +648,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="recent_photo" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents[2]['REC_DOC_ID']; ?>" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][2]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="recent_photo1" id="recent_photo" onchange="return fileValidation($id = 'recent_photo')">
 							<p class="size"></p>
 							<?php if (isset($upload_error_photo)) {
@@ -683,7 +659,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="signature" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents[3]['REC_DOC_ID']; ?>" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][3]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="signature1" id="signature" onchange="return fileValidation($id = 'signature')">
 							<p class="size"></p>
 						</div>
@@ -691,7 +667,7 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="right_finger_scan" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents[4]['REC_DOC_ID']; ?>" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][4]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="right_finger_scan1" id="right_finger_scan" onchange="return fileValidation($id = 'right_finger_scan')">
 							<p class="size"></p>
 						</div>
@@ -699,59 +675,67 @@
 					<td style="border-top:0;">
 						<div class="form-group">
 							<input type="hidden" name="image_ids[]" value="left_finger_scan" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents[5]['REC_DOC_ID']; ?>" />
+							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][5]['REC_DOC_ID']; ?>" />
 							<input type="file" class="form-control-file" name="left_finger_scan1" id="left_finger_scan" onchange="return fileValidation($id = 'left_finger_scan')">
 							<p class="size"></p>
 						</div>
 					</td>
 				</tr>
 			</table>
+			<!-- Academic Document Upload -->
 			<h6 class="form-table-title">Document and Certificate (JPG | PNG Only)</h6>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-8 col-md-12">
-						<div style="font-size: 12px;font-weight: bold;padding: 10px 0;">
-							नागरिकताको प्रमाणपत्र र समावेशीको हक़मा समावेशीताको प्रमाणपत्रहरु अनिवार्य रूपमा upload गर्नु पर्नेछ। <br> (साईज: बढिमा 1 MB)
+						<div style="font-size: 12px;font-weight: bold;padding: 10px 0;">							
+							<h6>Note: This vacancy require up to <?= $vacancylist['ACADEMIC_DEGREE_NAME'];  ?> degree documents, please upload it all else your application will not get approved.</h6>
+							<h6>  2. Please upload all respective document in single a file.</h6>
 						</div>
 						<table class="table table-responsive-lg table-striped table-bordered table-sm">
 							<thead>
-								<tr>
-									<th>File Name</th>
-									<th>Size</th>
-									<th>Name of Document</th>
-									<th></th>
+								<tr class="UploadDoc">
+									<td>S.No</td>
+									<td>Document Name</td>
+									<td>Upload</td>
+									<td>View</td>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>
-										<div class="form-group">
-											<input type="text" class="form-control form-control-sm">
-										</div>
-									</td>
-									<td>
-										<div class="form-group">
-											<input type="text" class="form-control form-control-sm">
-										</div>
-									</td>
-									<td>
-										<div class="form-group">
-											<input type="text" class="form-control form-control-sm">
-										</div>
-									</td>
-									<td>
-										<button class="btn"><i class="fa fa-minus-circle" aria-hidden="true" style="color: red; cursor: pointer"></i></button>
-									</td>
+									<?php $c = 1; $d=0; foreach($certificates as $certificate) {?>
+									<tr class="certificate">
+										<td><?php echo $c; ?></td>
+										<td>											
+											<div class="form-group">
+												<p><?php echo ucfirst($certificate['ACADEMIC_DEGREE_NAME']);  ?></p>										
+											</div>
+										</td>
+										<td class='certInput'>
+											<input type="hidden" name="certificates_id[]" value="<?php echo $documents['certificates'][$d]['REC_DOC_ID']; ?>" />
+											<input type="file" class="form-control-file" name="<?php echo $certificate['ACADEMIC_DEGREE_NAME'];?>" />
+										</td>
+										<td colspan="7">
+										<?php if(!empty($documents['certificates'][$d]['DOC_PATH'])) { ?>
+										<a href="<?php echo $documents['certificates'][$d]['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">View</a>
+										<?php } ?>
+										</td>
+									</tr>
+									<?php $c++; $d++;} ?>
+									<p style="color: #47759e;">Only choose new file to update previous one.</p>
 								</tr>
 								<tr>
-									<td colspan="7">
+									<!-- <td colspan="7">
 										<a href="" class="bt btn-apply" role="button" data-toggle="modal" data-target="#citizenshipModal"><i class="fa fa-plus-circle" aria-hidden="true" style="color: green;margin-right: 5px;"></i>New upload</a>
-									</td>
+									</td> -->
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
+				<!-- <div class="form-group col-md-3 mb-3 mt-3">
+					<label for="">Voucher/Receipt Number</label>
+					<input type="text" name="" class="form-control form-control-sm">
+				</div> -->
 			</div>
 		</div>
 		<div style="overflow:auto;">
@@ -765,17 +749,17 @@
 	</section>
 </main>
 <script type="text/javascript">
-	function myFunction() {
+	// function myFunction() {
 
-		var trDateInput = document.getElementsByClassName("selectNepaliDate");
-		trDateInput.nepaliDatePicker({
-			dateFormat: "YYYY-MM-DD",
-			disableAfter: "2077-12-15",
-			ndpYear: true,
-			ndpMonth: true
-		});
-	};
-	window.onload = myFunction();
+	// 	var trDateInput = document.getElementsByClassName("selectNepaliDate");
+	// 	trDateInput.nepaliDatePicker({
+	// 		dateFormat: "YYYY-MM-DD",
+	// 		disableAfter: "2077-12-15",
+	// 		ndpYear: true,
+	// 		ndpMonth: true
+	// 	});
+	// };
+	// window.onload = myFunction();
 	// Allowed File Type
 
 	function fileValidation($id) {
@@ -794,17 +778,6 @@
 			return false;
 		} else {
 			// Image preview
-			if (fileInput.files && fileInput.files[0]) {
-				// var reader = new FileReader();
-				// reader.onload = function(e) {
-				// 	document.getElementById(
-				// 			'imagePreview').innerHTML =
-				// 		'<img src="' + e.target.result +
-				// 		'"/>';
-				// };
-
-				// reader.readAsDataURL(fileInput.files[0]);
-			}
 		}
 		if (fileInput.files.length > 0) {
 			for (const i = 0; i <= fileInput.files.length - 1; i++) {
@@ -825,6 +798,8 @@
 		}
 	}
 </script>
+<script type='text/javascript' src='<?php echo base_url('assets/js/Datepicker/custom.js'); ?>'></script>
 <script type='text/javascript' src='<?php echo base_url('assets/js/apply/applytab.js'); ?>'></script>
-<script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply_edit.js'); ?>'></script>
 <script type='text/javascript' src='<?php echo base_url('assets/js/apply/edit.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/global/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>'></script>

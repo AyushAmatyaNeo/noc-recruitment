@@ -891,7 +891,7 @@
 
         this.setNepaliDate = function(year, month, date) {
             if (!this.isNepaliRange(year, month, date)) {
-                console.log('Invalid Date Format');
+                // console.log('Invalid Date Format');
                 // throw new Exception("Invalid date format.");
                 return;
             }

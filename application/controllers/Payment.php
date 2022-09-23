@@ -43,4 +43,4 @@ class Payment extends CI_Controller
         }
     }
 }
-http://localhost/noc-recruitment/vacancy/payment_success?q=su&oid=ee2c3ca1-696b-4cc5-a6be-2c403d929d4ss53&amt=1.0&refId=0001UEN
+// http://localhost/noc-recruitment/vacancy/payment_success?q=su&oid=ee2c3ca1-696b-4cc5-a6be-2c403d929d4ss53&amt=1.0&refId=0001UEN

@@ -1,10 +1,12 @@
 <link href="<?= base_url(); ?>assets/css/register.css" rel="stylesheet">
+<link href="<?= base_url(); ?>assets/global/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
 <section class="recruitment-form-sec">
-  <form id="myForm" method="post">
+  <form id="myForm" method="post" enctype="multipart/form-data">
     <h2>NOC | Registration Form</h2>
     <!-- One "tab" for each step in the form: -->
-  	<?php //if(isset($registerData)){ //echo $registerData;} ?>
-    <?php echo '<p class="status-msg error">'. $this->session->flashdata('msg').'</p>' ?>
+    <?php //if(isset($registerData)){ //echo $registerData;} 
+    ?>
+    <?php echo '<p class="status-msg error">' . $this->session->flashdata('msg') . '</p>' ?>
     <!--1. Account Information -->
     <div class="tab">
       <p class="section-head">Personal Information:</p>
@@ -96,7 +98,7 @@
           <div class="col-lg-5" id="ethnicity">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="ethnicity" value="Aadibasi/Janajati">
-              <label class="form-check-label" for="inlineRadio1">Aadibasi/Janajati</label>
+              <label class="form-check-label">Aadibasi/Janajati</label>
             </div>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="ethnicity" value="Dalit">
@@ -126,12 +128,101 @@
               <input class="form-check-input" type="radio" name="ethnicity" id="ethnic_others" value="others">
               <label class="form-check-label">others</label>
             </div>
+            <input class="form-control btn-input form-control-file" type="file" name="ethnicity_file" id="ethnicity_file" style='display:none;margin-left:12px' />
           </div>
           <div class="col-lg-5">
             <div class="form-group row">
               <label class="col-lg-5">Specify if any other</label>
               <div class="col-lg-7">
                 <input type="text" class="form-control form-control-sm" name="ethnicity_input">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <!-- Marital status -->
+      <div class="col-md-12">
+        <div class="row card-inner">
+          <div class="col-lg-2">
+            <p class="sm-bold-text">Marital status</p>
+          </div>
+          <div class="col-lg-10">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="marital" value="Married">
+              <label class="form-check-label">Married</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="marital" value="Unmarried">
+              <label class="form-check-label">Unmarried</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="marital" value="Widow">
+              <label class="form-check-label">Widow/widower</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="marital" value="Divorcee">
+              <label class="form-check-label">Divorcee</label>
+            </div>
+          </div>
+        </div>
+        <?php echo form_error('marital', '<p class="help-block error">', '</p>');  ?>
+      </div>
+      <hr>
+      <!-- Employment status -->
+      <div class="col-md-12">
+        <div class="row card-inner">
+          <div class="col-lg-2">
+            <p class="sm-bold-text">Employment status</p>
+          </div>
+          <div class="col-lg-5">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="employment" value="Unmployed">
+              <label class="form-check-label">Unmployed</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="employment" value="Government Service">
+              <label class="form-check-label">Government Service</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" id="others-req" type="radio" name="employment" value="others">
+              <label class="form-check-label"> Others</label>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="form-group row">
+              <label class="col-lg-5">Specify if any other</label>
+              <div class="col-lg-7">
+                <input type="text" class="form-control form-control-sm" name="employment_input">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <!-- Physical disability -->
+      <div class="col-md-12">
+        <div class="row card-inner">
+          <div class="col-lg-2">
+            <p class="sm-bold-text">Physical disability</p>
+          </div>
+          <div class="col-lg-5">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="disability" id="disability_yes" value="Yes">
+              <label class="form-check-label">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="disability" id="disability_no" value="No">
+              <label class="form-check-label">No</label>
+            </div>
+            <input class="form-control btn-input form-control-file" type="file" name="disability_file" id="disability_file" style='display:none;margin-left:12px' />
+          </div>
+
+          <div class="col-lg-5">
+            <div class="form-group row">
+              <label class="col-lg-5">Specify the type if any</label>
+              <div class="col-lg-7">
+                <input type="text" class="form-control form-control-sm" name="disability_input" id="disability_input">
               </div>
             </div>
           </div>
@@ -147,6 +238,37 @@
           <div class="col-lg-3">
             <input type="text" class="form-control form-control-sm" name="mother_tongue">
           </div>
+          <!-- Blood group -->
+          <div class="col-lg-2">
+            <p class="sm-bold-text">Blood Group</p>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" name="blood_group" id="blood_group">
+              <option value="">---</option>
+              <?php foreach ($blood_groups as $blood_group) { ?>
+                <option value="<?php echo $blood_group['BLOOD_GROUP_ID'] ?>"><?php echo $blood_group['BLOOD_GROUP_CODE'] ?></option>
+              <?php } ?>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="row card-inner">
+          <!-- IN SERVICE -->
+          <div class="col-lg-2">
+            <p class="sm-bold-text">Are you NOC Employee?</p>
+          </div>
+          <div class="col-lg-3">
+            <select class="form-control" name="in_service" id="in_service">
+              <option value="">---</option>
+              <option value="Y">Yes</option>
+              <option value="N">No</option>
+            </select>
+          </div>
+          <div class="col-lg-4">
+            <input class="form-control btn-input form-control-file" type="file" name="inservice_file" id="inservice_file" style='display:none;margin-left:12px' />
+
+          </div>
         </div>
       </div>
     </div>
@@ -161,7 +283,10 @@
         </div>
         <div class="form-group col-4">
           <label for="Issued_date">Issue Date</label>
-          <p><input type="text" name="Issued_date" class="form-control" id="nepali-datepicker" data-single="true" placeholder="Select Date(s)"></p>
+          <p>
+            <input type="text" name="Issued_date_bs" class="date-picker form-control" id="Issue_date_ad" data-single="true" placeholder="Select Date(BS)">
+            <input type="text" name="Issued_date" class="date-picker form-control" id="Issue_date_bs" data-single="true" placeholder="Date in BS" readonly>
+          </p>
         </div>
         <div class="form-group col-4">
           <label for="Issuedistrict">Issue District</label>
@@ -176,12 +301,15 @@
       <!-- Date of Birth -->
       <div class="row">
         <div class="form-group col-3">
-          <label for="dateOfBirth">Date of Birth</label>
-          <p><input type="text" class="date-picker form-control" name="dateOfBirth" id="dateOfBirth" data-single="true" placeholder="Select Date(s)"></p>
+          <label for="dateOfBirth_bs">Date of Birth</label>
+          <p>
+            <input type="text" class="form-control" name="dateOfBirth_bs" id="dateOfBirth_ad" data-single="true" placeholder="Select Date(AD)">
+            <input type="text" class="form-control" name="dateOfBirth" id="dateOfBirth_bs" data-single="true" placeholder="Date in BS" readonly>
+          </p>
         </div>
         <div class="form-group col-1">
           <label for="age">Age</label>
-          <input type="text" class="form-control" name="age" id="age" placeholder="23" >
+          <input type="text" class="form-control" name="age" id="age" placeholder="xx">
         </div>
         <div class="form-group col-4">
           <label for="phone_no">Phone Number</label>
@@ -189,14 +317,14 @@
         </div>
         <div class="form-group col-4">
           <label for="phone_no">Gender</label>
-          <select class="form-control" id="gender" name="gender" placeholder="Gender" required>
+          <select class="form-control" id="gender" name="gender" placeholder="Gender">
             <option value="">Gender</option>
             <option value="1">Male</option>
             <option value="2">Female</option>
             <option value="3">Other</option>
           </select>
         </div>
-      </div>      
+      </div>
       <!-- Family Information: -->
       <hr>
       <p class="section-head">Family Information:</p>
@@ -375,6 +503,10 @@
           <label for="per_tole">Tole Name</label>
           <input type="text" name="per_tole" class="form-control form-control-sm">
         </div>
+        <div class="form-group col-4">
+          <label for="per_tole">House Number</label>
+          <input type="text" name="per_house_no" class="form-control form-control-sm">
+        </div>
       </div>
       <!-- Mailling Address -->
       <hr>
@@ -413,6 +545,10 @@
           <label for="mail_tole">Tole Name</label>
           <input type="text" name="mail_tole" class="form-control form-control-sm">
         </div>
+        <div class="form-group col-4">
+          <label for="per_tole">House Number</label>
+          <input type="text" name="mail_house_no" class="form-control form-control-sm">
+        </div>
       </div>
     </div>
     <!-- <div class="tab"> Info:
@@ -435,77 +571,64 @@
     </div>
   </form>
 </section>
+<script type='text/javascript' src='<?php echo base_url('assets/js/Datepicker/custom.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/global/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>'></script>
 <script type="text/javascript">
-  window.onload = function() {
-    var mainInput = document.getElementById("nepali-datepicker");
-    var dobInput = document.getElementById("dateOfBirth");
-    dobInput.nepaliDatePicker({
-      dateFormat: "YYYY-MM-DD",
-      ndpYear: true,
-      ndpMonth: true
-    });
-    mainInput.nepaliDatePicker({
-      dateFormat: "YYYY-MM-DD",
-      ndpYear: true,
-      ndpMonth: true
-    });
-  };
+  // window.onload = function() {
+  //   var mainInput = document.getElementById("nepali-datepicker");
+  //   var dobInput = document.getElementById("dateOfBirth");
+  //   dobInput.nepaliDatePicker({
+  //     dateFormat: "YYYY-MM-DD",
+  //     ndpYear: true,
+  //     ndpMonth: true
+  //   });
+  //   mainInput.nepaliDatePicker({
+  //     dateFormat: "YYYY-MM-DD",
+  //     ndpYear: true,
+  //     ndpMonth: true
+  //   });
+  // };
 
   $(document).ready(function() {
+    app.startEndDatePickerWithNepali('dateOfBirth_bs', 'dateOfBirth_ad', 'Issue_date_bs', 'Issue_date_ad');
 
-    $("input[type=radio][name=ethnicity]").on('change', function() 
-    {
+    $("input[type=radio][name=ethnicity]").on('change', function() {
       // alert ('Hello');
-      if(this.value == 'others')
-      {
-        $("input[name='ethnicity_input']").prop('required',true);
-      }
-      else
-      {
+      if (this.value == 'others') {
+        $("input[name='ethnicity_input']").prop('required', true);
+      } else {
         $("input[name='ethnicity_input']").removeAttr('required');
       }
-  });
-  // Ethnic Name
-  
-  // Religion
-  $('input[type=radio][name=religion]').on('change', function() 
-    {
+    });
+    // Ethnic Name
+
+    // Religion
+    $('input[type=radio][name=religion]').on('change', function() {
       // alert ('dHello');
-      if(this.value == 'others')
-      {
-        $("input[name='religion_input']").prop('required',true);
-      }
-      else
-      {
+      if (this.value == 'others') {
+        $("input[name='religion_input']").prop('required', true);
+      } else {
         $("input[name='religion_input']").removeAttr('required');
       }
-  });
-  // Region
-  $('input[type=radio][name=region]').on('change', function() 
-    {
+    });
+    // Region
+    $('input[type=radio][name=region]').on('change', function() {
       // alert ('dHello');
-      if(this.value == 'others')
-      {
-        $("input[name='region_input']").prop('required',true);
-      }
-      else
-      {
+      if (this.value == 'others') {
+        $("input[name='region_input']").prop('required', true);
+      } else {
         $("input[name='region_input']").removeAttr('required');
       }
-  });
-  // Father Mother Occupation
-  $("input[type=radio][name=fmoccupation]").click(function() 
-    {
-      if(this.value == 'others')
-      {
-        $("input[name='fm_occupation_input']").prop('required',true);
-      }
-      else
-      {
+    });
+    // Father Mother Occupation
+    $("input[type=radio][name=fmoccupation]").click(function() {
+      if (this.value == 'others') {
+        $("input[name='fm_occupation_input']").prop('required', true);
+      } else {
         $("input[name='fm_occupation_input']").removeAttr('required');
       }
-  });
+    });
 
-});
+  });
 </script>
-<script type='text/javascript' src='<?php echo base_url('assets/js/regform.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/js/regform.js'); ?>'></script> 

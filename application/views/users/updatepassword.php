@@ -29,16 +29,16 @@
 								<form method="post" id="updatepassword">
 									<div class="form-row">
 										<div class="form-group col-md-12">
-											<input type="password" name="old_password" class="form-control" id="old_password" placeholder="Old Password" >
+											<input type="password" name="old_password" class="form-control" id="old_password" placeholder="Current Password" >
 										</div>
                                         <div class="form-group col-md-12">
 											<input type="password" name="new_password" class="form-control" id="new_password" placeholder="New Password" >
 										</div>
                                         <div class="form-group col-md-12">
-											<input type="password" name="conf_password" class="form-control" id="conf_password" placeholder="Confirm Password" >
+											<input type="password" name="conf_password" class="form-control" id="conf_password" placeholder="Confirm New Password" >
 										</div>										
 										<div class=" form-group col-md-12">
-											<a href="<?php echo base_url('users/forgotpassword'); ?>" style="font-style:italic;font-size:13px;color:#e54d06;padding-bottom:1rem">Forgot password?</a><span style="font-size: 13px;color:#0749ab"> Request new one! </span>
+											<!-- <a href="<?php //echo base_url('users/forgotpassword'); ?>" style="font-style:italic;font-size:13px;color:#e54d06;padding-bottom:1rem">Forgot password?</a><span style="font-size: 13px;color:#0749ab"> Request new one! </span> -->
 										</div>
 										<div class="send-button">
 											<input type="submit" class="btn btn-primary btn-noc" name="update_password" value="UPDATE">

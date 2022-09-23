@@ -47,18 +47,7 @@
 								</div>
 							</div>
 							<div class="form-row">
-								<div class="form-group col-md-3">
-									<label for="">Ethnicity</label>
-									<!-- <input class="form-control" value="<?php //echo $user['ETHNIC_NAME']; ?>" readonly> -->
-									<?php
-										if($user['ETHNIC_NAME'] == 'others'){
-											echo '<input class="form-control" value="'.$user['ETHNIC_INPUT'].'" readonly>';
-										} else
-										{
-											echo '<input class="form-control" value="'.$user['ETHNIC_NAME'].'" readonly>';
-										}
-									?>
-								</div>
+								
 								<div class="form-group col-md-3">
 									<label for="">Region</label>
 									<!-- <input type="email" class="form-control" value="<?php //echo $user['REGION']; ?>" readonly> -->
@@ -70,18 +59,55 @@
 											echo '<input class="form-control" value="'.$user['REGION'].'" readonly>';
 										}
 									?>
+								</div>								
+								<div class="form-group col-md-3">
+									<label>Date of Birth</label>
+									<input class="form-control" value="<?php echo $user['DOB']; ?>" readonly>
 								</div>
-
+								<div class="form-group col-md-3">
+									<label for="">Age</label>
+									<input class="form-control" value="<?php echo $user['AGE']; ?>" readonly>
+								</div>
+								<div class="form-group col-md-3">
+									<label>Marital Status</label>
+									<input class="form-control" value="<?php echo $user['MARITAL_STATUS']; ?>" readonly>
+								</div>
+								<div class="form-group col-md-3">
+									<label>Employment status</label>
+									<input class="form-control" value="<?php echo $user['EMPLOYMENT_STATUS']; ?>" readonly>
+								</div>
 								<div class="form-group col-md-3">
 									<label>Mother Tongue</label>
 									<input class="form-control" value="<?php echo $user['MOTHER_TONGUE']; ?>" readonly>
 								</div>
 								<div class="form-group col-md-3">
-									<label>Date of Birth</label>
-									<input class="form-control" value="<?php echo $user['DOB']; ?>" readonly>
+									<label for="">Email</label>
+									<input type="email" class="form-control" value="<?php echo $user['EMAIL_ID']; ?>" readonly>
 								</div>
+								
+								<div class="form-group col-md-3">
+									<label>Gender</label>
+									<input class="form-control" value="<?php echo $user['GENDER_NAME']; ?>" readonly>
+								</div>
+								
 							</div>
 							<div class="form-row">
+								<div class="form-group col-md-3">
+									<label for="">Citizenship Number</label>
+									<input type="text" class="form-control" value="<?php echo $user['CITIZENSHIP_NO']; ?>" readonly>
+								</div>
+								<div class="form-group col-md-3">
+									<label for="">Issue Date</label>
+									<input type="text" class="form-control" value="<?php echo $user['CTZ_ISSUE_DATE']; ?>" readonly>
+								</div>
+								<div class="form-group col-md-3">
+									<label for="">Issue District</label>
+									<input type="text" class="form-control" value="<?php echo $user['DISTRICT_NAME']; ?>" readonly>
+								</div>
+								<div class="form-group col-md-3">
+									<label for="">Blood Group</label>
+									<input type="text" class="form-control" value="<?php echo $user['BLOOD_GROUP']; ?>" readonly>
+								</div>
 								<div class="form-group col-md-3">
 									<label for="">Mobile Number</label>
 									<input type="text" class="form-control" value="<?php echo $user['MOBILE_NO']; ?>" readonly>
@@ -91,33 +117,48 @@
 									<input type="text" class="form-control" value="<?php echo $user['PHONE_NO']; ?>" readonly>
 								</div>
 								<div class="form-group col-md-3">
-									<label for="">Email</label>
-									<input type="email" class="form-control" value="<?php echo $user['EMAIL_ID']; ?>" readonly>
+									<label>Physical disability</label>
+									<input class="form-control" value="<?php echo $user['DISABILITY']; ?>" readonly>
+									<?php 
+									if(!empty($documents)){
+										foreach($documents as $doc){
+											if(($doc['DOC_FOLDER'] == 'disability') && $user['DISABILITY'] == "Yes"){
+												echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" id="disability_view" style="margin:10px">View File</a>';
+											}
+										}
+									}
+									?>
 								</div>
-								<div class="form-group col-md-1">
-									<label for="">Age</label>
-									<input class="form-control" value="<?php echo $user['AGE']; ?>" readonly>
+								<div class="form-group col-md-3">
+									<label for="">Inclusion</label>									
+									<?php
+										if($user['ETHNIC_NAME'] == 'others'){
+											echo '<input class="form-control" value="'.$user['ETHNIC_INPUT'].'" readonly>';
+										} else
+										{
+											echo '<input class="form-control" value="'.$user['ETHNIC_NAME'].'" readonly>';
+										}
+										if(!empty($documents)){
+											foreach($documents as $doc){
+												if($doc['DOC_FOLDER'] == 'ethnicity'){
+													echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" style="margin:10px">View File</a>';
+												}
+											}
+										}										
+									?>
 								</div>
-								<div class="form-group col-md-2">
-									<label>Gender</label>
-									<input class="form-control" value="<?php echo $user['GENDER_NAME']; ?>" readonly>
+								<div class="form-group col-md-3">
+									<label for="">Are you NOC Employee?</label>
+									<input type="text" class="form-control" value="<?php echo $user['IN_SERVICE']; ?>" readonly>
+									<?php if(!empty($documents)){
+											foreach($documents as $doc){
+												if(($doc['DOC_FOLDER'] == 'in_service') && ($user['IN_SERVICE'] == 'YES')){
+													echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" style="margin:10px">View File</a>';
+												}
+											}
+										}  ?>
 								</div>
-							</div>
-
-							<div class="form-row">
-								<div class="form-group col-md-4">
-									<label for="">Citizenship Number</label>
-									<input type="text" class="form-control" value="<?php echo $user['CITIZENSHIP_NO']; ?>" readonly>
-								</div>
-								<div class="form-group col-md-4">
-									<label for="">Issue Date</label>
-									<input type="text" class="form-control" value="<?php echo $user['CTZ_ISSUE_DATE']; ?>" readonly>
-								</div>
-								<div class="form-group col-md-4">
-									<label for="">Issue District</label>
-									<input type="text" class="form-control" value="<?php echo $user['DISTRICT_NAME']; ?>" readonly>
-								</div>
-							</div>
+							</div>							
 							<hr>
 							<h6 class="form-table-title">Family Information</h6>
 							<hr>
@@ -180,7 +221,7 @@
 							<label style="color: #47759e;"><u>Permanent Address</u></label>
 							<div class="form-row">
 								<div class="form-group col-md-2">
-									<label for="">Provience</label>
+									<label for="">Province </label>
 									<input type="text" class="form-control" value="<?php echo $user['PER_PROVINCE']; ?>" readonly>
 								</div>
 								<div class="form-group col-md-2">
@@ -199,11 +240,15 @@
 									<label for="">Tole Name</label>
 									<input type="text" class="form-control" value="<?php echo $user['PER_TOLE']; ?>" readonly>
 								</div>
+								<div class="form-group col-md-2">
+									<label for="">House Number</label>
+									<input type="text" class="form-control" value="<?php echo $user['PER_HOUSE_NO']; ?>" readonly>
+								</div>
 							</div>
 							<label style="color: #47759e;"><u>Mailling Address</u></label>
 							<div class="form-row">
 								<div class="form-group col-md-2">
-									<label for="">Provience</label>
+									<label for="">Province</label>
 									<input type="text" class="form-control" value="<?php echo $user['MAIL_PROVINCE']; ?>" readonly>
 								</div>
 								<div class="form-group col-md-2">
@@ -221,6 +266,10 @@
 								<div class="form-group col-md-2">
 									<label for="">Tole Name</label>
 									<input type="text" class="form-control" value="<?php echo $user['MAIL_TOLE']; ?>" readonly>
+								</div>
+								<div class="form-group col-md-2">
+									<label for="">House Number</label>
+									<input type="text" class="form-control" value="<?php echo $user['MAIL_HOUSE_NO']; ?>" readonly>
 								</div>
 							</div>
 						</form>

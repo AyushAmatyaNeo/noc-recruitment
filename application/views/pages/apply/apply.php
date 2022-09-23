@@ -1,14 +1,13 @@
 <link href="<?= base_url(); ?>assets/css/apply.css" rel="stylesheet">
+<link href="<?= base_url(); ?>assets/global/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
 <main class="main-recruit-application bg-light sec-padd">
 	<section class="top-info-sec">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-6 offset-md-3">
-					<div class="text-center">
-						<h6>Schedule 2</h6>
-						<h6>Nepal Oil Corporation Limited</h6>
-						<h6>Application form for new recruitment</h6>
-					</div>
+				<div class="col-md-5 text-center">
+					<h6>Schedule 2</h6>
+					<h6>Nepal Oil Corporation Limited</h6>
+					<h6>Application form for new recruitment</h6>
 				</div>
 			</div>
 		</div>
@@ -19,7 +18,7 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<a href="">
-						<p>View all vacancies</p>
+						<!-- <p>View all vacancies</p> -->
 					</a>
 					<div class="card">
 						<button type="button" class="btn form-table-title" data-toggle="collapse" data-target="#apply">Personal Details of applicant (Note: please edit the informations from <a href="<?php echo base_url('profile/edit') ?>" style="color: #fff;"> <i class="fa fa-pencil-square-o" aria-hidden="true" aria-expanded="false"></i> here</a> if required) <i class="fa fa-chevron-down float-right" aria-hidden="true"></i></button>
@@ -51,6 +50,14 @@
 													<th><label class="col-form-label">Father's Name</label></th>
 													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['FATHER_NAME'] ?>"></td>
 												</tr>
+												<tr>
+													<th><label class="col-form-label">Marital status</label></th>
+													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['MARITAL_STATUS'] ?>"></td>
+												</tr>
+												<tr>
+													<th><label class="col-form-label">Disability status</label></th>
+													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['DISABILITY']; if($user_detail['DISABILITY'] == 'Yes' && !empty($user_detail['DISABILITY_INPUT'])){ echo ' - '. $user_detail['DISABILITY_INPUT']; } ?>"></td>
+												</tr>
 											</table>
 										</div>
 										<div class="col-lg-6">
@@ -76,6 +83,11 @@
 													<th><label class="col-form-label">Mother's Name</label></th>
 													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['MOTHER_NAME'] ?>"></td>
 												</tr>
+												<tr>
+													<th><label class="col-form-label">Employment Status</label></th>
+													<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $user_detail['EMPLOYMENT_STATUS']; if($user_detail['EMPLOYMENT_STATUS'] == 'others' && !empty($user_detail['EMPLOYMENT_INPUT'])){ echo  ' - '.$user_detail['EMPLOYMENT_INPUT']; } ?>"></td>
+												</tr>
+												
 											</table>
 										</div>
 									</div>
@@ -113,6 +125,10 @@
 												<th><label class="col-form-label"></label>Post</th>
 												<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $vacancylist['DESIGNATION_TITLE']; ?>"></td>
 											</tr>
+											<tr>
+												<th><label class="col-form-label">Qualification</label></th>
+												<td><input type="text" readonly class="form-control form-control-sm" value="<?php echo $vacancylist['ACADEMIC_DEGREE_NAME']; ?>"></td>
+											</tr>
 										</table>
 									</div>
 									<div class="col-lg-6">
@@ -133,14 +149,17 @@
 													<input type="hidden" name="position_id" id="position_id" value="<?php echo $vacancylist['DESIGNATION_ID']; ?>">
 												</td>
 											</tr>
-
+											<tr>
+												<th><label class="col-form-label">Experience</label></th>
+												<td><input type="text" readonly class="form-control form-control-sm" value="<?php $exp =  ($vacancylist['EXPERIENCE'] > 0) ?  ' Years' : '0'; echo $vacancylist['EXPERIENCE'].' '.$exp; ?>"></td>
+											</tr>
 										</table>
 									</div>
 									<div class="col-lg-12">
 										<table>
 											<tr>
 												<th><label class="col-form-label"></label>Other Details</th>
-												<td class="col-lg-6"><textarea name="message" readonly class="form-control form-control-sm" rows="4"><?php echo $vacancylist['INSTRUCTION_EDESC'] ?></textarea>
+												<td class="col-lg-12"><textarea name="message" readonly class="form-control form-control-sm" rows="4"><?php echo $vacancylist['INSTRUCTION_EDESC'] ?></textarea>
 											</tr>
 										</table>
 									</div>
@@ -160,117 +179,38 @@
 		<h2>Application Form</h2>
 		<!-- Circles which indicates the steps of the form: -->
 		<div style="text-align:center;margin-top:40px;margin-bottom:40px;">
-			<span class="step">Details</span>
-			<span class="step">Qualifications</span>
+			<!-- <span class="step">Details</span> -->
+			<span class="step">Details & Qualifications</span>
 			<span class="step">Documents</span>
-		</div>
-		<!-- Personal Details -->
+		</div>	
+		<!-- Qualification -->
 		<div class="tab">
-			<h6 class="form-table-title">Tick any one of the options given below</h6>
-			<!-- Marital -->
-			<div class="col-md-12">
-				<div class="row card-inner">
-					<div class="col-lg-2">
-						<p class="sm-bold-text">Marital status</p>
-					</div>
-					<div class="col-lg-10">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Married">
-							<label class="form-check-label">Married</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Unmarried">
-							<label class="form-check-label">Unmarried</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Widow">
-							<label class="form-check-label">Widow/widower</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="marital" value="Divorcee">
-							<label class="form-check-label">Divorcee</label>
-						</div>
-					</div>
-				</div>
-				<?php echo form_error('marital', '<p class="help-block error">', '</p>');  ?>
-			</div>
-			<hr>
+			<h6 class="blockquote text-center">Please check above personal details to match vacancy description</h6>
+			
 			<?php foreach ($vacancylists as $vacancylist) { ?>
 				<?php echo form_hidden('vacancy_id', $vacancylist['VACANCY_ID']); ?>
 				<?php echo form_hidden('ad_no', $vacancylist['AD_NO']); ?>
 			<?php } ?>
-			<!-- Employment status -->
-			<div class="col-md-12">
-				<div class="row card-inner">
-					<div class="col-lg-2">
-						<p class="sm-bold-text">Employment status</p>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="employment" value="Unmployed">
-							<label class="form-check-label">Unmployed</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="employment" value="Government Service">
-							<label class="form-check-label">Government Service</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" id="others-req" type="radio" name="employment" value="others">
-							<label class="form-check-label"> Others</label>
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-group row">
-							<label class="col-lg-5">Specify if any other</label>
-							<div class="col-lg-7">
-								<input type="text" class="form-control form-control-sm" name="employment_input">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr>
-			<!-- Physical disability -->
-			<div class="col-md-12">
-				<div class="row card-inner">
-					<div class="col-lg-2">
-						<p class="sm-bold-text">Physical disability</p>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="disability" value="Yes">
-							<label class="form-check-label">Yes</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="disability" value="No">
-							<label class="form-check-label">No</label>
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="form-group row">
-							<label class="col-lg-5">Specify the type if any</label>
-							<div class="col-lg-7">
-								<input type="text" class="form-control form-control-sm" name="disability_input">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr>
+			
 			<!-- Select inclusion -->
-			<h6 class="form-table-title">Select inclusion</h6>
+			<?php
+				if ($inclusions != []) { ?>
+					
+			
+			<h6 class="form-table-title">Select</h6>
 			<div class="col-md-12">
 				<div class="row card-inner">
 					<div class="col-lg-2">
-						<p class="sm-bold-text">Inclusion</p>
+						<p class="sm-bold-text"></p>
 					</div>
-					<?php foreach($inclusions as $inclusion) {?>
-					<div class="col-lg-2">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>">
-							<label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
+					<?php
+					   foreach($inclusions as $inclusion) {?>
+						<div class="col-lg-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>">
+								<label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
+							</div>
 						</div>
-					</div>
 					<?php } ?>
 					<div class="col-lg-3">
 						<div class="form-group row">
@@ -280,36 +220,73 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<?php	}else { ?>
+				<div class="col-lg-3">
+						<div class="form-group row">
+							<label class="col-lg-5">Total Amount:</label>
+							<div class="col-lg-7">
+								<input type="text" class="form-control form-control-sm" name="inclusion_amount" value="600" readonly>
+							</div>
+						</div>
+					</div>
+			<?php }
+			?>
+			<?php
+			if ($vacancylists[0]['SKILL_ID'] != "") { ?>
+			<!-- Select Skills -->
+			<h6 class="form-table-title">Select Skills - PNG, JPG & PDF format only (All fields are mandatory for application approval) </h6>
+			<?php
+			if ($vacancylists[0]['SKILL_ID'] != "") {
+			foreach($vacancylists[0]['SKILL_ID'] as $Skills) {?>
+			<div class="col-md-12">
+				<div class="row card-inner">
+					<!-- <div class="col-lg-2">
+						<p class="sm-bold-text">Skills</p>
+					</div> -->					
+					<div class="col-md-6">
+						<div class="form-check form-check-inline">
+							<!-- <input type="hidden" name="image_ids[]" value="<?php //echo $Skills['SKILL_NAME']; ?>" /> -->
+							<input class="form-check-input skills" type="checkbox" name="skills[]"  value="<?php echo $Skills['SKILL_ID'] ?>" skillname="<?php echo $Skills['SKILL_NAME']; ?>" />
+							<label class="form-check-label"><?php echo $Skills['SKILL_NAME']; ?></label>							
+						</div>
+						<?php if($Skills['UPLOAD_FLAG'] == 'Y'){ ?>
+							<input type="file" accept=".png,.jpg,.pdf" class="form-control-file skill_name" id="<?php $skillId = str_replace(' ', '_', $Skills['SKILL_NAME']); echo $skillId ?>" name="<?php echo $Skills['SKILL_NAME'];?>" onchange="return fileValidation($id = '<?php $skillId = str_replace(' ', '_', $Skills['SKILL_NAME']); echo $skillId  ?>')"/>								
+							<?php } ?>
+					</div>					
 				</div>				
 			</div>
-		</div>
-		<hr>
-		<!-- Qualification -->
-		<div class="tab">
+			<?php } } }?>
 			<!-- G. Educational Qualification -->
 			<div class="card mt-3">
 				<h6 class="form-table-title">Educational Qualification</h6>
 				<div class="card-body">
-					<div class="col-lg-12 my-3">
+					<p>Please tick maximum level of education qualification and add all relevant informational in below input section.</p>
+					<div class="col-lg-12 my-3" id="max_education">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option1">
+							<input class="form-check-input" type="radio" name="max_education" value="1">
 							<label class="form-check-label">SLC</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option2">
-							<label class="form-check-label">+2</label>
+							<input class="form-check-input" type="radio" name="max_education" value="2">
+							<label class="form-check-label">+2 / Intermediate</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option3">
+							<input class="form-check-input" type="radio" name="max_education" value="3">
 							<label class="form-check-label">Bachelors</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option4">
+							<input class="form-check-input" type="radio" name="max_education" value="4">
 							<label class="form-check-label">Masters</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="education" value="option4">
-							<label class="form-check-label">Others</label>
+							<input class="form-check-input" type="radio" name="max_education" value="5">
+							<label class="form-check-label">M.phil</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="max_education" value="11">
+							<label class="form-check-label">others</label>
 						</div>
 					</div>
 					<div class="col-md-12">
@@ -320,8 +297,9 @@
 									<th rowspan="2">Level</th>
 									<th rowspan="2">Faculty</th>
 									<th colspan="2">Division</th>
+									<th rowspan="2">University/Board</th>
 									<th rowspan="2">Major Subject</th>
-									<th rowspan="2" width="10%">Passed Year</th>
+									<th rowspan="2" width="10%">Passed Year (AD)</th>
 									<th rowspan="2"></th>
 								</tr>
 								<tr>
@@ -340,7 +318,7 @@
 									<td>
 										<div for="level_id" class="form-group">
 											<select class="form-control form-control-sm" name="level_id[]" id="level_id">
-												<option value="">-- Select -- </option>
+												<option value="">-- Select Degree -- </option>
 												<?php foreach ($degrees as $degree) { ?>
 													<option value="<?php echo $degree['ACADEMIC_DEGREE_ID'] ?>"><?php echo $degree['ACADEMIC_DEGREE_NAME'] ?></option>
 												<?php } ?>
@@ -350,29 +328,50 @@
 									</td>
 									<td>
 										<div for="facalty" class="form-group">
-											<input type="text" name="facalty[]" id="facalty" class="form-control form-control-sm">
-											<?php echo form_error('facalty', '<p class="help-block error">', '</p>'); ?>
+										
+											<select class="form-control form-control-sm" name="facalty[]" id="FACULTY_id">
+												<option value="">-- Select Program -- </option>
+												<?php foreach ($faculties as $faculty) { ?>
+													<option value="<?php echo $faculty['ACADEMIC_PROGRAM_ID'] ?>"><?php echo $faculty['ACADEMIC_PROGRAM_NAME'] ?></option>
+												<?php } ?>
+											</select>
 										</div>
 									</td>
 									<td>
 										<div class="form-group">
 											<select class="form-control form-control-sm" id="rank_type" name="rank_type[]">
-												<option value="">---</option>
+												<option value="">--Select Rank Type--</option>
 												<option value="GPA">GPA</option>
 												<option value="Percentage">Percentage</option>
+												<option value="Division/grade">Division/grade</option>
 											</select>
 										</div>
-									</td>
+									</td>									
 									<td>
-										<div for="rank_value" class="form-group">
+										<div for="rank_value" class="form-group" id="rank_value_error">
 											<input type="text" name="rank_value[]" id="rank_value" class="form-control form-control-sm">
+											<label id="rank_value-error" class="error" for="rank_value" style="display: none">Please enter above 32.</label>
 											<?php echo form_error('rank_value', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
+										<div for="university_board" class="form-group" id="rank_value_error">
+											<select class="form-control form-control-sm" name="university_board[]" id="UNIV">
+												<option value="">-- Select University -- </option>
+												<?php foreach ($univs as $univ) { ?>
+													<option value="<?php echo $univ['ACADEMIC_UNIVERSITY_ID'] ?>"><?php echo $univ['ACADEMIC_UNIVERSITY_NAME'] ?></option>
+												<?php } ?>
+											</select>
+										</div>
+									</td>
+									<td>
 										<div for="major_subject" class="form-group">
-											<input type="text" name="major_subject[]" id="major_subject" class="form-control form-control-sm">
-											<?php echo form_error('major_subject', '<p class="help-block error">', '</p>'); ?>
+											<select class="form-control form-control-sm" name="major_subject[]" id="major_subject">
+												<option value="">-- Select Majors -- </option>
+												<?php foreach ($majors as $major) { ?>
+													<option value="<?php echo $major['ACADEMIC_COURSE_ID'] ?>"><?php echo $major['ACADEMIC_COURSE_NAME'] ?></option>
+												<?php } ?>
+											</select>
 										</div>
 									</td>
 									<td>
@@ -394,6 +393,7 @@
 			<div class="card mt-3">
 				<h6 class="form-table-title">Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
 				<div class="col-md-12 mt-3">
+					<?php if(!empty($vacancylist['EXPERIENCE']) && $vacancylist['EXPERIENCE'] != 0){ echo '<p style="color:#c75216">This vacancy require <b> '. $vacancylist['EXPERIENCE']. ' </b>years of experiance, please add using <i class="fa fa-plus-circle" aria-hidden="true" style="color: green; cursor: pointer"></i> sign.</p>';} ?>
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>
 							<tr>
@@ -404,71 +404,25 @@
 								<th width="12%">Employee Type</th>
 								<th>Start From</th>
 								<th>Till Date</th>
-								<th></th>
+								<th><i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i></th>
 							</tr>
 						</thead>
 						<tbody id="experiancebody">
-							<tr>
-								<td>
-									<div for="org_name" class="form-group">
-										<input type="text" name="org_name[]" id="org_name" class="form-control form-control-sm validate-field">
-									</div>
-								</td>
-								<td>
-									<div for="post_name" class="form-group">
-										<input type="text" name="post_name[]" id="post_name" class="form-control form-control-sm validate-field">
-									</div>
-								</td>
-								<td>
-									<div for="service_name" class="form-group">
-										<input type="text" name="service_name[]" id="service_name" class="form-control form-control-sm validate-field">
-									</div>
-								</td>
-								<td>
-									<div for="org_level" class="form-group">
-										<input type="number" name="org_level[]" id="org_level" class="form-control form-control-sm validate-field">
-									</div>
-								</td>
-								<td>
-									<div for="employee_type" class="form-group">
-										<select name="employee_type[]" id="employee_type" class="form-control form-control-sm">
-											<option></option>
-											<option value="1">Permanent</option>
-											<option value="2">Temporary</option>
-											<option value="3">Contract</option>
-										</select>
-									</div>
-								</td>
-								<td>
-									<div for="from_date" class="form-group">
-										<!-- <input name="from_date" type="text" class="date-picker form-control form-control-sm"> -->
-										<input type="text" class="date-picker form-control selectNepaliDate fromDate" name="from_date[]" data-single="true" placeholder="Select Date(s)">
-									</div>
-								</td>
-								<td>
-									<div for="to_date" class="form-group">
-										<!-- <input name="to_date" type="text" class="form-control form-control-sm"> -->
-										<input type="text" class="date-picker form-control selectNepaliDate toDate" name="to_date[]" data-single="true" placeholder="Select Date(s)">
-									</div>
-								</td>
-								<td>
-									<i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i>
-								</td>
-							</tr>
+							
 						</tbody>
 						<tfoot>
 							<tr>
-								<td colspan="8">
-									<div class="form-group row">
-										<label class="col-lg-4">Total Experience</label>
-										<div class="col-lg-8 d-flex">
-											<button type="button" class="btn btn-primary" id="expcalculate">Calculate</button>
-											<input type="number" class="form-control form-control-sm mr-1 years" placeholder="Years" readonly>
-											<input type="number" class="form-control form-control-sm mr-1 months" placeholder="Months" readonly>
-											<input type="number" class="form-control form-control-sm days" placeholder="Days" readonly>
+									<!-- <td colspan="8">
+										<div class="form-group row">
+											<label class="col-lg-4">Total Experience</label>
+											<div class="col-lg-8 d-flex">
+												<button type="button" class="btn btn-primary" id="expcalculate">Calculate</button>
+												<input type="number" class="form-control form-control-sm mr-1 years" placeholder="Years" readonly>
+												<input type="number" class="form-control form-control-sm mr-1 months" placeholder="Months" readonly>
+												<input type="number" class="form-control form-control-sm days" placeholder="Days" readonly>
+											</div>
 										</div>
-									</div>
-								</td>
+									</td> -->
 							</tr>
 						</tfoot>
 					</table>
@@ -485,47 +439,13 @@
 								<th>Certificate</th>
 								<th>From Date</th>
 								<th>To Date</th>
-								<th width="12%">Period (Days)</th>
+								<th>Period</th>
 								<th>Description</th>
-								<th></th>
+								<th><i class="fa fa-plus-circle btn-add-tr" aria-hidden="true" style="color: green; cursor: pointer"></i></th>
 							</tr>
 						</thead>
 						<tbody id="trainingbody">
-							<tr>
-								<td>
-									<div for="training_name" class="form-group">
-										<input type="text" name="training_name[]" id="training_name" class="form-control form-control-sm">
-									</div>
-								</td>
-								<td>
-									<div for="certificate" class="form-group">
-										<input type="text" name="certificate[]" id="certificate" class="form-control form-control-sm">
-									</div>
-								</td>
-								<td>
-									<div for="tr_from_date" class="form-group">
-										<input type="text" name="tr_from_date[]" id="tr_from_date" class="form-control form-control-sm selectNepaliDate tr_from_date" data-single="true" placeholder="Select Date(s)">
-									</div>
-								</td>
-								<td>
-									<div for="tr_to_date" class="form-group">
-										<input type="text" name="tr_to_date[]" id="tr_to_date" class="form-control form-control-sm selectNepaliDate tr_to_date" data-single="true" placeholder="Select Date(s)">
-									</div>
-								</td>
-								<td>
-									<div for="period" class="form-group">
-										<input type="number" name="period[]" id="total_days" class="form-control form-control-sm period">
-									</div>
-								</td>
-								<td>
-									<div for="description" class="form-group">
-										<input type="text" name="description[]" id="description" class="form-control form-control-sm">
-									</div>
-								</td>
-								<td>
-									<i class="fa fa-plus-circle btn-add-tr" aria-hidden="true" style="color: green; cursor: pointer"></i>
-								</td>
-							</tr>
+							
 						</tbody>
 					</table>
 				</div>
@@ -623,56 +543,60 @@
 					</td>
 				</tr>
 			</table>
+			<!-- Academic Document Upload -->
 			<h6 class="form-table-title">Document and Certificate (JPG | PNG Only)</h6>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-8 col-md-12">
-						<div style="font-size: 12px;font-weight: bold;padding: 10px 0;">
-							नागरिकताको प्रमाणपत्र र समावेशीको हक़मा समावेशीताको प्रमाणपत्रहरु अनिवार्य रूपमा upload गर्नु पर्नेछ। <br> (साईज: बढिमा 1 MB)
+						<div style="font-size: 12px;font-weight: bold;padding: 10px 0;">							
+							<h6>Note: 1. This vacancy require up to <strong> <?= $vacancylist['ACADEMIC_DEGREE_NAME'];  ?> </strong> degree documents, please upload it all else your application will not get approved.</h6>
+							<h6>  2. Please upload all respective document in single a file.</h6>
 						</div>
 						<table class="table table-responsive-lg table-striped table-bordered table-sm">
 							<thead>
-								<tr>
-									<th>File Name</th>
-									<th>Size</th>
-									<th>Name of Document</th>
-									<th></th>
+								<tr class="UploadDoc">
+									<td>S.No</td>
+									<td>Document Name</td>
+									<td>Upload</td>
+									<!-- <td>Add</td> -->
 								</tr>
-							</thead>
+							</thead>							
 							<tbody>
 								<tr>
-									<td>
-										<div class="form-group">
-											<input type="text" class="form-control form-control-sm">
-										</div>
-									</td>
-									<td>
-										<div class="form-group">
-											<input type="text" class="form-control form-control-sm">
-										</div>
-									</td>
-									<td>
-										<div class="form-group">
-											<input type="text" class="form-control form-control-sm">
-										</div>
-									</td>
-									<td>
-										<button class="btn"><i class="fa fa-minus-circle" aria-hidden="true" style="color: red; cursor: pointer"></i></button>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="7">
-										<a href="" class="bt btn-apply" role="button" data-toggle="modal" data-target="#citizenshipModal"><i class="fa fa-plus-circle" aria-hidden="true" style="color: green;margin-right: 5px;"></i>New upload</a>
-									</td>
-								</tr>
+									<input type="hidden" value="0" id="certImageId">
+									<?php $c = 1; foreach($certificates as $certificate) {?>
+									<tr class="certificate">
+										<td><?php echo $c; ?></td>
+										<td>											
+											<div class="form-group">
+												<p><?php echo ucfirst($certificate['ACADEMIC_DEGREE_NAME']);  ?></p>										
+											</div>
+										</td>
+										<td class='certInput' id="td<?php echo $c; ?>">
+
+										<?php
+											$b = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']);
+										?>
+											<div class="row">
+												<div class="col-md-8">
+													<input type="file" class="form-control-file" id="<?php $CertId = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']); echo $CertId;  ?>" name="<?php echo $CertId; ?>" onchange="return fileValidation($id = '<?php $CertId = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']); echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
+												</div>
+												<div class="col-md-4">
+													<i class="fa fa-plus-circle" onclick="addNewImage('<?php echo $c ?>','<?php echo $b; ?>')" aria-hidden="true" style="color: green; cursor: pointer"></i>	
+												</div>
+											</div>
+										</td>										
+									</tr>
+									<?php $c++; } ?>
+								</tr>								
 							</tbody>
 						</table>
 					</div>
 				</div>
-				<div class="form-group col-md-3 mb-3 mt-3">
+				<!-- <div class="form-group col-md-3 mb-3 mt-3">
 					<label for="">Voucher/Receipt Number</label>
 					<input type="text" name="" class="form-control form-control-sm">
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<div style="overflow:auto;">
@@ -685,35 +609,36 @@
 		<?= form_close(); ?>
 	</section>
 </main>
+<script type='text/javascript' src='<?php echo base_url('assets/js/Datepicker/custom.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/js/apply/applytab.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply_edit.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply.js'); ?>'></script>
+<script type='text/javascript' src='<?php echo base_url('assets/global/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>'></script>
+
+<script>
+    document.levellist =<?=json_encode($degrees);?>;
+	document.faculties = <?=json_encode($faculties);?>;
+	document.univs = <?=json_encode($univs);?>;
+	document.majors = <?=json_encode($majors);?>;
+</script>
 <script type="text/javascript">
 	
-	
-	function myFunction() {
-
-		var trDateInput = document.getElementsByClassName("selectNepaliDate");
-		trDateInput.nepaliDatePicker({
-			dateFormat: "YYYY-MM-DD",
-			// disableAfter: today,	//'"'+today+'"',
-			disableDaysAfter: 0,
-			ndpYear: true,
-			ndpMonth: true
-		});
-	};
-	window.onload = myFunction();
-	// Allowed File Type
+	app.startEndDatePickerWithNepali('from_date_ad', 'from_date_bs', 'to_date_ad', 'to_date_bs');
+	app.startEndDatePickerWithNepali('from_date_ad1', 'from_date_bs1', 'to_date_ad1', 'to_date_bs1');	
+	app.startEndDatePickerWithNepali('tr_from_date', 'tr_from_date_bs', 'tr_to_date', 'tr_to_date_bs');
+	$( document ).ready(function() {
+    	$('#certImageId').val(0);
+	});	
 
 	function fileValidation($id) {
 		var fileInput =
-			document.getElementById($id);
-
+		document.getElementById($id);
 		var filePath = fileInput.value;
-
 		// Allowing file type
 		var allowedExtensions =
 			/(\.jpg|\.jpeg|\.png|\.pdf)$/i;
-
 		if (!allowedExtensions.exec(filePath)) {
-			alert('Invalid file type, please select JPG|PNG|JPEG|PDF');
+			alert('Invalid file type, please select - JPG | PNG | JPEG | PDF');
 			fileInput.value = '';
 			return false;
 		} else {
@@ -731,7 +656,7 @@
 			}
 		}
 		if (fileInput.files.length > 0) {
-			for (const i = 0; i <= fileInput.files.length - 1; i++) {
+			for (let i = 0; i <= fileInput.files.length - 1; i++) {
 
 				const fsize = fileInput.files.item(i).size;
 				const file = Math.round((fsize / 1024));
@@ -748,6 +673,30 @@
 			}
 		}
 	}
+
+
+	function addNewImage(params,b) {
+		var certIdImage = $('#certImageId').val();
+		
+		// console.log(b);
+		$('#td'+params).append(`
+		 <div class = "row" id = "deleteAdded`+certIdImage+`" >
+			<div class="col-md-8">
+				<input type = "file" name = "`+b+``+certIdImage+`" class="form-control-file" id="`+b+`" accept=".png,.pdf,.jpg,.jpeg">
+			</div>
+			<div class="col-md-4">
+				<i class="fa fa-minus-circle" onclick= "removeCertImage('`+certIdImage+`')" aria-hidden="true" style="color: red; cursor: pointer"></i>
+			</div>
+		 </div>
+			
+		`);
+		certIdImage++
+		// console.log(certIdImage);
+		$('#certImageId').val(certIdImage);
+	}
+	function removeCertImage(params) {
+		console.log(params);
+		$('#deleteAdded'+params).remove();
+	}
 </script>
-<script type='text/javascript' src='<?php echo base_url('assets/js/apply/applytab.js'); ?>'></script>
-<script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply.js'); ?>'></script>
+

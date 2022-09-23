@@ -73,13 +73,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
+
 $db['default'] = array(
-	'dsn'	=> '',
-	'hostname' => 'Driver={HDBODBC};ServerNode=10.10.11.92:30015;UID=HRISVISMA2;PWD=Vishma@1234567;Database=NDB;',
-	'username' => 'HRISVISMA2',
-	'password' => 'Vishma@1234567',
+	'dsn'	=> 'SAPHANA',
+	// 'dsn'	=> 'NEW_TEST_DB',
+	// 'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHR_TEST;PWD=P@s$w0rd;Database=NOCHR_TEST;',
+	'hostname' => 'Driver={HDBODBC};ServerNode=10.10.10.92;UID=NOCHR;PWD=NocHR@123;Database=NOCHR;',
+	// 'username' => 'NOCHRTEST',
+	// 'password' => 'Noc$%^@123',
+	'username' => 'NOCHR',
+	'password' => 'NocHR@123',
 	// 'port'     => '1521',
-	'database' => '',
+	'database' => 'NOCHR',
 	'dbdriver' => 'odbc',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

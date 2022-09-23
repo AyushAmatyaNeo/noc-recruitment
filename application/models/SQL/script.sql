@@ -4,7 +4,9 @@ truncate table HRIS_REC_APPLICATION_EDUCATION;
 truncate table HRIS_REC_APPLICATION_EXPERIENCES;
 truncate table HRIS_REC_APPLICATION_TRAININGS;
 truncate table HRIS_REC_APPLICATION_DOCUMENTS;
+truncate table HRIS_REC_APPLICATION_PAYMENT;
 truncate table HRIS_REC_VACANCY_APPLICATION;
+
 
 ----------------------------------------------------
 INSERT INTO HRIS_REC_APPLICATION_STAGE VALUES(1,'PENDING',1,'','E');

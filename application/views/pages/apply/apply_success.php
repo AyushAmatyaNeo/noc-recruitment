@@ -50,6 +50,7 @@
 						</div>
 					</form>
 					<div class="alert alert-info" role="alert">
+						<p>This is non-refundable amount, Please make sure you have choose correct data.</p>
 					<label>Please proceed for Payment : Amount <?php echo $amount ?></label>
 						<form action="<?php echo $redirect ?>" method="POST">
 							<input value="<?php echo $amount ?>" name="tAmt" type="hidden">

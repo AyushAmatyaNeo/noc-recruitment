@@ -10,8 +10,6 @@ require 'vendor/autoload.php';
 class UserModel extends CI_Model{ 
     function __construct() 
     { 
-        // Set table name 
-        // $this->table = 'HRIS_NOC_VACANCY_USERS';
         $this->table = 'HRIS_REC_VACANCY_USERS';
     } 
     /* 
@@ -45,8 +43,7 @@ class UserModel extends CI_Model{
                     $where.= "USER_ID = $pid";
                 }
                 // print_r($this->db->last_query()); die;
-                $query  = $this->db->query("SELECT USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMAIL_ID,USERNAME,MOBILE_NO FROM $this->table 
-                  where $where 1=1");
+                $query  = $this->db->query("SELECT USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMAIL_ID,USERNAME,MOBILE_NO FROM $this->table where $where");
                 // print_r($this->db->last_query()); die;
                 $result = $query->row_array();
             }else{ 
@@ -73,7 +70,7 @@ class UserModel extends CI_Model{
      * @param $data data to be inserted 
      */ 
     public function insert($data = array()) 
-    { 
+    {
         if(!empty($data)){ 
             // Add created and modified date if not included 
             // if(!array_key_exists("CREATED_DT", $data)){ 
@@ -152,7 +149,7 @@ class UserModel extends CI_Model{
     {
         if($user_id)
         {
-            $query = $this->db->query("SELECT FIRST_NAME,MIDDLE_NAME,LAST_NAME,MOBILE_NO,EMAIL_ID,USERNAME,AGE,CTZ_ISSUE_DATE,GENDER_NAME,FATHER_NAME,CITIZENSHIP_NO,DOB,DISTRICT_NAME,MOTHER_NAME FROM HRIS_REC_VACANCY_USERS UR
+            $query = $this->db->query("SELECT FIRST_NAME,MIDDLE_NAME,LAST_NAME,MOBILE_NO,EMAIL_ID,USERNAME,AGE,CTZ_ISSUE_DATE,GENDER_NAME,FATHER_NAME,CITIZENSHIP_NO,DOB,DISTRICT_NAME,MOTHER_NAME,MARITAL_STATUS,EMPLOYMENT_STATUS,EMPLOYMENT_INPUT,DISABILITY,DISABILITY_INPUT FROM HRIS_REC_VACANCY_USERS UR
             LEFT JOIN HRIS_REC_USERS_REGISTRATION HR ON HR.USER_ID = UR.USER_ID
             LEFT JOIN HRIS_GENDERS HG ON HG.GENDER_ID = HR.GENDER_ID
             LEFT JOIN HRIS_DISTRICTS HD ON HD.DISTRICT_ID = HR.CTZ_ISSUE_DISTRICT_ID
@@ -226,9 +223,9 @@ class UserModel extends CI_Model{
             $mail->Host = "smtp.ionos.com";
             $mail->Port = 587;
             $mail->SMTPAuth = true;   
-            $mail->Username = "info@leantask.com";    
-            $mail->Password = "JI(o)u89p77g&";
-            $mail->setFrom('info@leantask.com', 'NOC');
+            $mail->Username = "jasmin.tamang@neosoftware.com.np";
+            $mail->Password = "Jasmin@12345#";
+            $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
             $mail->IsHTML(true);
             $mail->addAddress($email);
             $mail->Subject = 'OTP from NOC';
@@ -268,10 +265,10 @@ class UserModel extends CI_Model{
                 if(!empty($params['id']))
                 { 
                      $pid = $params['id'];
-                    $where.= "and HU.USER_ID = $pid";
+                    $where.= "HU.USER_ID = $pid";
                 } 
-                // $query  = $this->db->query("SELECT * FROM $this->table NU LEFT JOIN HRIS_GENDERS HG ON HG.GENDER_ID = NU.GENDER where 1=1 $where ");
-                $query  = $this->db->query("SELECT HUR.*,HU.FIRST_NAME,HU.MIDDLE_NAME,HU.LAST_NAME,HU.MOBILE_NO,HU.EMAIL_ID,HU.USERNAME,HG.*,HD.*,HUA.*,
+                $query  = $this->db->query("SELECT HUR.REGISTRATION_ID,HUR.USER_ID,HUR.RELIGION,HUR.RELIGION_INPUT,HUR.REGION,HUR.REGION_INPUT,HUR.ETHNIC_NAME,HUR.ETHNIC_INPUT,HUR.MOTHER_TONGUE,HUR.CITIZENSHIP_NO,HUR.CTZ_ISSUE_DATE,HUR.CTZ_ISSUE_DISTRICT_ID,HUR.DOB,HUR.AGE,HUR.PHONE_NO,HUR.GENDER_ID,HUR.FATHER_NAME,HUR.FATHER_QUALIFICATION,HUR.MOTHER_NAME,HUR.MOTHER_QUALIFICATION,HUR.FM_OCCUPATION,HUR.FM_OCCUPATION_INPUT,HUR.GRANDFATHER_NAME,HUR.GRANDFATHER_NATIONALITY,HUR.SPOUSE_NAME,HUR.SPOUSE_NATIONALITY,HUR.PROFILE_STATUS,HUR.MARITAL_STATUS,HUR.EMPLOYMENT_STATUS,HUR.EMPLOYMENT_INPUT,(CASE WHEN HUR.IN_SERVICE = 'Y' THEN 'YES' ELSE 'NO' END) AS IN_SERVICE,HUR.DISABILITY,HUR.DISABILITY_INPUT,HUR.STATUS,HUR.CREATED_DT,HUR.MODIFIED_DT,BG.BLOOD_GROUP_CODE as BLOOD_GROUP,
+                HU.FIRST_NAME,HU.MIDDLE_NAME,HU.LAST_NAME,HU.MOBILE_NO,HU.EMAIL_ID,HU.USERNAME,HG.*,HD.*,HUA.*,
                 HP.PROVINCE_NAME AS PER_PROVINCE,
                 HP1.PROVINCE_NAME AS MAIL_PROVINCE,
                 HD1.DISTRICT_NAME AS PER_DISTRICT,
@@ -289,8 +286,10 @@ class UserModel extends CI_Model{
                 LEFT JOIN HRIS_DISTRICTS AS HD1 ON HD1.DISTRICT_ID = HUA.PER_DISTRICT_ID
                 LEFT JOIN HRIS_DISTRICTS AS HD2 ON HD2.DISTRICT_ID = HUA.MAIL_DISTRICT_ID
                 LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM1 ON HM1.VDC_MUNICIPALITY_ID = HUA.PER_VDC_ID
-                LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM2 ON HM2.VDC_MUNICIPALITY_ID = HUA.MAIL_VDC_ID 
-                where 1=1 $where ");
+                LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM2 ON HM2.VDC_MUNICIPALITY_ID = HUA.MAIL_VDC_ID
+                LEFT JOIN HRIS_BLOOD_GROUPS AS BG ON BG.BLOOD_GROUP_ID = HUR.BLOOD_GROUP
+                where $where ");
+                // echo $this->db->last_query();
                 $result = $query->row_array();
             }else{ 
                 
@@ -308,6 +307,38 @@ class UserModel extends CI_Model{
         } 
         return $result; 
     }
+    public function userdocuments($params = array()){
+        $where = "";
+        if(array_key_exists("conditions", $params)){ 
+            foreach($params['conditions'] as $key => $val){ 
+                $where.= "and $key = '$val'"; 
+            }
+        }
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count')
+        { 
+            // $rawquery = $this->db->query("SELECT COUNT('*') FROM $this->table");
+            // $result = $rawquery->current_row;
+        }else{ 
+            if(array_key_exists("id", $params) || $params['returnType'] == 'single'){ 
+                if(!empty($params['id']))
+                { 
+                     $pid = $params['id'];
+                    $where.= "and HU.USER_ID = $pid";
+                } 
+                $query  = $this->db->query("SELECT 
+                HAD.DOC_OLD_NAME AS DOC_NAME,
+                HAD.DOC_PATH AS DOC_PATH,
+                HAD.DOC_FOLDER AS DOC_FOLDER
+                FROM $this->table HU
+                LEFT JOIN HRIS_REC_USERS_REGISTRATION HUR ON HUR.USER_ID = HU.USER_ID
+                LEFT JOIN HRIS_REC_APPLICATION_DOCUMENTS AS HAD ON HAD.USER_ID = HUR.USER_ID 
+                where HAD.DOC_FOLDER in ('ethnicity','disability','in_service') $where ");
+                // echo $this->db->last_query();
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }
+        } 
+        return $result; 
+    }
     public function updateprofile($userData,$uid)
     {
         if(!empty($userData))
@@ -315,10 +346,7 @@ class UserModel extends CI_Model{
             $users        = $userData['users'];
             $registration = $userData['registration'];
             $address      = $userData['address'];
-
             // echo "<pre>"; print_r($registration); die;
-
-
             if(!empty($users))
             {
                 $users['MODIFIED_DT'] = DATE("Y-m-d");
@@ -357,7 +385,6 @@ class UserModel extends CI_Model{
         }
         return false;
     }
-
     // For Profile Edit page -- Address fields
     public function fetch_user_district($province_id,$district_id)
     {   
@@ -388,6 +415,9 @@ class UserModel extends CI_Model{
     // Check if user is registred or not
     public function userRegistred($uid)
     {
+        if($uid == ''){
+            return FALSE;
+        }
         $query  = $this->db->query("SELECT * FROM HRIS_REC_USERS_REGISTRATION where USER_ID = '$uid' AND PROFILE_STATUS = '1'");
         if( $query->num_rows() > 0 ){ 
             return TRUE; 
@@ -433,6 +463,27 @@ class UserModel extends CI_Model{
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         return $result;
     }
+    // Check account active status
+    public function checkactivestatus($params = array())
+    {
+        // echo '<pre>'; print_r($params); die;
+        if(array_key_exists("email", $params)){ 
+            if(isset($params['email']['EMAIL_ID'])){
+                $email_id = $params['email']['EMAIL_ID'];
+                $query = $this->db->query("SELECT ACTIVE_STATUS FROM $this->table WHERE EMAIL_ID = '$email_id'");
+                // print_r($query); die;
+                $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
+                return $result;
+            }else{
+                $username = $params['email']['USERNAME'];
+                $query = $this->db->query("SELECT ACTIVE_STATUS FROM $this->table WHERE USERNAME = '$username'");
+                // print_r($query); die;
+                $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
+                return $result;
+            }
+        }
+        
+    }
     // Check db values: like: age,inclusion etc
     public function checkattribute($table, $column,$uid)
     {
@@ -445,7 +496,92 @@ class UserModel extends CI_Model{
     {
         // $uid = ($uid )? '0': '';
         $query = $this->db->query("SELECT $column FROM $table WHERE $aid = '$wid'");
+        // echo $this->db->last_query();
         $result = ($query->num_rows() > 0)?TRUE:FALSE;
+        return $result;
+    }
+    // Email verification
+    function sendVerificationEmail($email){
+
+        $query1 = $this->db->query("SELECT * from $this->table where EMAIL_ID = '".$email."' ");
+        $row=$query1->result_array();        
+        $textplain  = $this->EmailrandomText();
+        $query = $this->db->query("UPDATE $this->table SET EMAIL_VERIFICATION_CODE = '$textplain' , ACTIVE_STATUS = 'D' where EMAIL_ID = '$email'");
+        $mail_message='Dear '.$row[0]['FIRST_NAME'].','. "<br \><br \>";
+        $mail_message.='Thanks for signup to Nepal Oil Corporation,<br> Your <b> verification link </b> is below : <br \><br \><a href="'.base_url('users/verify?evc='.$textplain.'&email='.$row[0]['EMAIL_ID']).'">Activate Account</a>';
+        // $mail_message.='<br>Please Update your password.';
+        $mail_message.='<br>Thanks & Regards';
+        $mail_message.='<br>Nepal Oil Corporation';        
+        date_default_timezone_set('Etc/UTC');
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->SMTPSecure = "tls"; 
+        $mail->Debugoutput = 'html';
+        $mail->Host = "smtp.ionos.com";
+        $mail->Port = 587;
+        $mail->SMTPAuth = true;   
+        $mail->Username = "jasmin.tamang@neosoftware.com.np";
+            $mail->Password = "Jasmin@12345#";
+            $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'Nepal Oil Corporation');
+        $mail->IsHTML(true);
+        $mail->addAddress($email);
+        $mail->Subject = 'Verification Link | NOC';
+        $mail->Body    = $mail_message;
+        $mail->AltBody = $mail_message;
+        if (!$mail->send()) {
+            return false;
+        } else {                
+            return true;
+        }  
+    }
+    function verifyEmailAddress($verificationText, $email){
+        $sql = $this->db->query("SELECT EMAIL_VERIFICATION_CODE FROM $this->table where EMAIL_ID = '$email'");
+        $row=$sql->result_array();
+        if($row[0]['EMAIL_VERIFICATION_CODE'] === $verificationText){
+            $this->db->query("UPDATE $this->table SET ACTIVE_STATUS = 'E' where EMAIL_ID = '$email'");
+            return true;
+        }else{
+            return false;
+        }
+        // echo '<pre>'; print_r($row); die;
+    }
+    function EmailrandomText() 
+    {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyz!@$%^*()ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 30; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+    public function insertimg($image)
+    {
+        // echo '<pre>'; print_r(($image)); die;
+        if(!empty($image)){ 
+            $image = implode('\',\'', $image);
+            // echo '<pre>'; print_r(($image)); die;
+            $insert = $this->db->query("INSERT INTO HRIS_REC_APPLICATION_DOCUMENTS (REC_DOC_ID,USER_ID,DOC_OLD_NAME,DOC_NEW_NAME,DOC_PATH,DOC_TYPE,DOC_FOLDER)
+            values ('$image')");
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public function FindAndDelImg($uid,$folder_name){
+        $query = $this->db->query("SELECT * FROM HRIS_REC_APPLICATION_DOCUMENTS WHERE DOC_FOLDER = '$folder_name' AND USER_ID = $uid");
+        $result['oldimg'] = ($query->num_rows() > 0) ? ($query->row_array()):FALSE;
+        $result['status'] = 0;
+        // echo'<pre>'; print_r($result) ; die;
+        if($query->num_rows() > 0) {
+            // echo ' ffff'; die;
+            $query = $this->db->query("DELETE FROM HRIS_REC_APPLICATION_DOCUMENTS WHERE DOC_FOLDER = '$folder_name' AND USER_ID = $uid");
+            $result['status'] = ($this->db->affected_rows() > 0)?TRUE:FALSE;
+            // $result['status'] = true;
+                return $result;
+        }
         return $result;
     }
 }

@@ -4,9 +4,15 @@
 .text-center{
 	text-align: center;
 }
+/* -- added -- */ 
+.applied-vacancies-sec {
+	padding: 20px 0;
+}
+/* -- added -- */ 
 .main-title{
 	color: #575655;
-	margin-bottom: 30px;
+	/*margin-bottom: 30px;*/ 
+	margin: 30px 0; /* -- added -- */
 }
 .btn:focus{
 	box-shadow: none;
@@ -476,14 +482,14 @@
 .vacancy-detail-sec .table th, .vacancy-detail-sec .table td{
 	/* border-top: 0; */
 	font-size: 14px;
-	padding: 3px 0;
+	padding: 3px 20px;
 }
 .vacancy-detail-sec .table th{
 	width: 50%;
 	font-weight: normal;
 }
 .vacancy-detail-sec .table td:before{
-	content: ":";
+	/* content: ":"; */
 	padding-right: 10px;
 }
 .vacancy-detail-sec ul li{
