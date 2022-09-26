@@ -812,6 +812,7 @@ class Vacancy extends CI_Controller
             );
 
             $data['vacancylists'] = $this->VacancyModel->fetchvacancy();
+
             // echo '<pre>'; print_r($data['vacancylists']); die;  
             if($data['vacancylists'] != '')
             {            

@@ -163,6 +163,7 @@
 					$counter = 0;
 					$user_age = $this->VacancyModel->checkAge($this->session->userdata('userId'));
 					$date = date('Y-m-d');
+					
 					if (!empty($vacancylists)) {
 						
 						foreach ($vacancylists as $vacancylist) {
