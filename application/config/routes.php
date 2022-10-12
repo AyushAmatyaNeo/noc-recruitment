@@ -54,3 +54,5 @@ $route['default_controller'] = 'vacancy';
 $route['404_override'] = 'Noc404';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['vacancy/connectIpsSuccess'] = 'vacancy/connectIpsSuccess';
+

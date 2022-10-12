@@ -22,17 +22,12 @@ class Vacancy extends CI_Controller
 
     public function index()
     {
-        if ($this->isUserLoggedIn) 
-        {
-            
+        if ($this->isUserLoggedIn) {
             redirect('vacancy/vacancylist');
-
+            // $this->load->view('pages/applydocs', array('error' => ' ' ));
         } else {
-            
             redirect('users/login');
-        
         }
-    
     }
 
     /**
@@ -43,81 +38,107 @@ class Vacancy extends CI_Controller
      * */
     public function vacancylist()
     { 
-        sessionCheck();
 
-        $con = ['id' => $this->session->userdata('userId')];
+        if ($this->isUserLoggedIn) 
+        {
+        
+            $con = ['id' => $this->session->userdata('userId')];
 
-        $data['vacancylists'] = $this->VacancyModel->fetchvacancy();
-        $data['payment_gateways'] = $this->VacancyModel->fetchAll('HRIS_REC_PAYMENT_GATEWAY');
+            $data['vacancylists'] = $this->VacancyModel->fetchvacancy();
+            $data['payment_gateways'] = $this->VacancyModel->fetchAll('HRIS_REC_PAYMENT_GATEWAY');
 
 
-        if ($data['vacancylists'] != '')
-        {            
-            
-            for ($i=0; $i < count($data['vacancylists']); $i++)
-            {
+            if ($data['vacancylists'] != '')
+            {            
                 
-                $IncName = array();
-                
-                if ($data['vacancylists'][$i]['INCLUSION_ID'] != null) 
+                for ($i=0; $i < count($data['vacancylists']); $i++)
                 {
                     
-                    $data['vacancylists'][$i]['INCLUSION_ID'] = explode(',' , $data['vacancylists'][$i]['INCLUSION_ID']);
-                    $incNumbers = $data['vacancylists'][$i]['INCLUSION_ID'];
+                    $IncName = array();
+                    
+                    if ($data['vacancylists'][$i]['INCLUSION_ID'] != null) 
+                    {
                         
-                        foreach($incNumbers as $incNumber)
-                        {
-                            // echo '<pre>'; print_r($incNumber); die;
-                            $IncName[] = $this->VacancyModel->fetchinclusions($incNumber);
-                        }
-                
-                }
+                        $data['vacancylists'][$i]['INCLUSION_ID'] = explode(',' , $data['vacancylists'][$i]['INCLUSION_ID']);
+                        $incNumbers = $data['vacancylists'][$i]['INCLUSION_ID'];
+                            
+                            foreach($incNumbers as $incNumber)
+                            {
+                                // echo '<pre>'; print_r($incNumber); die;
+                                $IncName[] = $this->VacancyModel->fetchinclusions($incNumber);
+                            }
+                    
+                    }
 
-                $data['vacancylists'][$i]['INCLUSION_ID'] = implode(',', array_map(function ($el) {return $el['OPTION_EDESC']; }, $IncName));
-               
+                    $data['vacancylists'][$i]['INCLUSION_ID'] = implode(',', array_map(function ($el) {return $el['OPTION_EDESC']; }, $IncName));
+                   
+                };
+
             };
+            
+            $data['user'] = $this->UserModel->getRows($con);
 
-        };
-        
-        $data['user'] = $this->UserModel->getRows($con);
+            
+            $data['register'] = $this->UserModel->checkattribute('HRIS_REC_USERS_REGISTRATION', 'in_service,gender_id,disability,dob',$con['id']);
 
-        
-        $data['register'] = $this->UserModel->checkattribute('HRIS_REC_USERS_REGISTRATION', 'in_service,gender_id,disability,dob',$con['id']);
+            // echo "<pre>";
 
-        $data['meta'] = array(
-            'title' => 'Vacancy List',
-            'Description' => 'View and Apply for vacancy'
-        );
-        $random =  random_string('alnum', 16);
-        $data['applications'] = $this->VacancyModel->applicationDetails($con);
+            // print_r($data['register']);
 
-        
-        $data['esewa'] = [
-            'invoice'   => $random,
-        ];   
-        
-        $data['connectips'] = [
-            'merchant_id' => $this->config->item('connectips_merchant_id'),
-            'app_id'      => $this->config->item('connectips_app_id'),  
-            'app_name'    => $this->config->item('connectips_appname'),  
-            'txn_id'      => $this->config->item('connectips_txnId'),  
-            'txn_date'    => $this->config->item('connectips_txn_date'),
-            'txn_cur'     => $this->config->item('connectips_txncrncy'),
-            'txn_amt'     => '',
-            'referenceId' => 'REF'.rand(0, 10000000),
-            // 'referenceId' => 'VID1REF'.rand(0, 10000000),
-            'remarks'     => 'RMKS-00',
-            'particulars' => 'PART-001',
-            'token'       => 'TOKEN'
-        ];
+            // die;
+
+  
+
+            $data['meta'] = array(
+                'title' => 'Vacancy List',
+                'Description' => 'View and Apply for vacancy'
+            );
+            $random =  random_string('alnum', 16);
+            $data['applications'] = $this->VacancyModel->applicationDetails($con);
+
+            // echo "<pre>";
+            // print_r($data['applications']);
+
+            // die;
+
+            // $data['paymentChecks'] = $this->UserModel->userVacancyApplicationPaymentCheck($con);
+            // echo '<pre>'; print_r($data['applications'] );
+            // echo '<pre>'; print_r($data['applications'] ); die;
+            
+            $data['esewa'] = [
+                // 'redirect' => 'https://uat.esewa.com.np/epay/main',
+                // 'amount'   => $data['applications'][0]['APPLICATION_AMOUNT'],
+                // 'merchant_id' => 'EPAYTEST',
+                'invoice'   => $random,
+                'returnURl' => 'http://localhost/noc-recruitment/vacancy/payment_success?q=su',
+                'cancelURL' => 'http://localhost/noc-recruitment/vacancy/payment_failed?q=fu',
+            ];   
+            
+            $data['connectips'] = [
+                'merchant_id' => $this->config->item('connectips_merchant_id'),
+                'app_id'      => $this->config->item('connectips_app_id'),  
+                'app_name'    => $this->config->item('connectips_appname'),  
+                'txn_id'      => $this->config->item('connectips_txnId'),  
+                'txn_date'    => $this->config->item('connectips_txn_date'),
+                'txn_cur'     => $this->config->item('connectips_txncrncy'),
+                'txn_amt'     => '',
+                'referenceId' => 'REF'.rand(0, 10000000),
+                // 'referenceId' => 'VID1REF'.rand(0, 10000000),
+                'remarks'     => 'RMKS-00',
+                'particulars' => 'PART-001',
+                'token'       => 'TOKEN'
+            ];
 
 
-        // $this->load->library('session');
+            // $this->load->library('session');
+            // echo '<pre>'; print_r($_SESSION); die;
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('pages/vacancylist', $data);
-        $this->load->view('templates/footer');
-
+            $this->load->view('templates/header', $data);
+            $this->load->view('pages/vacancylist', $data);
+            $this->load->view('templates/footer');
+        } else {
+            redirect('users/login');
+        }
     }
 
     /**
@@ -126,7 +147,6 @@ class Vacancy extends CI_Controller
      * */
     public function paymentProcess()
     {
-        sessionCheck();
         // POST DATA VIA AJAX
         $data = [
 
@@ -143,6 +163,14 @@ class Vacancy extends CI_Controller
 
         // GET ALL DATA RELATED TO APPLICATION ID AND VACANCY ID
         $getDetailOfApplicant = $this->VacancyModel->fetchVacancyAndApplicationById($data['application_id'], $data['vacancy_id']);
+
+
+
+
+
+        // return print_r($getDetailOfApplicant);
+        // return print_r($_POST);
+
 
         // GET ALL PAYMENT GATEWAY
         $availablePaymentGateway = assocArrayToArray($this->VacancyModel->fetchAllBySelect('HRIS_REC_PAYMENT_GATEWAY', 'GATEWAY_COMPANY'));
@@ -162,15 +190,21 @@ class Vacancy extends CI_Controller
                 $data['actual_amount'] = $getDetailOfApplicant['APPLICATION_AMOUNT'];
 
                 return $this->khalti::initiate($data, $return_url, $purchase_order_id, $purchase_order_name,  $amount_in_paisa);
+                // $amount   = $getDetailOfApplicant['APPLICATION_AMOUNT'];
+                // $uniqueId = random_string('alnum', 16) . 'aid' . $application_id . 'vid' . $vacancy_id;
+
+                // echo $this->esewa::initiate($amount, 0, 0, 0, $uniqueId);
 
             }
 
+            
+
         } else {
-
-            redirect('vacancy/vacancylist');
-
+            // echo  'no';
         }
 
+
+        // return print_r($availablePaymentGateway);
     }
 
     public function apply()
@@ -865,7 +899,7 @@ class Vacancy extends CI_Controller
 
     public function payment_success()
     {
-        sessionCheck();
+
         /*
          * CHECKING QUERY STRING AFTER RETURNING PAYMENT SUCCESS
          *
@@ -1053,43 +1087,49 @@ class Vacancy extends CI_Controller
      * */
     public function payment_failed()
     {
-        sessionCheck();
 
-        $userId       = ['id' => $this->session->userdata('userId')];
+        if ($this->isUserLoggedIn) 
+        {
+            $userId       = ['id' => $this->session->userdata('userId')];
 
-        $data['user'] = $this->UserModel->getRows($userId);
+            $data['user'] = $this->UserModel->getRows($userId);
 
-        $paymentId    = $this->VacancyModel->getMaxIds('PAYMENT_ID','HRIS_REC_APPLICATION_PAYMENT');
-        $application  = $this->VacancyModel->applicationDetailsRow($userId);
-        // GET PAYMENT GATEWAY ID
-        $gatewayId = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_PAYMENT_GATEWAY', 'ID', 'GATEWAY_COMPANY', 'esewa', 'row_array');
+            $paymentId    = $this->VacancyModel->getMaxIds('PAYMENT_ID','HRIS_REC_APPLICATION_PAYMENT');
+            $application  = $this->VacancyModel->applicationDetailsRow($userId);
+            // GET PAYMENT GATEWAY ID
+            $gatewayId = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_PAYMENT_GATEWAY', 'ID', 'GATEWAY_COMPANY', 'esewa', 'row_array');
 
 
-        /**
-         *  fu refer as failed payment return
-         *  
-         *  failed payment will not return PAYMENT_OID and PAYMENT_REFID so use 'fu' as value
-         * 
-         *  status [0 - failed   1 - success] check HRIS_REC_APPLICATION_PAYMENT
-         * 
-         * */
-        $esewa = [
-            'payment_id'     => $paymentId['MAXID'] + 1,
-            'application_id' => $application['APPLICATION_ID'],
-            'user_id'        => $this->session->userdata('userId'),
-            'vacancy_id'     => $application['VACANCY_ID'], 
-            'payment_type'   => 'esewa',
-            'payment_gateway_id' => $gatewayId['ID'],
-            'payment_amount' => $application['APPLICATION_AMOUNT'],
-            'payment_status' => 'cancelled',
-            'created_date'   => date('Y-m-d H:i:s.v')
-        ];
+            /**
+             *  fu refer as failed payment return
+             *  
+             *  failed payment will not return PAYMENT_OID and PAYMENT_REFID so use 'fu' as value
+             * 
+             *  status [0 - failed   1 - success] check HRIS_REC_APPLICATION_PAYMENT
+             * 
+             * */
+            $esewa = [
+                'payment_id'     => $paymentId['MAXID'] + 1,
+                'application_id' => $application['APPLICATION_ID'],
+                'user_id'        => $this->session->userdata('userId'),
+                'vacancy_id'     => $application['VACANCY_ID'], 
+                'payment_type'   => 'esewa',
+                'payment_gateway_id' => $gatewayId['ID'],
+                'payment_amount' => $application['APPLICATION_AMOUNT'],
+                'payment_status' => 'cancelled',
+                'created_date'   => date('Y-m-d H:i:s.v')
+            ];
 
-        $payment_status = $this->VacancyModel->paymentInsertWithKey($esewa);
-        $this->load->view('templates/header', $data);
-        $this->load->view('pages/payment/failed');
-        $this->load->view('templates/footer');
+            $payment_status = $this->VacancyModel->paymentInsertWithKey($esewa);
+            $this->load->view('templates/header', $data);
+            $this->load->view('pages/payment/failed');
+            $this->load->view('templates/footer');
 
+        } else {
+
+            redirect('users/login');
+
+        }
     }   
 
 

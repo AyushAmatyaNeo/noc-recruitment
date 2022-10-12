@@ -1,16 +1,21 @@
 /*  */
-
 body {background-color: #f1f1f1;}
 
-form {background-color: #ffffff; margin: 100px auto; font-family: Raleway; padding: 40px; width: 40%; min-width: 300px; }
+form {background-color: #ffffff; margin: 100px auto; padding: 40px; width: 40%; min-width: 300px; }
 
 h2 {text-align: center; margin-bottom: 2rem; }
 
-input {padding: 10px; width: 100%; font-size: 17px; font-family: Raleway; border: 1px solid #aaaaaa; }
+input {padding: 10px; width: 100%; font-size: 17px; border: 1px solid #aaaaaa; }
 
-button {background-color: #4CAF50; color: #ffffff; border: none; padding: 10px 20px; font-size: 17px; font-family: Raleway; cursor: pointer; }
+button {background-color: #4CAF50; color: #ffffff; border: none; padding: 10px 20px; font-size: 17px;  cursor: pointer; }
 
 button:hover {opacity: 0.8; }
+
+form.tab .form-control {
+    height: calc(1.9em + .75rem + 2px) !important;
+    padding: .375rem .75rem !important;
+    font-size: 0.8rem !important;
+}
 
 .previous {background-color: #bbbbbb; }
 
@@ -21,12 +26,16 @@ button:hover {opacity: 0.8; }
 
 .step.finish {background-color: #4CAF50; }
 
-.error {color: #f00; }
+.error {
+    padding-top: 5px;
+    color: #f00; 
+    font-size: 13px; 
+}
 
 /* Custom added */
 .section-head {
-    text-decoration: underline;
-    font-style: italic;
+    /*text-decoration: underline;*/
+    /*font-style: italic;*/
     color: #47759e;
-    font-weight: bold;
+    font-weight: 700;
 }

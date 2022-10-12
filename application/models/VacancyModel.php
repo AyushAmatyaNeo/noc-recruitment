@@ -7,12 +7,19 @@ class VacancyModel extends CI_Model
     {
         $this->table    = 'HRIS_REC_VACANCY';
         $this->apptable = 'HRIS_REC_VACANCY_APPLICATION';
+        $this->gatewaytable = 'HRIS_REC_PAYMENT_GATEWAY';
 
     }
+
     public function fetchvacancy()
     {
         // $sql = "SELECT * FROM HRIS_REC_VACANCY";
-        $query  = $this->db->query("SELECT NV.VACANCY_ID,AD_NO,DESIGNATION_TITLE,HD.DESIGNATION_ID,NV.STATUS,NV.VACANCY_RESERVATION_NO,DEPARTMENT_NAME,FILE_IN_DIR_NAME,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,SERVICE_EVENT_NAME,START_DATE,END_DATE,EXTENDED_DATE,NV.INCLUSION_ID,STAGE_EDESC,FILE_NAME FROM $this->table NV 
+        $query  = $this->db->query("
+            SELECT NV.VACANCY_ID,AD_NO,DESIGNATION_TITLE,DESIGNATION_ID,
+            NV.STATUS,NV.VACANCY_RESERVATION_NO,DEPARTMENT_NAME,FILE_IN_DIR_NAME,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,SERVICE_EVENT_NAME,START_DATE,END_DATE,EXTENDED_DATE,
+            NV.INCLUSION_ID,STAGE_EDESC,FILE_NAME 
+            FROM $this->table NV 
+
         LEFT JOIN HRIS_DESIGNATIONS HD ON NV.POSITION_ID = HD.DESIGNATION_ID
         LEFT JOIN HRIS_DEPARTMENTS HVD ON NV.DEPARTMENT_ID = HVD.DEPARTMENT_ID
         LEFT JOIN HRIS_REC_OPENINGS_DOCUMENTS  HVF ON NV.OPENING_ID = HVF.OPENING_ID
@@ -22,8 +29,13 @@ class VacancyModel extends CI_Model
         LEFT JOIN HRIS_REC_OPENINGS HRO ON HRO.OPENING_ID = NV.OPENING_ID
         LEFT JOIN HRIS_REC_VACANCY_STAGES HVS ON HVS.VACANCY_ID = NV.VACANCY_ID
         LEFT JOIN HRIS_REC_STAGES HS ON HS.REC_STAGE_ID = HVS.REC_STAGE_ID
-        WHERE NV.VACANCY_TYPE = 'OPEN' AND NV.STATUS = 'E' AND HS.ORDER_NO > 3 AND HVF.STATUS = 'E'");
-        $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+
+        WHERE NV.VACANCY_TYPE = 'OPEN' AND 
+              NV.STATUS = 'E' AND 
+              HS.ORDER_NO > 3 AND 
+              HVF.STATUS = 'E'");
+
+        $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
         // echo '<pre>';print_r($result); die;
         return $result;
     }
@@ -353,6 +365,8 @@ class VacancyModel extends CI_Model
         // echo '<pre>';print_r($result); die;
         return $result;
     }
+
+
     public function academicDegree($academicCode){
         $query = $this->db->query("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_CODE <= '$academicCode'");
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
@@ -510,29 +524,118 @@ class VacancyModel extends CI_Model
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         return $result;
     }
+
     public function payment_insert($esewa)
     {
             $esewa = implode('\',\'', $esewa);
-            // echo '<pre>'; print_r($esewa); die;
+            echo '<pre>'; print_r($esewa); die;
             $sql = "INSERT INTO HRIS_REC_APPLICATION_PAYMENT values ('$esewa')";
             $insert = $this->db->query($sql);
             return true;
     }
+
+    public function paymentInsertWithKey($data)
+    {
+            $columns = implode(',', array_keys($data));
+            $values  = implode('\',\'', $data);
+
+            $sql = "INSERT INTO HRIS_REC_APPLICATION_PAYMENT ($columns) values ('$values')";
+            // echo '<pre>'; print_r($sql); die;
+            $insert = $this->db->query($sql);
+            return true;
+    }
+
+    public function paymentUpdateWithKey($table, $data, $where, $where_value)
+    {
+        $columns = implode(',', array_keys($data));
+        $values  = implode('\',\'', $data);
+
+        $sql = "UPDATE $table SET ($columns) = ('$values') WHERE $where = '$where_value'";
+        // echo '<pre>'; print_r($sql); die;
+        // $update = $this->db->query($sql);
+        return ($this->db->query($sql)) ? true : false;
+    }
+
+    // public function insertPayment($table, $data)
+    // {
+    //     $this->db->insert($table, $data);
+    //     return true;
+    // }
+
+
+    /* MY METHOD TESTING FOR CONNECTIPS PAYMENT*/
+    public function payment_insert_ips($data)
+    {   
+            $data = implode('\',\'', $data);
+            // echo '<pre>'; print_r($esewa); die;
+            $sql = "INSERT INTO HRIS_REC_TEMP_PAYMENT_TEST values ('$data')";
+            $insert = $this->db->query($sql);
+            return true;
+    }
+    /* MY METHOD TESTING FOR CONNECTIPS PAYMENT*/
+
     // Applied vacnacy Details
     public function applicationDetails($uid)
     {
-        // echo $uid['id']; die; 
-        $uid = $uid['id'];
-        $query  = $this->db->query("SELECT HP.ROLL_NO, NV.APPLICATION_ID,HV.AD_NO, HD.DESIGNATION_TITLE, HFL.FUNCTIONAL_LEVEL_EDESC,STAGE_EDESC,APPLICATION_AMOUNT,VACANCY_ID,NV.REMARKS FROM HRIS_REC_VACANCY_APPLICATION AS NV 
-        LEFT JOIN HRIS_REC_VACANCY AS HV ON NV.AD_NO = HV.VACANCY_ID
-        LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = HV.LEVEL_ID
-        LEFT JOIN HRIS_DESIGNATIONS HD ON HV.POSITION_ID = HD.DESIGNATION_ID
-        LEFT JOIN HRIS_REC_STAGES HAS ON NV.STAGE_ID = HAS.REC_STAGE_ID
-        LEFT JOIN HRIS_REC_APPLICATION_PERSONAL HP ON NV.APPLICATION_ID = HP.APPLICATION_ID
-        WHERE NV.STATUS = 'D' AND NV.USER_ID = $uid ORDER BY NV.APPLICATION_ID");
+        $uid   = $uid['id'];
+        $query = $this->db->query("
+
+                        SELECT 
+                            NV.APPLICATION_ID, NV.REMARKS,  NV.APPLICATION_AMOUNT,
+                            HP.ROLL_NO, 
+                            HV.AD_NO, HV.VACANCY_ID, 
+                            HD.DESIGNATION_TITLE, 
+                            HFL.FUNCTIONAL_LEVEL_EDESC,
+                            HAS.STAGE_EDESC,
+                            HC.PAYMENT_PAID, HC.PAYMENT_STATUS, HC.PAYMENT_VERIFIED
+
+
+                        FROM HRIS_REC_VACANCY_APPLICATION AS NV 
+
+                        LEFT JOIN HRIS_REC_VACANCY AS HV ON NV.AD_NO = HV.VACANCY_ID
+                        LEFT JOIN HRIS_FUNCTIONAL_LEVELS AS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = HV.LEVEL_ID
+                        LEFT JOIN HRIS_DESIGNATIONS AS HD ON HV.POSITION_ID = HD.DESIGNATION_ID
+                        LEFT JOIN HRIS_REC_STAGES AS HAS ON NV.STAGE_ID = HAS.REC_STAGE_ID
+                        LEFT JOIN HRIS_REC_APPLICATION_PERSONAL AS HP ON NV.APPLICATION_ID = HP.APPLICATION_ID
+                        LEFT JOIN HRIS_REC_APPLICATION_PAYMENT AS HC ON NV.PAYMENT_ID = HC.PAYMENT_ID
+                        
+                        WHERE NV.STATUS = 'D' AND NV.USER_ID = $uid ORDER BY NV.APPLICATION_ID");
+
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         return $result;
     }
+
+    /* ======================================== */
+    // Applied vacnacy Details
+    public function applicationDetailsRow($uid)
+    {
+        // echo $uid['id']; die; 
+        $uid   = $uid['id'];
+        $query = $this->db->query("
+
+                        SELECT 
+                            NV.APPLICATION_ID, NV.REMARKS,  NV.APPLICATION_AMOUNT,
+                            HP.ROLL_NO, 
+                            HV.AD_NO, HV.VACANCY_ID, 
+                            HD.DESIGNATION_TITLE, 
+                            HFL.FUNCTIONAL_LEVEL_EDESC,
+                            HAS.STAGE_EDESC
+
+                        FROM HRIS_REC_VACANCY_APPLICATION AS NV 
+
+                        LEFT JOIN HRIS_REC_VACANCY AS HV ON NV.AD_NO = HV.VACANCY_ID
+                        LEFT JOIN HRIS_FUNCTIONAL_LEVELS AS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = HV.LEVEL_ID
+                        LEFT JOIN HRIS_DESIGNATIONS AS HD ON HV.POSITION_ID = HD.DESIGNATION_ID
+                        LEFT JOIN HRIS_REC_STAGES AS HAS ON NV.STAGE_ID = HAS.REC_STAGE_ID
+                        LEFT JOIN HRIS_REC_APPLICATION_PERSONAL AS HP ON NV.APPLICATION_ID = HP.APPLICATION_ID
+                        
+                        WHERE NV.STATUS = 'D' AND NV.USER_ID = $uid ORDER BY NV.APPLICATION_ID");
+
+        $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
+        return $result;
+    }
+
+    /* ======================================== */
     //Get data for edit applied vacancy
     public function applicationById($vid,$uid, $table)
     {
@@ -643,7 +746,7 @@ class VacancyModel extends CI_Model
             $details = implode('\',\'', $details);
  
 
-            $sql = "INSERT INTO HRIS_REC_TEMP_PAYMENT (ID,
+            $sql = "INSERT INTO HRIS_REC_TEMP_PAYMENT (ID,APPLICATION_ID,
             MERCHANT_ID,
             APP_ID, 
             APP_NAME,
@@ -654,7 +757,8 @@ class VacancyModel extends CI_Model
             REFERENCE_ID,
             REMARKS,
             PARTICULARS,
-            TOKEN,STATUS) VALUES ('$details')";
+            TOKEN,
+            STATUS,STATUSDESC,CREATED_DT,MODIFIED_DT) VALUES ('$details')";
 
             $insert = $this->db->query($sql);   
 
@@ -670,8 +774,102 @@ class VacancyModel extends CI_Model
 
     public function getTempPayment($txn)
     {
-        $query = $this->db->query("SELECT * from HRIS_REC_TEMP_PAYMENT where TXN_ID = '{$txn}' ");
+        $query = $this->db->query("SELECT * from HRIS_REC_TEMP_PAYMENT where TXN_ID = '{$txn}' AND STATUS != 'failed' ");
         $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
         return $result[0];
+    }
+
+    public function fetchAll($table)
+    {
+        $query = $this->db->query("SELECT * FROM {$table}");
+            return ($query->num_rows() > 0) ? $query->result_array() : false;
+    }
+
+    /**
+     * 
+     * 
+     * @param fetch_type ['result', DEFAULT = 'result_array', 'row', 'row_array']
+     * */
+    public function fetchAllOrRowSelectWhere($table, $select, $where = NULL, $where_value = NULL, $fetch_type = 'result_array')
+    {
+        if (isset($select)) {
+
+            $select = strtoupper(is_array($select) ? implode(' ,', $select) : $select);
+
+        } else {
+
+            // DEFAULT IS ALL
+            $select = ' * ';
+
+        }
+
+        $statement = "SELECT " . $select . " FROM ". $table . " WHERE " . $where ."=". "'". $where_value ."'";
+
+        $query = $this->db->query($statement);
+
+        switch (strtolower($fetch_type)) {
+            case 'result':
+                return $query->result();
+                break;
+
+            case 'row_array':
+                return $query->row_array();
+                break;
+
+            case 'row':
+                return $query->row();
+                break;
+            
+            default:
+                return $query->result_array();
+                break;
+        }
+
+    }
+
+
+    public function fetchAllBySelect($table, $select)
+    {   
+        
+        
+        if (isset($select)) {
+
+            if (is_array($select)) {
+            
+                $select = strtoupper(implode(' ,', $select));
+
+            } else {
+
+                $select = strtoupper($select);
+
+            }
+
+        } else {
+
+            // DEFAULT IS ALL
+            $select = ' * ';
+
+        }
+        
+        $query = $this->db->query("SELECT {$select} FROM {$table}");
+            return ($query->num_rows() > 0) ? $query->result_array() : false;
+    }
+
+
+    // GETTING APPLICANT DATA WITH VACANCY ID [AD_NO IS VACANCY_ID IN HRIS_REC_VACANCY_APPLICATION]
+    function fetchVacancyAndApplicationById($aid, $vid)
+    {
+        $query = $this->db->query("
+                            SELECT NV.*, 
+                                HV.VACANCY_TYPE, HV.OPENING_ID
+
+                            FROM $this->apptable NV 
+                            LEFT JOIN HRIS_REC_VACANCY HV ON NV.AD_NO = HV.VACANCY_ID
+
+                            WHERE NV.APPLICATION_ID = $aid AND NV.AD_NO = $vid");
+
+        $result = ($query->num_rows() > 0) ? $query->row_array():FALSE;
+        // echo '<pre>';print_r($result); die;
+        return $result;
     }
 }

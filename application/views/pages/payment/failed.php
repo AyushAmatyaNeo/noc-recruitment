@@ -1,8 +1,3 @@
-<?php
-
-// echo 'Payment Fail';
-
-?>
 <main class="main-success-page bg-light">
     <section class="sec-success-page sec-padd">
     <section class="tran-failed-sec">
@@ -17,8 +12,8 @@
                         </svg>
                     </div>
                     <p class="error">Transaction Failed!</p>
-                    <p>The system is currently experiencing technical difficulties. 
-                        Error Code: C20_3244</p>
+                    <p>The system is currently experiencing technical difficulties.</p>
+                    <!-- <p>Error Code: C20_3244</p> -->
                         <!-- <button class="btn btn-tranFailed">Try Again</button> -->
                         <a href="<?php echo base_url(); ?>vacancy"><button class="btn btn-outline-tranFailed">Back to Home</button></a>
                 </div>

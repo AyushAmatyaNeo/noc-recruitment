@@ -4,6 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 Class Users extends CI_Controller 
 {
 
+    private $isUserLoggedIn;
+
     public function __construct() 
     {
         parent::__construct(); 
@@ -13,6 +15,7 @@ Class Users extends CI_Controller
         $this->load->model('UserModel');
         $this->load->model('VacancyModel');
         $this->load->helper('captcha');
+        $this->load->helper('url');
         // $this->load->helper(array('form', 'url'));
         // User login status 
         $this->isUserLoggedIn = $this->session->userdata('isUserLoggedIn');
@@ -21,102 +24,170 @@ Class Users extends CI_Controller
     // Show login page
     public function index()
     { 
-        if($this->isUserLoggedIn){ 
+        if($this->isUserLoggedIn) { 
+
             redirect('vacancy/vacancylist'); 
-        }else{ 
+        
+        } else { 
+            
             redirect('users/login'); 
+        
         }
-    } 
+    }
+
     public function login()
     { 
         $data = array();
         
-        if($this->isUserLoggedIn){ 
+        /**
+         * ON FINDING USER SESSION ID
+         * */
+        if ($this->isUserLoggedIn)
+        {
+
             $checkpwStatus = $this->UserModel->checkpwResetstatus($this->session->userdata('userId'));
-                if($checkpwStatus == 1)
-                {
-                    $this->session->set_flashdata('msg', 'Please update your password before enter!');
-                    redirect('users/updatepassword');
-                }
-            redirect('vacancy/vacancylist'); 
-        }else{ 
-        // Get messages from the session 
-        if($this->session->userdata('success_msg'))
-        { 
-            $data['success_msg'] = $this->session->userdata('success_msg'); 
-            $this->session->unset_userdata('success_msg'); 
-        } 
-        if($this->session->userdata('error_msg'))
-        { 
-            $data['error_msg'] = $this->session->userdata('error_msg'); 
-            $this->session->unset_userdata('error_msg'); 
-        } 
-        // If login request submitted 
-        if($this->input->post('loginSubmit'))
-        {   
-            $this->form_validation->set_rules('email', 'email/Username', 'required'); 
-            $this->form_validation->set_rules('password', 'password', 'required');
-            
-            if($this->form_validation->run() == true){     
-                // check active status
-                $regef = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';     
-                if (preg_match($regef, $this->input->post('email'))) {
-                    $cond['email']['EMAIL_ID']= $this->input->post('email');
-                }else{
-                    $cond['email']['USERNAME']= $this->input->post('email');
-                }
-                $checkactiveStatus = $this->UserModel->checkactivestatus($cond);
-                // echo '<pre>'; print_r($checkactiveStatus); die;
-                if($checkactiveStatus['ACTIVE_STATUS'] == 'D'){
-                    $this->session->set_flashdata('msg', 'Please verify your Email before enter!');
-                    redirect('users/login');
-                }    
-                $con = array( 
-                    'returnType' => 'single', 
-                    'conditions' => array(
-                        // 'USERNAME'=> $this->input->post('email'),
-                        'PASSWORD' => ($this->input->post('password'))
-                    )
-                );
-                $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';     
-                if (preg_match($regex, $this->input->post('email'))) {
-                    $con['conditions']['EMAIL_ID']= $this->input->post('email');
-                }else{
-                    $con['conditions']['USERNAME']= $this->input->post('email');
-                }
                 
-                $checkLogin = $this->UserModel->getRows($con);
-                if($checkLogin){ 
-                    $this->session->set_userdata('isUserLoggedIn', TRUE); 
-                    $this->session->set_userdata('userId', $checkLogin['USER_ID']); 
-                    $checkpwStatus = $this->UserModel->checkpwResetstatus($this->session->userdata('userId'));
-                    if($checkpwStatus[0]['RESET_STATUS'] == 1)
-                    {
+                if ($checkpwStatus == 1)
+                {
                         $this->session->set_flashdata('msg', 'Please update your password before enter!');
-                        redirect('users/updatepassword');
-                    }
-                    redirect('vacancy/vacancylist'); 
-                }else{ 
-                    $data['error_msg'] = 'Wrong <strong>Email/Username</strong> or <strong>password</strong>, please try again.'; 
-                } 
-            }else{ 
-                $data['error_msg'] = 'Please fill all the mandatory fields.'; 
+                            redirect('users/updatepassword');
+                }
+            
+                redirect('vacancy/vacancylist'); 
+        
+        } else {
+
+            // Get messages from the session 
+            if ($this->session->userdata('success_msg'))
+            { 
+                
+                $data['success_msg'] = $this->session->userdata('success_msg'); 
+                    $this->session->unset_userdata('success_msg'); 
+            
             } 
-        } 
-        $data['meta'] = array(
-            'title' => 'Noc | Login'
-        );
-        // Load view 
-        $this->load->view('templates/header', $data); 
-        $this->load->view('users/login', $data); 
-        $this->load->view('templates/footer'); 
+        
+            if ($this->session->userdata('error_msg'))
+            { 
+            
+                $data['error_msg'] = $this->session->userdata('error_msg'); 
+                    $this->session->unset_userdata('error_msg'); 
+            
+            } 
+        
+            // If login request submitted 
+            if ($this->input->post('loginSubmit'))
+            {  
+
+                $this->form_validation->set_rules('email', 'email/Username', 'required'); 
+                $this->form_validation->set_rules('password', 'password', 'required');
+                
+                if ($this->form_validation->run() == true)
+                {     
+                
+                    
+                    // check active status
+                    if (emailCheckValid($this->input->post('email'))) 
+                    {
+                    
+                        $cond['email']['EMAIL_ID']= $this->input->post('email');
+
+                    } else {
+                        
+                        $cond['email']['USERNAME']= $this->input->post('email');
+                        
+                    }
+                
+                    $checkactiveStatus = $this->UserModel->checkactivestatus($cond);
+
+                    /**
+                     *  ACTIVE STATUS ->>>>>> D : 'NOT EMAIL VERIFIED' || E:  'EMAIL VERIFIED'
+                     * */
+                
+                    if ($checkactiveStatus['ACTIVE_STATUS'] == 'D')
+                    {
+                    
+                        $this->session->set_flashdata('msg', 'Please verify your Email before enter!');
+                            redirect('users/login');
+                    
+                    }
+
+                    $con = [ 
+                            'returnType' => 'single', 
+                            'conditions' => [
+                                // 'USERNAME'=> $this->input->post('email'),
+                                'PASSWORD' => $this->input->post('password')
+                                ]
+                            ];
+
+                    if (emailCheckValid($this->input->post('email'))) 
+                    {
+                     
+                        $con['conditions']['EMAIL_ID']= $this->input->post('email');
+
+                    } else {
+                        
+                        $con['conditions']['USERNAME']= $this->input->post('email');
+
+                    }
+                    
+
+                    $checkLogin = $this->UserModel->getRows($con);
+                    
+                    // SETTING SESSION OF USERS
+                    if ($checkLogin)
+                    { 
+                        
+                        $this->session->set_userdata('isUserLoggedIn', TRUE); 
+                        $this->session->set_userdata('userId', $checkLogin['USER_ID']); 
+                        $checkpwStatus = $this->UserModel->checkpwResetstatus($this->session->userdata('userId'));
+
+
+                        if($checkpwStatus[0]['RESET_STATUS'] == 1)
+                        {
+                        
+                            $this->session->set_flashdata('msg', 'Please update your password before enter!');
+                                redirect('users/updatepassword');
+
+                        }
+                        
+                        redirect('vacancy/vacancylist'); 
+                    
+                    } else { 
+
+                        $data['error_msg'] = 'Wrong <strong>Email/Username</strong> or <strong>password</strong>, please try again.'; 
+                    
+                    } 
+                
+                } else { 
+                    
+                    $data['error_msg'] = 'Please fill all the mandatory fields.'; 
+                
+                } 
+            
+            } 
+
+            $data['meta'] = ['title' => 'Noc | Login'];
+
+            // Load view 
+            $this->load->view('templates/header', $data); 
+            $this->load->view('users/login', $data); 
+            $this->load->view('templates/footer'); 
 
         }
     }
+
+    /**
+     * CREATE NEW USER REGISTRATION
+     * 
+     * 
+     * */
     public function registration()
     {
+
         // If registration request is submitted 
         $userRegistred = $this->UserModel->userRegistred($this->session->userdata('userId'));
+
+        // echo "here"; die;
         // $userRegistred = false;
         if($userRegistred == true)
         {
@@ -255,6 +326,7 @@ Class Users extends CI_Controller
         }
              
     }
+
     public function file_upload($input_id,$folder_name)
     {
         // echo'<pre>'; print_r($folder_name) ; die; 
@@ -292,6 +364,7 @@ Class Users extends CI_Controller
             return false;
         }
     }
+
     // Existing email check during validation 
     public function email_check($str)
     {
@@ -310,6 +383,13 @@ Class Users extends CI_Controller
                 return TRUE; 
             } 
     }
+
+
+    /*************
+     * 
+     *  USER PASSWORD SECTION
+     * 
+     *********** */
     public function valid_password($password = '')
     {
         $password = trim($password);
@@ -354,106 +434,152 @@ Class Users extends CI_Controller
         }
             return TRUE;
     }
-    // Forgot password --
+
+    /**
+     * Forgot password
+     * 
+     * */
     public function ForgotPassword()
-   {
+    {
 
         $data = array();
-        if(empty($this->session->userdata('userId'))) {
 
-            if($this->session->userdata('success_msg'))        { 
+        if (empty($this->session->userdata('userId'))) 
+        {
+
+            if ($this->session->userdata('success_msg')) 
+            {
+
                 $data['success_msg'] = $this->session->userdata('success_msg'); 
-                $this->session->unset_userdata('success_msg'); 
-            } 
-            if($this->session->userdata('error_msg'))        { 
-                $data['error_msg'] = $this->session->userdata('error_msg'); 
-                $this->session->unset_userdata('error_msg'); 
+                    $this->session->unset_userdata('success_msg'); 
+            
             }
-            $data['meta'] = array(
-                'title' => 'Noc | Forgot Password'
-            );
-            if($this->input->post('resetPassword'))        {
-                $email = $this->input->post('EMAIL_ID');
-                $findemail = $this->UserModel->forgotPassword($email); 
-                if($findemail)
+
+            if ($this->session->userdata('error_msg')) 
+            {
+
+                $data['error_msg'] = $this->session->userdata('error_msg'); 
+                    $this->session->unset_userdata('error_msg'); 
+            
+            }
+
+            $data['meta'] = [
+                'title' => 'Noc | Forgot Password',
+                'description' => 'Forgot Password'
+            ];
+
+            if ($this->input->post('resetPassword') == 'Submit') 
+            {
+               
+                $email     = $this->input->post('email_id');
+                $findEmail = $this->UserModel->forgotPassword($email); 
+
+                if ($findEmail)
                 {
-                $this->UserModel->sendpassword($findemail);
-                }else{
-                $this->session->set_flashdata('msg','Given Email doesn\'t match with the System');
-                redirect(base_url().'users/forgotpassword','refresh');
+                    
+                    $this->UserModel->sendpassword($findEmail);
+
+                } else {
+
+                    $this->session->set_flashdata('msg','Given Email doesn\'t match with the System');
+                        redirect('users/forgotpassword','refresh');
+
                 }
             }           
-            // print_r($con);die;  
-                // $data['user'] = $this->UserModel->getRows($con);
-                $data['meta'] = array(
-                    'title' => 'NOC | Forgot Password',
-                    'Description' => 'Forgot Password'
-                );
-            $this->load->view('templates/header',$data); 
-            $this->load->view('users/forgotpassword',$data); 
+
+            
+            $this->load->view('templates/header', $data); 
+            $this->load->view('users/forgotpassword', $data); 
             $this->load->view('templates/footer');
-        }else {
+
+        } else {
+
             redirect('users/updatepassword');
+
         }
-   }
-   //Update password
-   public function UpdatePassword()
-   {
+    }
+
+    /**
+     * Update password
+     * 
+     * */
+    public function UpdatePassword()
+    {
+
         $data = array();
-       if($this->isUserLoggedIn){
-        //    echo 'You are here to update password';
-        if($this->input->post('update_password'))
+       
+        if ($this->isUserLoggedIn)
         {
-            // echo '<pre>'; print_r($_POST); die;
-            $uid = $this->session->userdata('userId');
-            $oldpw  = $this->input->post('old_password');
-            $newpw  = $this->input->post('new_password');
-            $confpw = $this->input->post('conf_password');
-            $checkpassword = $this->UserModel->checkpw($oldpw,$uid);
-            if((!strcmp($confpw, $newpw)) && $checkpassword == true) 
+            $con = [
+                    'id' => $this->session->userdata('userId')
+                   ];
+
+            if ($this->input->post('update_password'))
             {
-                if($oldpw != $newpw)
+                $oldpw  = $this->input->post('old_password');
+                $newpw  = $this->input->post('new_password');
+                $confpw = $this->input->post('conf_password');
+                $checkpassword = $this->UserModel->checkpw($oldpw, $con['id']);
+
+                if ((!strcmp($confpw, $newpw)) && $checkpassword == true) 
                 {
-                    $update = $this->UserModel->updatepw($uid,$newpw);
-                    if($update == true)
+
+                    if ($oldpw != $newpw)
                     {
-                        $this->session->set_flashdata('success_msg','Your password has been updated!');
-                        redirect('profile/view');
-                    }else
-                    {
-                        $this->session->set_flashdata('msg','Some error occured!');
+
+                        $update = $this->UserModel->updatepw($con['id'], $newpw);
+                        
+                        if ($update == true)
+                        {
+                            
+                            $this->session->set_flashdata('success_msg','Your password has been updated!');
+                                redirect('profile/view');
+                        
+                        } else {
+
+                            $this->session->set_flashdata('msg','Some error occured!');
+                            redirect('users/updatepassword');
+
+                        }
+
+                    } else {
+
+                        $this->session->set_flashdata('msg','Your cannot use old password,please try again!');
+                            redirect('users/updatepassword');
+                    
+                    } 
+
+                } else {
+
+                    $this->session->set_flashdata('msg','Your old password doesn\'t match,please try again!');
                         redirect('users/updatepassword');
-                    }
 
-                }else
-                {
-                    $this->session->set_flashdata('msg','Your cannot use old password,please try again!');
-                    redirect('users/updatepassword');
-                }                
-            }else
-            {
-                $this->session->set_flashdata('msg','Your old password doesn\'t match,please try again!');
-                redirect('users/updatepassword');
+                }
+
             }
-        }
-        $con = array(
-            'id' => $this->session->userdata('userId')
-        );
-        $data['meta'] = [
-            'title' => 'Noc | Password Update',
-        ];
-        $data['user'] = $this->UserModel->getRows($con);
-        $this->load->view('templates/header',$data);
-        $this->load->view('users/updatepassword',$data);
-        $this->load->view('templates/footer');
 
-       }else
-       {
+        
+            $data['meta'] = [
+                'title' => 'Noc | Password Update',
+            ];
+
+            $data['user'] = $this->UserModel->getRows($con);
+            $this->load->view('templates/header',$data);
+            $this->load->view('users/updatepassword',$data);
+            $this->load->view('templates/footer');
+
+        } else {
+
            $this->session->set_flashdata('msg','Please login to update password!');
-           redirect('users/login');
-       }
-   }
-   // Check Unique Email ID while signup
+            redirect('users/login');
+
+        }
+    }
+
+    /**
+    * CHECK UNIQUE EMAIL ID WHILE SIGNUP 
+    * 
+    * */
     public function register_email_exists()
     {
         // print_r($_POST); die;
@@ -469,7 +595,11 @@ Class Users extends CI_Controller
             }
         }
     } 
-    // Check Unique Mobile no. while signup
+    
+    /**
+     * CHECK UNIQUE MOBILE NO. WHILE SIGNUP
+     * 
+     * */
     public function register_mobile_exists()
     {
         // print_r($_POST); die;
@@ -484,76 +614,132 @@ Class Users extends CI_Controller
                 echo json_encode(TRUE);
             }
         }
+    }  
+
+    /**
+     * CHECK UNIQUE USERNAME WHILE SIGNUP
+     * 
+     * */
+    public function register_username_exists()
+    {
+        if (array_key_exists('username',$_POST)) 
+        {
+         if ( $this->UserModel->columnDataExits('username', $this->input->post('username')) == TRUE ) 
+            {
+                echo json_encode(FALSE);
+            } 
+        else 
+            {
+                echo json_encode(TRUE);
+            }
+        }
     } 
+
+    /**
+     *  USER SIGN UP FORM
+     * 
+     * 
+     * */
     public function signup()
     {
-        if($this->isUserLoggedIn){ 
+
+        if ($this->isUserLoggedIn) 
+        { 
+        
             redirect('vacancy/vacancylist'); 
-        }else
-        { 
-            if($this->input->post('signup'))
-        { 
-            $this->form_validation->set_rules('first_name', 'First Name', 'required');
-            $this->form_validation->set_rules('last_name', 'Last Name', 'required'); 
-            $this->form_validation->set_rules('mobile_no', 'Mobile Number', 'required');
-            $this->form_validation->set_rules('email_id', 'Email Id', 'required'); 
-            $this->form_validation->set_rules('username', 'Username', 'required'); 
-            $this->form_validation->set_rules('password', 'Password', 'required');
-            
-            $UserId = $this->UserModel->getMaxUserId();
-            $userData = array(
-                'USER_ID' => $UserId['MAXID'] +1,
-                'FIRST_NAME' => strip_tags($this->input->post('first_name')),
-                'MIDDLE_NAME' => $this->input->post('middle_name'), 
-                'LAST_NAME' => strip_tags($this->input->post('last_name')),
-                'MOBILE_NO' => strip_tags($this->input->post('mobile_no')),
-                'EMAIL_ID' => strip_tags($this->input->post('email_id')),
-                'USERNAME' => $this->input->post('username'),
-                'PASSWORD' => $this->input->post('password'), 
-                'CREATED_DT' => date('Y-m-d')
-            ); 
-            if($this->form_validation->run() == true)
-            { 
-                $inputCaptcha = $this->input->post('captcha');
-                $sessCaptcha = $this->session->userdata('captchaCode');
-                if($inputCaptcha !== $sessCaptcha){
-                    $this->session->set_flashdata('error_msg', 'Your Captch doesn\'t Match. Please try again!'); 
-                    redirect('users/signup');
-                }
-                // echo '<pre>'; print_r($userData); die;
-                $insert = $this->UserModel->insert($userData); 
-                if($insert){ 
-                    //Send Email to user
-                    // $this->sendVerificationEmail($userData['EMAIL_ID']);
-                    $emailsend = $this->UserModel->sendVerificationEmail($userData['EMAIL_ID']);
-                    if($emailsend){
-                        $this->session->set_flashdata('success_msg', 'Account Signup successful , Verification Email sent.');
-                        redirect('users/login');
-                    } else{
-                        $this->session->set_flashdata('error_msg', 'Account Signup successful , Verification Email Failed to send.'); 
-                        redirect('users/login'); 
+        
+        } else {
+
+            if ($this->input->post('signup'))
+            {
+
+                $this->form_validation->set_rules('first_name', 'First Name', 'required');
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required'); 
+                $this->form_validation->set_rules('mobile_no', 'Mobile Number', 'required');
+                $this->form_validation->set_rules('email_id', 'Email Id', 'required'); 
+                $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check'); 
+                $this->form_validation->set_rules('password', 'Password', 'required');
+                
+               
+                $UserId = $this->UserModel->getMaxUserId();
+
+                $userData = array(
+                    'USER_ID' => $UserId['MAXID'] +1,
+                    'FIRST_NAME' => strip_tags($this->input->post('first_name')),
+                    'MIDDLE_NAME' => $this->input->post('middle_name'), 
+                    'LAST_NAME' => strip_tags($this->input->post('last_name')),
+                    'MOBILE_NO' => strip_tags($this->input->post('mobile_no')),
+                    'EMAIL_ID' => strip_tags($this->input->post('email_id')),
+                    'USERNAME' => $this->input->post('username'),
+                    'PASSWORD' => $this->input->post('password'), 
+                    'CREATED_DT' => date('Y-m-d')
+                );
+
+
+                if ($this->form_validation->run() == true)
+                { 
+
+                    $inputCaptcha = $this->input->post('captcha');
+                    $sessCaptcha  = $this->session->userdata('captchaCode');
+                    
+                    if ($inputCaptcha !== $sessCaptcha)
+                    {
+
+                        $this->session->set_flashdata('error_msg', 'Your Captch doesn\'t Match. Please try again!'); 
+                        redirect('users/signup');
+                    
                     }
-                }else{ 
-                    $data['error_msg'] = 'Some problems occured, please try again.'; 
-                } 
-                }else{ 
+                    
+                    // echo '<pre>'; print_r($userData); die;
+                    $insert = $this->UserModel->insert($userData); 
+                    // $insert = 1; 
+                    
+                    if ($insert)
+                    { 
+
+                        //Send Email to user
+                        // $this->sendVerificationEmail($userData['EMAIL_ID']);
+                        $emailsend = $this->UserModel->sendVerificationEmail($userData['EMAIL_ID']);
+
+                        if ($emailsend)
+                        {
+                        
+                            $this->session->set_flashdata('success_msg', 'Account Signup successful , Verification Email sent.');
+                            redirect('users/login');
+                        
+                        } else {
+                            
+                            $this->session->set_flashdata('error_msg', 'Account Signup successful , Verification Email Failed to send.'); 
+                            redirect('users/login'); 
+                        }
+
+                    } else {
+
+                        $data['error_msg'] = 'Some problems occured, please try again.'; 
+                    
+                    } 
+                
+                } else { 
+                    
                     $data['error_msg'] = 'Please fill all the mandatory fields.'; 
-            } 
-        }
-            $data['meta'] = array(
-                'title' => 'Noc | SignUp Account'
-            );
+                
+                } 
+            }
+
+            $data['meta'] = ['title' => 'Noc | SignUp Account'];
+
             // Captcha
             $config = array(
                 'img_path'      => 'assets/captcha/',
                 'img_url'       => base_url('assets/captcha/'),
                 'font_path'     => '../../assets/fonts/OpenSans.ttf', 
                 'font_size'     => 100,
-                'img_width'     => '150',
-                'img_height'    => 30,
+                'img_width'     => '160',
+                'img_height'    => 40,
                 'word_length'   => 4,
                 'expiration'    => 7200
             );
+
             $captcha = create_captcha($config);
             // echo '<pre>'; print_r($captcha); die;
             
@@ -569,8 +755,33 @@ Class Users extends CI_Controller
             $this->load->view('templates/header', $data); 
             $this->load->view('users/signup', $data); 
             $this->load->view('templates/footer');
+        
         }
+
     }
+
+    /**
+     *  CHECKING UNIQUE USERNAME BY SYSTEM SIDE
+     * 
+     * */
+    public function username_check($username)
+    {   
+        if ($this->UserModel->columnDataExits('username', $username) == TRUE ) 
+        {
+                
+            $this->form_validation->set_message('callback_username_check', 'This Username is already exists. Please Try Another One!');
+
+            return FALSE;
+
+        } else {
+
+            return TRUE;
+
+        }
+
+    }
+
+
     //Captcha Refresh
     public function refresh(){
         // Captcha configuration

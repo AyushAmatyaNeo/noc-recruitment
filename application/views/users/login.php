@@ -1,4 +1,3 @@
-
 <main class="main-registration login-main sec-padd bg-light">
 	<section class="login-sec">
 			<div class="container">
@@ -38,15 +37,18 @@
 											<input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password">
 											<?php echo form_error('password','<p class="help-block">','</p>'); ?>
 										</div>	
-										<div class="form-group form-check">
+										<div class="form-group form-check pl-4">
 											<input type="checkbox" class="form-check-input" id="rememberMe">
 											<label class="form-check-label" for="rememberMe">Remember me</label>
 										</div>	
-										<div class=" form-group col-md-12">
+										<div class="form-group col-md-12">
 											<a href="<?php echo base_url('users/forgotpassword'); ?>" style="font-style:italic;font-size:13px;color:#0749ab;padding-bottom:1rem">Forgot password?</a>
 										</div>
-										<div class="send-button">
-											<input type="submit" class="btn btn-primary btn-noc" name="loginSubmit" value="LOGIN">
+
+										<div class=" form-group col-md-12">
+											<div class="send-button">
+												<input type="submit" class="btn btn-primary btn-noc" name="loginSubmit" value="Login">
+											</div>
 										</div>
 
 										<!-- <button type="submit" class="btn btn-primary btn-noc" style="width: 100%;">Login</button> -->
