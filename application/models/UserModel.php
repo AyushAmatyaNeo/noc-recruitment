@@ -85,6 +85,7 @@ class UserModel extends CI_Model{
         } 
         return false; 
     }
+
     public function registerUser($data = array()) 
     { 
         // echo '<pre>'; print_r(count($data)); die;
@@ -145,6 +146,29 @@ class UserModel extends CI_Model{
         return FALSE; 
         }
    }
+
+   function username_exists2($username)
+   {
+        $query  = $this->db->query("SELECT * FROM $this->table where username = '$username'");
+        // echo $this->db->last_query();
+        if( $query->num_rows() > 0 )
+        { 
+            return TRUE; 
+        } 
+        else 
+        { 
+            return FALSE; 
+        }
+   }
+
+   public function columnDataExits($column, $column_value)
+   {
+       $query = $this->db->query("SELECT * FROM ".$this->table." WHERE ".$column." = '".$column_value."'");
+
+       return ($query->num_rows() > 0) ? true : false;
+
+   }
+
     public function user($user_id)
     {
         if($user_id)
@@ -199,53 +223,82 @@ class UserModel extends CI_Model{
         }
         return implode($pass); //turn the array into a string
     }
+
+    /**
+     * 
+     * SEND PASSWORD AS FORGOT AND SEND EMAIL
+     * 
+     * */
     public function sendpassword($data)
     {
-            $email = $data['EMAIL_ID'];
-            $query1=$this->db->query("SELECT *  from $this->table where EMAIL_ID = '".$email."' ");
-            $row=$query1->result_array();
-        if ($query1->num_rows()>0)        
+
+        $email = $data['EMAIL_ID'];
+
+        $findEmail = $this->db->query("SELECT *  from $this->table where EMAIL_ID = '".$email."' ");
+
+        $result = $findEmail->row_array();
+
+        if ($findEmail->num_rows() > 0)        
         {
-            $passwordplain = "";
-            $passwordplain  = $this->randomPassword();
-            $newpass['PASSWORD'] = ($passwordplain);
-            $query = $this->db->query("UPDATE $this->table SET PASSWORD = '$passwordplain' ,RESET_STATUS = TRUE where EMAIL_ID = '$email'");
-            $mail_message='Dear '.$row[0]['FIRST_NAME'].','. "<br \><br \>";
-            $mail_message.='Thanks for contacting regarding to forgot password,<br> Your <b> New Password</b> is <b>'.$passwordplain.'</b>'."<br \><br \>";
+
+            $plainPassword = $this->randomPassword();
+            $newPassword['PASSWORD'] = $plainPassword;
+
+            $updateNewPassword = $this->db->query("UPDATE $this->table 
+                                                   SET PASSWORD = '$plainPassword', RESET_STATUS = TRUE 
+                                                   WHERE EMAIL_ID = '$email'");
+
+            /* ---- CREATING EMAIL MESSAGE ---- */
+            $mail_message = 'Dear '.ucwords($result['FIRST_NAME']).','. "<br \><br \>";
+            $mail_message.='Thanks for contacting regarding to forgot password,<br> Your <b> New Password</b> is <b>'.$plainPassword.'</b>'."<br \><br \>";
             // $mail_message.='<br>Please Update your password.';
             $mail_message.='<br>Thanks & Regards';
-            $mail_message.='<br>Nepal Oil Corporation';        
-            date_default_timezone_set('Etc/UTC');
+            $mail_message.='<br>Nepal Oil Corporation';
+
+            date_default_timezone_set('Asia/Kathmandu');
+
             $mail = new PHPMailer;
             $mail->isSMTP();
+            $mail->Priority = 1;
             $mail->SMTPSecure = "tls"; 
             $mail->Debugoutput = 'html';
             $mail->Host = "smtp.ionos.com";
             $mail->Port = 587;
             $mail->SMTPAuth = true;   
-            $mail->Username = "jasmin.tamang@neosoftware.com.np";
-            $mail->Password = "Jasmin@12345#";
-            $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
+            $mail->Username = "bidhya.singh@neosoftware.com.np";
+            // $mail->Username = "jasmin.tamang@neosoftware.com.np";
+            $mail->Password = "Bidhya@@Singh123";
+            // $mail->Password = "Jasmin@12345#";
+            $mail->setFrom('bidhya.singh@neosoftware.com.np', 'NOC');
+            // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
             $mail->IsHTML(true);
             $mail->addAddress($email);
             $mail->Subject = 'OTP from NOC';
             $mail->Body    = $mail_message;
             $mail->AltBody = $mail_message;
-        if (!$mail->send()) 
-        {
-            $this->session->set_flashdata('msg','Failed to send password Email, please try again!');
-        } else 
-        {
+
+
+            if (!$mail->send()) 
+            {
+                
+                $this->session->set_flashdata('msg','Failed to send password Email, please try again!');
+                    redirect(base_url().'users/forgotpassword','refresh');        
             
-        $this->session->set_flashdata('msg','Password sent to your email!');
+            } else {
+            
+                $this->session->set_flashdata('msg_success','Password sent to your email!');
+                    redirect(base_url().'users/login','refresh');        
+
+            }
+            
+        
+        } else {
+
+            $this->session->set_flashdata('msg','Email not found try again!');
+                redirect(base_url().'users/forgotpassword','refresh');
+
         }
-        redirect(base_url().'users/Login','refresh');        
-        }
-        else
-        {  
-        $this->session->set_flashdata('msg','Email not found try again!');
-        redirect(base_url().'users/Login','refresh');
-        }
+
     }
     // Forgot password End --
     public function userDetails($params = array())
@@ -493,18 +546,71 @@ class UserModel extends CI_Model{
         return $result;
     }
     public function checkattributes($table, $column,$aid,$wid)
-    {
+    {   
+
         // $uid = ($uid )? '0': '';
         $query = $this->db->query("SELECT $column FROM $table WHERE $aid = '$wid'");
         // echo $this->db->last_query();
-        $result = ($query->num_rows() > 0)?TRUE:FALSE;
+        $result = ($query->num_rows() > 0) ? TRUE : FALSE;
         return $result;
     }
-    // Email verification
-    function sendVerificationEmail($email){
 
-        $query1 = $this->db->query("SELECT * from $this->table where EMAIL_ID = '".$email."' ");
-        $row=$query1->result_array();        
+    public function checkattributesWithStatus($table, $column,$aid,$wid, $status, $status_value)
+    {   
+
+        // $uid = ($uid )? '0': '';
+        $query = $this->db->query("SELECT $column FROM $table WHERE $aid = '$wid' AND $status = '$status_value'");
+        // echo $this->db->last_query();
+        $result = ($query->num_rows() > 0) ? TRUE : FALSE;
+        return $result;
+    }
+
+    public function userVacancyApplicationPaymentCheck($uid)
+    {
+        $uid   = (is_array($uid) ? $uid['id'] : $uid);
+        $query = $this->db->query("
+                        SELECT 
+                            NV.APPLICATION_ID, NV.APPLICATION_AMOUNT,
+                            AP.USER_ID, AP.PAYMENT_TYPE, AP.PAYMENT_NPR, AP.PAYMENT_EID, AP.PAYMENT_RFID, AP.STATUS
+
+                        FROM HRIS_REC_VACANCY_APPLICATION AS NV 
+
+                        LEFT JOIN HRIS_REC_APPLICATION_PAYMENT AS AP ON NV.USER_ID = AP.USER_ID
+                        -- LEFT JOIN HRIS_FUNCTIONAL_LEVELS AS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = HV.LEVEL_ID
+                        -- LEFT JOIN HRIS_DESIGNATIONS AS HD ON HV.POSITION_ID = HD.DESIGNATION_ID
+                        -- LEFT JOIN HRIS_REC_STAGES AS HAS ON NV.STAGE_ID = HAS.REC_STAGE_ID
+                        -- LEFT JOIN HRIS_REC_APPLICATION_PERSONAL AS HP ON NV.APPLICATION_ID = HP.APPLICATION_ID
+                        
+                        WHERE AP.USER_ID = $uid AND AP.STATUS = 1");
+
+        $result = ($query->num_rows() > 0) ? $query->result_array():FALSE;
+        return $result;
+    }
+
+
+    public function checkattributesByStatus($table, $column, $aid, $wid)
+    {   
+
+        // $uid = ($uid )? '0': '';
+        $query = $this->db->query("SELECT $column FROM $table WHERE $aid = '$wid'");
+        // echo $this->db->last_query();
+        $result = $query->row_array();
+        return $result;
+    }
+
+    /**
+     *  EMAIL VERIFICATION 
+     * 
+     * */
+    public function sendVerificationEmail($email)
+    {
+
+        $findEmailQuery = $this->db->query("SELECT * from $this->table where EMAIL_ID = '".$email."' ");
+        // $findEmailQuery = $this->db->query("SELECT * from $this->table where EMAIL_ID = 'bidud@gmail.com' ");
+
+        
+        $row = $findEmailQuery->result_array();
+                
         $textplain  = $this->EmailrandomText();
         $query = $this->db->query("UPDATE $this->table SET EMAIL_VERIFICATION_CODE = '$textplain' , ACTIVE_STATUS = 'D' where EMAIL_ID = '$email'");
         $mail_message='Dear '.$row[0]['FIRST_NAME'].','. "<br \><br \>";
@@ -515,25 +621,29 @@ class UserModel extends CI_Model{
         date_default_timezone_set('Etc/UTC');
         $mail = new PHPMailer;
         $mail->isSMTP();
+        $mail->Priority = 1;
         $mail->SMTPSecure = "tls"; 
         $mail->Debugoutput = 'html';
         $mail->Host = "smtp.ionos.com";
         $mail->Port = 587;
         $mail->SMTPAuth = true;   
-        $mail->Username = "jasmin.tamang@neosoftware.com.np";
-            $mail->Password = "Jasmin@12345#";
-            $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'Nepal Oil Corporation');
+        $mail->Username = "bidhya.singh@neosoftware.com.np";
+            // $mail->Username = "jasmin.tamang@neosoftware.com.np";
+        $mail->Password = "Bidhya@@Singh123";
+        // $mail->Password = "Jasmin@12345#";
+        $mail->setFrom('bidhya.singh@neosoftware.com.np', 'Nepal Oil Corporation');
+            // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
         $mail->IsHTML(true);
         $mail->addAddress($email);
         $mail->Subject = 'Verification Link | NOC';
         $mail->Body    = $mail_message;
         $mail->AltBody = $mail_message;
-        if (!$mail->send()) {
-            return false;
-        } else {                
-            return true;
-        }  
+
+        return (!$mail->send()) ? false : true;
+
     }
+
+
     function verifyEmailAddress($verificationText, $email){
         $sql = $this->db->query("SELECT EMAIL_VERIFICATION_CODE FROM $this->table where EMAIL_ID = '$email'");
         $row=$sql->result_array();

@@ -9,6 +9,8 @@
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 	<?= link_tag("assets/css/bootstrap.min.css"); ?>
 	<?= link_tag("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css") ?>
+
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 	<script href="<?= base_url(); ?>js/vendor/modernizr-2.6.2.min.js"></script>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href="<?= base_url(); ?>assets/css/main.css" rel="stylesheet">

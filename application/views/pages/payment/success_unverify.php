@@ -7,7 +7,7 @@
                         <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
                         <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                     </svg>
-                    <h6 class="success-top">Your Payment has been successfully paid!</h6>
+                    <h6 class="success-top">Your Payment has been made. Though Yet to be verified.</h6>
                 <div class="alert alert-success" role="alert">
                     <label>Application paid amount : Rs. <?php echo $payment_amount; ?></label>
                 </div>

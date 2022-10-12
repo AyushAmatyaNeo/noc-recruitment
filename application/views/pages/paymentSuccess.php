@@ -8,7 +8,7 @@
 	<section class="applied-vacancies-sec">
 		<div class="container-fluid">
             <input type="hidden" name="MERCHANTID" id="MERCHANTID" value="<?php echo $m_id ?>"/>
-            <input type="hidden" name="APPID" id="APPID" value="<?php echo $a_id ?>"/>
+            <input type="hidden" name="APPID" id="APPID" value="<?php echo $appId ?>"/>
             <input type="hidden" name="REFERENCEID" id="REFERENCEID" value="<?php echo $ref ?>"/>
             <input type="hidden" name="amt" id="amt" value="<?php echo $amt ?>"/>
             <input type="hidden" name="TOKEN" id="TOKEN" value="<?php echo $token ?>"/>

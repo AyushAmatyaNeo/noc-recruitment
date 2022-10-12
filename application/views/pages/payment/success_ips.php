@@ -1,3 +1,8 @@
+<?php
+
+// echo 'Payment Success'; die;
+?>
+
 <div class="jumbotron text-center">
     <h1 class="display-3">Thank You!</h1>
     <div class="container">
@@ -7,12 +12,12 @@
                         <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
                         <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                     </svg>
-                    <h6 class="success-top">Your Payment has been successfully paid!</h6>
+                    <h6 class="success-top">Your Payment has been successful!</h6>
                 <div class="alert alert-success" role="alert">
-                    <label>Application paid amount : Rs. <?php echo $payment_amount; ?></label>
+                    <label>Application paid amount : Rs. <?php echo $amount ?></label>
                 </div>
-                <p>Order Id: <?php echo $payment_transaction_id; ?></p>
-                <p>Reference Id: <?php echo $payment_reference_id; ?></p>
+                <p>Order Id: <?php echo $txn_id ?></p>
+                <p>Reference Id: <?php echo $reference_id ?></p>
             </div>
 
         </div>

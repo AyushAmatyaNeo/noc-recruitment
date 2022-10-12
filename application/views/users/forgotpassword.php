@@ -6,38 +6,48 @@
 						<div class="col-lg-6 offset-lg-3 col-md-12 card">
 							<div class="left-form p-5">
 								<div class="main-title">
-                				<?php
-									if($this->session->flashdata('msg')) {
-								?>
-								<div class="status-msg error"><?php echo $this->session->flashdata('msg'); ?>
+                				
+                				<?php if($this->session->flashdata('msg')) { ?>
+									<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('msg'); ?></div>
+								<?php } elseif ($this->session->flashdata('msg_success')) { ?>
+									<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('msg_success'); ?></div>
+								<?php } ?>
 
-										</div>
-										<?php } ?>
 									<h5>Update your Password</h5>
 									<p>Enter your registered Email.</p>
-									<p style="font-size: 14px;">We will send your new password in your registred Email.</p>
+									<p style="font-size: 14px;">We will send your new password in your Registered Email.</p>
 								</div>
+
 								<?php  
-									if(!empty($success_msg)){ 
-										echo '<p class="status-msg success">'.$success_msg.'</p>'; 
-									}elseif(!empty($error_msg)){ 
-										echo '<p class="status-msg error">'.$error_msg.'</p>'; 
+									if (!empty($success_msg)) { 
+										echo '<div class="alert alert-success" role="alert">'.$success_msg.'</div>'; 
+									} elseif (!empty($error_msg)) { 
+										echo '<div class="alert alert-danger" role="alert">'.$error_msg.'</div>'; 
 									} 
     							?>
-							<form method="post">
-								<table class="table table-bordered table-hover table-striped">                                      
-									<tbody>
-										<tr>
-											<td>Enter Email: </td>
-											<td>
-											<input type="email" name="EMAIL_ID" id="email" style="width:250px" required>
-											</td>
-											<td><input type = "submit" value="submit" name="resetPassword" class="button"></td>
-										</tr>							
-									</tbody>               
-								</table>
-							</form>
-							<p style="font-style:italic;font-size:14px;color:#dc3545;padding-bottom:1rem">* Don't refresh or reload this page</p>
+
+								<form method="post">
+
+	    							<div class="form-row">
+										<div class="form-group col-md-12 cstm-form-grp">
+											<i class="fa fa-envelope" aria-hidden="true"></i>
+											<input type="text" id="email" name="email_id" class="form-control" id="inputEmail" placeholder="enter your email address" required>
+										</div>
+										
+										<div class="form-group col-md-12">
+											<div class="send-button">
+												<input type="submit" value="Submit" name="resetPassword" class="btn btn-primary btn-noc">
+											</div>
+										</div>
+
+										<div class="form-group col-md-12">
+                                        <hr>
+                                            <label>Back to login page</label>
+                                            <a href="<?php echo  base_url('users/login') ?>" style="">Login</a>
+                                        </div>
+									</div>
+								</form>
+							<!-- <p style="font-style:italic;font-size:14px;color:#dc3545;padding-bottom:1rem">* Don't refresh or reload this page</p> -->
 							</div>
 						</div>
 					</div>
