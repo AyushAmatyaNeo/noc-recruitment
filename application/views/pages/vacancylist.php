@@ -98,7 +98,7 @@
 
 								<?php } elseif (($application['PAYMENT_PAID'] == 'Y') AND ($application['PAYMENT_VERIFIED'] == 'N')) { ?>
 
-										<td colspan="3"><h5 class="text-center">Paid Made but yet to verify</h5></td>
+										<td colspan="3"><p class="text-center"><strong>Payment Made but yet to verify</strong></p></td>
 
 								<?php } else {
 

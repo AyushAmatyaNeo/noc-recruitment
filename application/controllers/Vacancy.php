@@ -184,7 +184,7 @@ class Vacancy extends CI_Controller
 
     private function _connectips($data)
     {
-
+        sessionCheck(); 
         /**
          *  GET APPLICATION DETAILS
          * */
@@ -279,10 +279,21 @@ class Vacancy extends CI_Controller
         
     }
 
-    private function _generateTokenConnectIPS($data) {
+    private function _generateTokenConnectIPS($data) 
+    {
+        sessionCheck(); 
 
-        $string  = "MERCHANTID=".$data['merchant_id'].",APPID=".$data['app_id'].",APPNAME=".$data['app_name'].",TXNID=".$data['txn_id'].",TXNDATE=".$data['txn_date'].",TXNCRNCY=".$data['txn_currency'].",TXNAMT=".$data['txn_amount'].",REFERENCEID=".$data['reference_id'].",REMARKS=".$data['remarks'].",PARTICULARS=".$data['particulars'].",TOKEN=TOKEN";
+        if ($this->uri->segment(2) == 'connectIpsSuccess')
+        {
+            
+            $string = "MERCHANTID=".$data['merchant_id'].",APPID=".$data['app_id'].",REFERENCEID=".$data['txn_id'].",TXNAMT=".$data['txn_amount'];
+        
+        } else {
 
+            $string  = "MERCHANTID=".$data['merchant_id'].",APPID=".$data['app_id'].",APPNAME=".$data['app_name'].",TXNID=".$data['txn_id'].",TXNDATE=".$data['txn_date'].",TXNCRNCY=".$data['txn_currency'].",TXNAMT=".$data['txn_amount'].",REFERENCEID=".$data['reference_id'].",REMARKS=".$data['remarks'].",PARTICULARS=".$data['particulars'].",TOKEN=TOKEN";
+
+
+        }
 
         $hash = hash('sha256', $string);
 
@@ -326,6 +337,144 @@ class Vacancy extends CI_Controller
 
         return $hash;
 
+    }
+
+    /**
+     *  CONNECTI IPS SUCCESS
+     * 
+     *  vacancy/connectIpsSuccess?TXNID=78724191664179214
+     * */
+    public function connectIpsSuccess() 
+    {
+        sessionCheck();        
+
+        $userId       = ['id' => $this->userId];
+
+        $transaction_id =  $_GET['TXNID'];
+
+        $transactionDetail = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_APPLICATION_PAYMENT', '*', 'PAYMENT_TRANSACTION_ID', $transaction_id, 'row_array');
+
+        /* HERE WE ARE CONFIRM PAYMENT HAS BEEN MADE BUT NOT VERIFIED */
+        $payment_confirmed_data = [
+
+            'transaction_id' => $transactionDetail['PAYMENT_TRANSACTION_ID'],
+            'payment_id'     => $transactionDetail['PAYMENT_ID'],
+            'application_id' => $transactionDetail['APPLICATION_ID'],
+            'status'         => 1,
+            'payment_paid'   => 'Y'
+
+        ];
+
+            
+        $this->VacancyModel->paymentUpdateWithKey('HRIS_REC_APPLICATION_PAYMENT', 
+                                                  ['STATUS' => $payment_confirmed_data['status'], 'PAYMENT_PAID' => $payment_confirmed_data['payment_paid']], 
+                                                  'PAYMENT_TRANSACTION_ID', $payment_confirmed_data['transaction_id']);
+
+            
+        $this->VacancyModel->paymentUpdateWithKey('HRIS_REC_VACANCY_APPLICATION', 
+                                                 ['PAYMENT_ID' => $payment_confirmed_data['payment_id'], 'PAYMENT_PAID' => 'Y'], 
+                                                 'APPLICATION_ID', $payment_confirmed_data['application_id']);
+
+
+        /* HERE WE ARE CONFIRM PAYMENT HAS BEEN MADE BUT NOT VERIFIED */
+
+
+        /* FOR TOKEN GENERATING */
+        $connectips_data = [
+            
+            'merchant_id' => $this->config->item('connectips_merchant_id'),
+            'app_id'      => $this->config->item('connectips_app_id'),
+            'txn_amount'  => $transactionDetail['PAYMENT_AMOUNT'] * 100, // converting into PAISA
+            'txn_id'=> $transactionDetail['PAYMENT_TRANSACTION_ID'],
+
+        ];
+
+        /* FOR VERIFYING TRANSACTION */
+        $verifyData = [
+
+            "merchantId" => $connectips_data['merchant_id'],
+            "appId" => $connectips_data['app_id'],
+            "referenceId" => $connectips_data['txn_id'],
+            "txnAmt" => $connectips_data['txn_amount'],
+            "token" => $this->_generateTokenConnectIPS($connectips_data)
+        
+        ];
+
+
+        /* HERE STARTS PROCESS */
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
+        // CURLOPT_URL => 'https://uat.connectips.com:7443/connectipswebws/api/creditor/validatetxn/',
+
+        $curl = curl_init();
+        $client_id   = $this->config->item('ips_username');
+        $client_pass = $this->config->item('ips_password');
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $this->config->item('connectips_payment_validation_url'),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($verifyData),
+            CURLOPT_HTTPHEADER => array(
+                'Content-type: application/json',
+                'Authorization: Basic ' . base64_encode("$client_id:$client_pass")
+            ),
+
+            // ----- THIS BELOW LINE IS FOR LOCALHOST ONLY ----
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false
+            // ----- THIS ABOVE LINE IS FOR LOCALHOST ONLY ----
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $responseObj = json_decode($response, true);
+
+        $data = [
+            'user' => $this->UserModel->getRows($userId),
+            'meta' => [ 
+                        'title' => 'Vacancy Applied',
+                        'Description' => 'vacancy Application has been submitted!'
+                      ],
+            'payment_transaction_id' =>  $transactionDetail['PAYMENT_TRANSACTION_ID'],
+            'payment_amount'  => $transactionDetail['PAYMENT_AMOUNT'],
+            'payment_reference_id' => $transactionDetail['PAYMENT_REFERENCE_ID']        
+        ];
+
+        if ($responseObj['status'] == 'SUCCESS') 
+        {
+            $payment_verified_data = [
+                'payment_status'       => $responseObj['status'],
+                'payment_verified'     => 'Y',
+                'payment_verified_date'=> date('Y-m-d H:i:s.v')
+            ];
+
+            $this->VacancyModel->paymentUpdateWithKey('HRIS_REC_APPLICATION_PAYMENT', $payment_verified_data, 
+                                                      'PAYMENT_TRANSACTION_ID', $payment_confirmed_data['transaction_id']);
+
+            $this->VacancyModel->paymentUpdateWithKey('HRIS_REC_VACANCY_APPLICATION', ['PAYMENT_VERIFIED' => 'Y'], 
+                                                      'APPLICATION_ID',$payment_confirmed_data['application_id']);
+
+            
+
+            $this->load->view('templates/header',$data);
+            $this->load->view('pages/payment/success',$data);
+            $this->load->view('templates/footer');
+        
+        } else {
+
+            $this->load->view('templates/header',$data);
+            $this->load->view('pages/payment/success_unverify',$data);
+            $this->load->view('templates/footer');
+
+        }
+        
     }
 
     /**
@@ -803,9 +952,6 @@ class Vacancy extends CI_Controller
 
         }
     }
-
-
-
 
 
 
@@ -1620,549 +1766,7 @@ class Vacancy extends CI_Controller
 		$this->pdf->stream("Admin_card.pdf", array("Attachment"=> 0));
     }
 
-
-
-
-
-    public function connectIpsSuccess() {
-        
-        $returnTransactionID =  $_GET['TXNID'];
-
-        // $con = array(
-        //    'id' => $this->session->userdata('userId')
-        // );
-
-        $recentTransactionDetail = $this->VacancyModel->getTempPayment($returnTransactionID);
-
-        // $string = "MERCHANTID=$m_id,APPID=$appId,REFERENCEID=$ref,TXNAMT=$amt";
-        $string = "MERCHANTID=".$recentTransactionDetail['MERCHANT_ID'].
-                  ",APPID=".$recentTransactionDetail['APP_ID'].
-                  ",REFERENCEID=".$recentTransactionDetail['TXN_ID'].
-                  ",TXNAMT=".$recentTransactionDetail['AMOUNT'];
-
-
-        // echo '<pre>'; print_r($string); die;
-        if (!$cert_store = file_get_contents(FCPATH."CREDITOR\CREDITOR.pfx")) {
-        	echo "Error: Unable to read the cert file\n";
-        	exit;
-        }
-        if (openssl_pkcs12_read($cert_store, $cert_info, "123")) {
-        	if($private_key = openssl_pkey_get_private($cert_info['pkey'])){
-        		$array = openssl_pkey_get_details($private_key);
-        	    // print_r($array);
-        	}
-        } else {
-        	echo "Error: Unable to read the cert store.\n";
-        	exit;
-        }
-        $hash = "";
-        if(openssl_sign($string, $signature , $private_key, "sha256WithRSAEncryption")){
-	        $hash = base64_encode($signature);
-	        openssl_free_key($private_key);
-        } else {
-            echo "Error: Unable openssl_sign";
-            exit;
-        }    
-
-
-        $verifyData = [
-                        "merchantId" => $recentTransactionDetail['MERCHANT_ID'],
-                        "appId" => $recentTransactionDetail['APP_ID'],
-                        "referenceId" => $recentTransactionDetail['TXN_ID'],
-                        "txnAmt" => $recentTransactionDetail['AMOUNT'],
-                        "token" => $hash
-                     ];
-
-
-
-
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
-        $curl = curl_init();
-        $client_id   = $this->config->item('ips_username');
-        $client_pass = $this->config->item('ips_password');
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://uat.connectips.com:7443/connectipswebws/api/creditor/validatetxn/',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($verifyData),
-            CURLOPT_HTTPHEADER => array(
-                'Content-type: application/json',
-                'Authorization: Basic ' . base64_encode("$client_id:$client_pass")
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $responseObj = json_decode($response, true);
-
-        echo "<pre>";
-        print_r($responseObj);
-        die;
-
-        $response_code = $this->get_xml_node_value('response_code', $response);
-
-
-        //----------------------------------- testing ----------------------
-    
-        if(isset($_GET['TXNID']))
-        {
-            // echo "<pre>";
-            // print_r($_GET['TXNID']); die;
-            $paymentId   = $this->VacancyModel->getMaxIds('PAYMENT_ID','HRIS_REC_TEMP_PAYMENT_TEST');
-
-            $userId = ['id' => $this->session->userdata('userId')];
-            
-            // $oid = urldecode($_GET['oid']);
-            // $aid = preg_replace( "/vid.?.?.?./", "", $oid );
-            $userDetails = $this->VacancyModel->applicationDetailsRow($userId);
-
-            // echo "<pre>";
-            // print_r($userDetails['APPLICATION_ID']); die;
-            // $application_id = 0; //UXzlaP5uCe6LKpBgaid1vid1
-            // $vacancy_id = preg_replace( "#^[^:/.]*[:vid]+#i", "", $oid);
-
-            // JUST CALLING 
-            $connectIps = [
-                'payment_id'     => $paymentId['MAXID'] + 1,
-                'application_id' => $userDetails['APPLICATION_ID'],
-                'user_id'        => $userId['id'],
-                'vacancy_id'     => $userDetails['VACANCY_ID'], 
-                'payment_type'   => 'ConnectIps',
-                'payment_npr'    => $data['amt'],
-                'merchantId'     => $dataIps['merchantId'],
-                'app_id'         => $dataIps['appId'],
-                'app_name'       => 'NOC Recruitment',
-                'txn_id'         => $_GET['TXNID'],
-                'txn_date'       => date('Y-m-d'),
-                'txn_cur'        => 'NPR',
-                'amount'         => $dataIps['txnAmt'],
-                'reference_id'   => $dataIps['referenceId'],
-                'remarks'        => 'RMKS-00',
-                'particulars'    => 'PART-001',
-                'token'          => $dataIps['token'],
-                'status'         => 'success',
-                'created_dt'   => date('Y-m-d'),
-                'modified_dt'   => date('Y-m-d'),
-            ];
-
-           
-            // $url = "https://uat.esewa.com.np/epay/transrec";
-            // $dataEsewa =[
-            //     'amt'=> $_GET['amt'],
-            //     'rid'=> $_GET['refId'],
-            //     'pid'=>$oid,
-            //     'scd'=> 'EPAYTEST'
-            // ];
-            // $curl = curl_init($url);
-            // curl_setopt($curl, CURLOPT_POST, true);
-            // curl_setopt($curl, CURLOPT_POSTFIELDS, $dataEsewa);
-            // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            // $response = curl_exec($curl);
-            // echo $response;
-            // curl_close($curl);
-            if(true){
-                if($this->UserModel->checkattributes('hris_rec_temp_payment_test','*','txn_id',$_GET['TXNID']) == false){
-                    $payment_status = $this->VacancyModel->payment_insert_ips($connectIps);
-                    if($payment_status == true)
-                    {
-                        $this->load->view('templates/header', $data);
-                        $this->load->view('pages/payment/success_ips', $connectIps);
-                        $this->load->view('templates/footer');
-                    }
-                    }else{
-                        $this->session->set_flashdata('error_msg',"Some Error Occured!");
-                        redirect('vacancy/vacancylist');
-                    }                
-            }else{
-                echo "Some Error Occured!";
-            }  
-        }
-
-
-
-        // ------------------------------------- testing ------------------------
-
-        // echo '<pre>'; print_r($return); die;
-
-        $this->load->view('templates/header',$data);
-        $this->load->view('pages/paymentSuccess',$data);
-        $this->load->view('templates/footer');
-    }
-
-    public function connectIpsDetail() {
-        
-        $returnTransactionID =  '6233171664524950';
-
-        // $con = array(
-        //    'id' => $this->session->userdata('userId')
-        // );
-
-        $recentTransactionDetail = $this->VacancyModel->getTempPayment($returnTransactionID);
-
-        $verifyData = [
-                        "merchantId" => $recentTransactionDetail['MERCHANT_ID'],
-                        "appId" => $recentTransactionDetail['APP_ID'],
-                        "referenceId" => $recentTransactionDetail['TXN_ID'],
-                        "txnAmt" => $recentTransactionDetail['AMOUNT'],
-                     ];
-
-        
-
-
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
-        $curl = curl_init();
-        $client_id   = $this->config->item('ips_username');
-        $client_pass = $this->config->item('ips_password');
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://uat.connectips.com:7443/connectipswebws/api/creditor/gettxndetail',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($verifyData),
-            CURLOPT_HTTPHEADER => array(
-                'Content-type: application/json',
-                'Authorization: Basic ' . base64_encode("$client_id:$client_pass")
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $responseObj = json_decode($response, true);
-
-        echo "<pre>";
-        echo $responseObj;
-        die;
-
-        $response_code = $this->get_xml_node_value('response_code', $response);
-
-
-        //----------------------------------- testing ----------------------
-    
-        if(isset($_GET['TXNID']))
-        {
-            // echo "<pre>";
-            // print_r($_GET['TXNID']); die;
-            $paymentId   = $this->VacancyModel->getMaxIds('PAYMENT_ID','HRIS_REC_TEMP_PAYMENT_TEST');
-
-            $userId = ['id' => $this->session->userdata('userId')];
-            
-            // $oid = urldecode($_GET['oid']);
-            // $aid = preg_replace( "/vid.?.?.?./", "", $oid );
-            $userDetails = $this->VacancyModel->applicationDetailsRow($userId);
-
-            // echo "<pre>";
-            // print_r($userDetails['APPLICATION_ID']); die;
-            // $application_id = 0; //UXzlaP5uCe6LKpBgaid1vid1
-            // $vacancy_id = preg_replace( "#^[^:/.]*[:vid]+#i", "", $oid);
-
-            // JUST CALLING 
-            $connectIps = [
-                'payment_id'     => $paymentId['MAXID'] + 1,
-                'application_id' => $userDetails['APPLICATION_ID'],
-                'user_id'        => $userId['id'],
-                'vacancy_id'     => $userDetails['VACANCY_ID'], 
-                'payment_type'   => 'ConnectIps',
-                'payment_npr'    => $data['amt'],
-                'merchantId'     => $dataIps['merchantId'],
-                'app_id'         => $dataIps['appId'],
-                'app_name'       => 'NOC Recruitment',
-                'txn_id'         => $_GET['TXNID'],
-                'txn_date'       => date('Y-m-d'),
-                'txn_cur'        => 'NPR',
-                'amount'         => $dataIps['txnAmt'],
-                'reference_id'   => $dataIps['referenceId'],
-                'remarks'        => 'RMKS-00',
-                'particulars'    => 'PART-001',
-                'token'          => $dataIps['token'],
-                'status'         => 'success',
-                'created_dt'   => date('Y-m-d'),
-                'modified_dt'   => date('Y-m-d'),
-            ];
-
-           
-            // $url = "https://uat.esewa.com.np/epay/transrec";
-            // $dataEsewa =[
-            //     'amt'=> $_GET['amt'],
-            //     'rid'=> $_GET['refId'],
-            //     'pid'=>$oid,
-            //     'scd'=> 'EPAYTEST'
-            // ];
-            // $curl = curl_init($url);
-            // curl_setopt($curl, CURLOPT_POST, true);
-            // curl_setopt($curl, CURLOPT_POSTFIELDS, $dataEsewa);
-            // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            // $response = curl_exec($curl);
-            // echo $response;
-            // curl_close($curl);
-            if(true){
-                if($this->UserModel->checkattributes('hris_rec_temp_payment_test','*','txn_id',$_GET['TXNID']) == false){
-                    $payment_status = $this->VacancyModel->payment_insert_ips($connectIps);
-                    if($payment_status == true)
-                    {
-                        $this->load->view('templates/header', $data);
-                        $this->load->view('pages/payment/success_ips', $connectIps);
-                        $this->load->view('templates/footer');
-                    }
-                    }else{
-                        $this->session->set_flashdata('error_msg',"Some Error Occured!");
-                        redirect('vacancy/vacancylist');
-                    }                
-            }else{
-                echo "Some Error Occured!";
-            }  
-        }
-
-
-
-        // ------------------------------------- testing ------------------------
-
-        // echo '<pre>'; print_r($return); die;
-
-        $this->load->view('templates/header',$data);
-        $this->load->view('pages/paymentSuccess',$data);
-        $this->load->view('templates/footer');
-    }
-
-    public function connectIpsSuccess_copy() {
-        
-        $returnTransactionID =  $_GET['TXNID'];
-
-        // echo $this->userId; die;
-
-        // $con = array(
-        //    'id' => $this->session->userdata('userId')
-        // );
-
-        $recentTransactionDetail = $this->VacancyModel->getTempPayment($returnTransactionID);
-
-        // echo '<pre>'; print_r($recentTransactionDetail); die;
-
-        // $data = [
-        //             'm_id' => $dataIps['MERCHANT_ID'],
-        //             'appId' => $dataIps['APP_ID'],
-        //             'ref' => $dataIps['REFERENCE_ID'],
-        //             'amt' => $dataIps['AMOUNT']
-        //         ];
-
-        // echo "<pre>"; print_r($data); die;
-        
-        // $string = "MERCHANTID=$m_id,APPID=$appId,REFERENCEID=$ref,TXNAMT=$amt";
-        $string = "MERCHANTID=".$recentTransactionDetail['MERCHANT_ID'].
-                  ",APPID=".$recentTransactionDetail['APP_ID'].
-                  ",REFERENCEID=".$recentTransactionDetail['TXN_ID'].
-                  ",TXNAMT=".$recentTransactionDetail['AMOUNT'];
-
-        // echo '<pre>'; print_r($string); die;
-        if (!$cert_store = file_get_contents("CREDITOR.pfx")) {
-            echo "Error: Unable to read the cert file\n";
-            exit;
-        }
-        if (openssl_pkcs12_read($cert_store, $cert_info, "123")) {
-            if($private_key = openssl_pkey_get_private($cert_info['pkey'])){
-                $array = openssl_pkey_get_details($private_key);
-                // print_r($array);
-            }
-        } else {
-            echo "Error: Unable to read the cert store.\n";
-            exit;
-        }
-        $hash = "";
-        if(openssl_sign($string, $signature , $private_key, "sha256WithRSAEncryption")){
-            $hash = base64_encode($signature);
-            openssl_free_key($private_key);
-        } else {
-            echo "Error: Unable openssl_sign";
-            exit;
-        }    
-
-
-        $verifyData = [
-                        "merchantId" => $recentTransactionDetail['MERCHANT_ID'],
-                        "appId" => $recentTransactionDetail['APP_ID'],
-                        "referenceId" => $recentTransactionDetail['TXN_ID'],
-                        "txnAmt" => $recentTransactionDetail['AMOUNT'],
-                        "token" => $hash
-                     ];
-
-        // $username = $this->config->item('ips_username');
-        // $password = $this->config->item('ips_password');
-
-
-        // $curl = curl_init();
-
-        // curl_setopt_array($curl, array(
-
-        //     CURLOPT_URL => $this->config->item('connectips_payment_validation_url'),
-        //     CURLOPT_RETURNTRANSFER => true,
-        //     CURLOPT_ENCODING => '',
-        //     CURLOPT_MAXREDIRS => 10,
-        //     CURLOPT_TIMEOUT => 0,
-        //     CURLOPT_FOLLOWLOCATION => true,
-        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //     CURLOPT_CUSTOMREQUEST => 'POST',
-        //     CURLOPT_POSTFIELDS => json_encode($verifyData),
-
-        //     CURLOPT_HTTPHEADER => array(
-        //         'Content-Type: application/json',
-        //         'Authorization: Basic '."$username:$password"
-        //     ),
-
-        //     CURLOPT_SSL_VERIFYPEER => false,
-        //     CURLOPT_SSL_VERIFYHOST => false,
-
-        // ));
-
-        // $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-        // $response = curl_exec($curl);
-        // curl_close($curl);
-
-        // echo "<pre>";
-
-        // print_r($status_code);
-
-        // die;
-
-        $curl = curl_init($this->config->item('connectips_payment_validation_url'));
-        $headr = array(); //
-        // $headr[] = 'Content-length: 0'; //
-        $headr[] = 'Content-type: application/json'; //
-
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headr);
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-        curl_setopt($curl, CURLOPT_USERPWD, $this->config->item('ips_username') . ":" . $this->config->item('ips_password'));
-        curl_setopt($curl, CURLOPT_POST, true);
-        // curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($verifyData));
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($verifyData));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        // ----- THIS BELOW LINE IS FOR LOCALHOST ONLY ----
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        // ----- THIS ABOVE LINE IS FOR LOCALHOST ONLY ----
-        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        // $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-        // $response = curl_exec($curl);
-        // curl_close($curl);
-
-        print_r($response);
-        die;
-
-        echo "<pre>";
-        echo $status_code;
-        die;
-
-        $response_code = $this->get_xml_node_value('response_code', $response);
-
-
-        //----------------------------------- testing ----------------------
-    
-        if(isset($_GET['TXNID']))
-        {
-            // echo "<pre>";
-            // print_r($_GET['TXNID']); die;
-            $paymentId   = $this->VacancyModel->getMaxIds('PAYMENT_ID','HRIS_REC_TEMP_PAYMENT_TEST');
-
-            $userId = ['id' => $this->session->userdata('userId')];
-            
-            // $oid = urldecode($_GET['oid']);
-            // $aid = preg_replace( "/vid.?.?.?./", "", $oid );
-            $userDetails = $this->VacancyModel->applicationDetailsRow($userId);
-
-            // echo "<pre>";
-            // print_r($userDetails['APPLICATION_ID']); die;
-            // $application_id = 0; //UXzlaP5uCe6LKpBgaid1vid1
-            // $vacancy_id = preg_replace( "#^[^:/.]*[:vid]+#i", "", $oid);
-
-            // JUST CALLING 
-            $connectIps = [
-                'payment_id'     => $paymentId['MAXID'] + 1,
-                'application_id' => $userDetails['APPLICATION_ID'],
-                'user_id'        => $userId['id'],
-                'vacancy_id'     => $userDetails['VACANCY_ID'], 
-                'payment_type'   => 'ConnectIps',
-                'payment_npr'    => $data['amt'],
-                'merchantId'     => $dataIps['merchantId'],
-                'app_id'         => $dataIps['appId'],
-                'app_name'       => 'NOC Recruitment',
-                'txn_id'         => $_GET['TXNID'],
-                'txn_date'       => date('Y-m-d'),
-                'txn_cur'        => 'NPR',
-                'amount'         => $dataIps['txnAmt'],
-                'reference_id'   => $dataIps['referenceId'],
-                'remarks'        => 'RMKS-00',
-                'particulars'    => 'PART-001',
-                'token'          => $dataIps['token'],
-                'status'         => 'success',
-                'created_dt'   => date('Y-m-d'),
-                'modified_dt'   => date('Y-m-d'),
-            ];
-
-           
-            // $url = "https://uat.esewa.com.np/epay/transrec";
-            // $dataEsewa =[
-            //     'amt'=> $_GET['amt'],
-            //     'rid'=> $_GET['refId'],
-            //     'pid'=>$oid,
-            //     'scd'=> 'EPAYTEST'
-            // ];
-            // $curl = curl_init($url);
-            // curl_setopt($curl, CURLOPT_POST, true);
-            // curl_setopt($curl, CURLOPT_POSTFIELDS, $dataEsewa);
-            // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            // $response = curl_exec($curl);
-            // echo $response;
-            // curl_close($curl);
-            if(true){
-                if($this->UserModel->checkattributes('hris_rec_temp_payment_test','*','txn_id',$_GET['TXNID']) == false){
-                    $payment_status = $this->VacancyModel->payment_insert_ips($connectIps);
-                    if($payment_status == true)
-                    {
-                        $this->load->view('templates/header', $data);
-                        $this->load->view('pages/payment/success_ips', $connectIps);
-                        $this->load->view('templates/footer');
-                    }
-                    }else{
-                        $this->session->set_flashdata('error_msg',"Some Error Occured!");
-                        redirect('vacancy/vacancylist');
-                    }                
-            }else{
-                echo "Some Error Occured!";
-            }  
-        }
-
-
-
-        // ------------------------------------- testing ------------------------
-
-        // echo '<pre>'; print_r($return); die;
-
-        $this->load->view('templates/header',$data);
-        $this->load->view('pages/paymentSuccess',$data);
-        $this->load->view('templates/footer');
-    }
-    /*
-     *  -- 9/23/2022
-     *  
-     */
+   
 
     
 
