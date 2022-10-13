@@ -53,6 +53,12 @@
                                             </div>
 
                                             <div class="form-group col-md-12">
+                                                <label for="name_nepali">Full Name (नेपालीमा):</label>
+                                                <input type="text" name="name_nepali" class="form-control w-border" id="name_nepali" placeholder="हजुर को नाम नेपालीमा लेख्नुस" value="<?php echo set_value('name_nepali'); ?>">
+                                                <?php echo form_error('name_nepali','<p class="help-block error">','</p>'); ?>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
                                                 <label for="mobile_no">Mobile No:</label>
                                                 <input type="text" name="mobile_no" class="form-control w-border" id="mobile_no" placeholder="enter your mobile no (Ncell/NTC)" value="<?php echo set_value('mobile_no'); ?>">
                                                 <?php echo form_error('mobile_no','<p class="help-block error">','</p>'); ?>
