@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 
 $db['default'] = array(
-	'dsn'	=> 'SAPHANA',
+	'dsn'	=> 'NEW_TEST_DB',
 	// 'dsn'	=> 'NEW_TEST_DB',
 	// 'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHR_TEST;PWD=P@s$w0rd;Database=NOCHR_TEST;',
 	'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHRTEST;PWD=Noc$%^@123;Database=NOCHRTEST;',
