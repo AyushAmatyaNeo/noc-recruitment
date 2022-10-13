@@ -8,6 +8,10 @@ application/logs/*
 
 !application/*/.htaccess
 
+.htaccess
+
+application/config/config.php
+
 
 
 user_guide_src/build/*
