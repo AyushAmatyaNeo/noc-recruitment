@@ -581,13 +581,12 @@ class VacancyModel extends CI_Model
         $query = $this->db->query("
 
                         SELECT 
-                            NV.APPLICATION_ID, NV.REMARKS,  NV.APPLICATION_AMOUNT,
+                            NV.APPLICATION_ID, NV.REMARKS,  NV.APPLICATION_AMOUNT, NV.PAYMENT_PAID, NV.PAYMENT_VERIFIED,
                             HP.ROLL_NO, 
                             HV.AD_NO, HV.VACANCY_ID, 
                             HD.DESIGNATION_TITLE, 
                             HFL.FUNCTIONAL_LEVEL_EDESC,
-                            HAS.STAGE_EDESC,
-                            HC.PAYMENT_PAID, HC.PAYMENT_STATUS, HC.PAYMENT_VERIFIED
+                            HAS.STAGE_EDESC
 
 
                         FROM HRIS_REC_VACANCY_APPLICATION AS NV 
@@ -597,7 +596,6 @@ class VacancyModel extends CI_Model
                         LEFT JOIN HRIS_DESIGNATIONS AS HD ON HV.POSITION_ID = HD.DESIGNATION_ID
                         LEFT JOIN HRIS_REC_STAGES AS HAS ON NV.STAGE_ID = HAS.REC_STAGE_ID
                         LEFT JOIN HRIS_REC_APPLICATION_PERSONAL AS HP ON NV.APPLICATION_ID = HP.APPLICATION_ID
-                        LEFT JOIN HRIS_REC_APPLICATION_PAYMENT AS HC ON NV.PAYMENT_ID = HC.PAYMENT_ID
                         
                         WHERE NV.STATUS = 'D' AND NV.USER_ID = $uid ORDER BY NV.APPLICATION_ID");
 

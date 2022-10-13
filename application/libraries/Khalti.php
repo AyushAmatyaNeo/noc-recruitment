@@ -124,22 +124,19 @@ class Khalti
                 $paymentId = $CI->db->query("SELECT MAX(PAYMENT_ID) AS MAXID FROM HRIS_REC_APPLICATION_PAYMENT")->row_array();
 
                 $insert_data = [
-                    'payment_id'     => $paymentId['MAXID'] + 1,
-                    'application_id' => $post_data['application_id'],
-                    'user_id'        => $post_data['user_id'],
-                    'vacancy_id'     => $post_data['vacancy_id'], 
-                    // 'payment_type'   => $post_data['payment_gateway'],
+
+                    'payment_id'         => $paymentId['MAXID'] + 1,
+                    'application_id'     => $post_data['application_id'],
+                    'user_id'            => $post_data['user_id'],
+                    'vacancy_id'         => $post_data['vacancy_id'], 
                     'payment_gateway_id' => $post_data['payment_gateway_id'],
-                    'payment_amount' => $post_data['actual_amount'],
-                    'payment_unique_id' => $response->pidx,
-                    // 'payment_transaction_id' => '',
-                    'payment_order_id' => $request_data['purchase_order_id'],
+                    'payment_amount'     => $post_data['actual_amount'],
+                    'payment_unique_id'  => $response->pidx,
+                    'payment_order_id'   => $request_data['purchase_order_id'],
                     'payment_order_name' => $request_data['purchase_order_name'],
-                    // 'payment_reference_id'   => $_GET['refId'],
-                    // 'status'         => '1',
-                    // 'payment_paid'   => 'Y',
-                    'payment_status' => 'pending',
-                    'created_date'   => date('Y-m-d H:i:s.v')
+                    'payment_status'     => 'pending',
+                    'created_date'       => date('Y-m-d H:i:s.v')
+                    
                 ];
 
 
@@ -149,7 +146,6 @@ class Khalti
                 $checkPidx = $CI->db->query("SELECT * FROM HRIS_REC_APPLICATION_PAYMENT WHERE PAYMENT_UNIQUE_ID = '$pidx'")->num_rows();
 
                 
-                // if (false)
                 if ($checkPidx == 0)
                 {     
 
@@ -161,15 +157,6 @@ class Khalti
                      * */
                     $CI->db->query("INSERT INTO HRIS_REC_APPLICATION_PAYMENT ($columns) VALUES ('$values')");
 
-                    // if ($CI->db->affected_rows()) {
-
-                    //     $CI->db->query("UPDATE HRIS_REC_VACANCY_APPLICATION 
-                    //                     SET PAYMENT_STATUS = 'Y' 
-                    //                     WHERE APPLICATION_ID = '" . $insert_data['application_id'] . "' AND AD_NO = '" . $insert_data['vacancy_id'] ."'");
-
-
-
-                    // }
                     echo $response->payment_url;
 
                 } else {
@@ -177,12 +164,6 @@ class Khalti
                     return false;
 
                 }
-
-
-
-                // header( 'Access-Control-Allow-Origin: ' . $response->payment_url, true );
-
-                // redirect($response->payment_url);
 
             }
 
@@ -208,6 +189,12 @@ class Khalti
 
         $CI->load->helper('utility');
 
+        /* SETTING */
+        $private_key = config_item('live_secret_key');
+        $debug       = config_item('debug');
+        $base_url    = config_item('khalti_lookup_url');
+        /* SETTING */
+
        
         /**
          * GET DATA FROM HRIS_REC_APPLICATION_PAYMENT WHERE pidx  [COLUMN:  PAYMENT_UNIQUE_ID]
@@ -215,19 +202,8 @@ class Khalti
         $pidx = $data['pidx'];
         $checkPIDXAvailable = $CI->db->query("SELECT * FROM HRIS_REC_APPLICATION_PAYMENT WHERE PAYMENT_UNIQUE_ID = '$pidx'")->row_array();
 
+
         
-        // echo "<pre>";
-
-        // print_r($checkPIDXAvailable);
-
-        // die;
-
-        $private_key = config_item('live_secret_key');
-        $debug       = config_item('debug');
-
-        $base_url    = config_item('khalti_lookup_url');
-
-
         if ($checkPIDXAvailable)
         // if (true)
         {
@@ -284,8 +260,6 @@ class Khalti
                 $fee = ($response['fee'] !== 0) ? ($response['fee'] / 100) : 0;
 
                 $update_data = [
-                    'status' => 0,
-                    'payment_paid' => '',
                     'payment_status' => strtolower($response['status']),
                     'fee' => $fee,
                     'payment_verified' => '',
@@ -301,8 +275,6 @@ class Khalti
                      *  status = 1, payment_paid = Y, payment_verified = Y
                      * 
                      * */
-                    $update_data['status'] = 1;
-                    $update_data['payment_paid'] = 'Y';
                     $update_data['payment_verified'] = 'Y';
 
                     $column = arrayKeyImplode($update_data, 'c', 'key');
@@ -316,16 +288,15 @@ class Khalti
                     if ($CI->db->affected_rows() > 0)
                     { 
 
-                        $fetch_statement = "SELECT * FROM HRIS_REC_APPLICATION_PAYMENT WHERE PAYMENT_UNIQUE_ID = '$pidx'";
-                        $result = $CI->db->query($fetch_statement)->row_array();
-
                         // UPDATE HRIS_REC_VACANCY_APPLICATION  ->> PAYMENT_STATUS
-                        $application_id = $result['APPLICATION_ID'];
-                        $vacancy_id     = $result['VACANCY_ID'];
-                        $payment_id     = $result['PAYMENT_ID'];
+                        
+                        $payment_verified = $update_data['payment_verified'];
+                        $application_id   = $checkPIDXAvailable['APPLICATION_ID'];
+                        $vacancy_id       = $checkPIDXAvailable['VACANCY_ID'];
+                        $payment_id       = $checkPIDXAvailable['PAYMENT_ID'];
 
                         $update_statement = "UPDATE HRIS_REC_VACANCY_APPLICATION 
-                                             SET PAYMENT_ID = '$payment_id' 
+                                             SET (PAYMENT_VERIFIED) = ('$payment_verified') 
                                              WHERE APPLICATION_ID = '$application_id' AND AD_NO = '$vacancy_id'";
 
                         $CI->db->query($update_statement);
@@ -343,11 +314,9 @@ class Khalti
                     /**
                      *  for status !== completed
                      * 
-                     *  status = 0, payment_paid = N, payment_verified = N
+                     *  payment_verified = N
                      * 
                      * */
-                    $update_data['status'] = 0;
-                    $update_data['payment_paid'] = 'N';
                     $update_data['payment_verified'] = 'N';
 
                     $column = arrayKeyImplode($update_data, 'c', 'key');
