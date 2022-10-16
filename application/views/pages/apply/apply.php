@@ -393,7 +393,12 @@
 			<div class="card mt-3">
 				<h6 class="form-table-title">Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
 				<div class="col-md-12 mt-3">
-					<?php if(!empty($vacancylist['EXPERIENCE']) && $vacancylist['EXPERIENCE'] != 0){ echo '<p style="color:#c75216">This vacancy require <b> '. $vacancylist['EXPERIENCE']. ' </b>years of experiance, please add using <i class="fa fa-plus-circle" aria-hidden="true" style="color: green; cursor: pointer"></i> sign.</p>';} ?>
+					<?php if(!empty($vacancylist['EXPERIENCE']) && $vacancylist['EXPERIENCE'] != 0){ echo '<p style="color:#c75216">This vacancy require <b> '. $vacancylist['EXPERIENCE']. ' </b>years of experiance, please add using <i class="fa fa-plus-circle" aria-hidden="true" style="color: green; cursor: pointer"></i> sign.</p>';
+					?>
+					<label for="yourExp">Your total Experience:</label>
+					<input type="text" val='0' style="height: 25px;width: 300px;" id="yourTotalExp">
+					<?php
+					} ?>
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>
 							<tr>

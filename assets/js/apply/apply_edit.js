@@ -244,6 +244,7 @@ $(document).ready(function () {
   var y = 1; // initial row value
   
   $(document).on("click", '.btn-add-exp', addexprow);
+
   function addexprow(e) {
     e.preventDefault();
     if (y < max_fields_exp) {
@@ -298,10 +299,36 @@ $(document).ready(function () {
               </tr>`;
       $(t_experiance).append(appendDataexp);
       app.startEndDatePickerWithNepali('from_date_ad'+y, 'from_date_bs'+y, 'to_date_ad'+y, 'to_date_bs'+y);
+      // app.startEndDatePickerWithNepali('from_date_bs'+y, 'from_date_ad'+y, 'to_date_bs'+y, 'to_date_ad'+y);
+      $(document).on("change", '.from_date_bs'.y, function(){
+        var totalExpDays = 0;
+        for(var ai = 1;ai<y;ai++){
+          var diff = Math.floor(( Date.parse($('#to_date_bs'+ai).val()) - Date.parse($('#from_date_bs'+ai).val()) ) / 86400000);
+          totalExpDays = totalExpDays + diff
+        }
+          let months = 0, years = 0, days = 0, weeks = 0;
+          while(totalExpDays){
+              if(totalExpDays >= 365){
+                years++;
+                totalExpDays -= 365;
+              }else if(totalExpDays >= 30){
+                months++;
+                totalExpDays -= 30;
+              }else if(totalExpDays >= 7){
+                weeks++;
+                totalExpDays -= 7;
+              }else{
+                days++;
+                totalExpDays--;
+              }
+          }
+          $('#yourTotalExp').val(years + ' Years ' + months + ' Months ' + weeks + ' Weeks ' + days + ' Days ');
+      });
       y++; 
+      
     }
   }
-
+  
   $(t_experiance).on("click", ".btn-exp-remove", function (e) {
     e.preventDefault();
     $(this).closest('tr').remove();
@@ -653,6 +680,7 @@ function getPeriodTrainingFromDays(params) {
 function getPeriodTrainingToDays(params) {
  console.log('sdcnsjd');
 }
+
 
 
 
