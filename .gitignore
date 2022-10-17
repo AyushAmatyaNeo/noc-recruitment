@@ -8,7 +8,11 @@ application/logs/*
 
 !application/*/.htaccess
 
+.htaccess
 
+application/config/config.php
+
+assets/captcha/*
 
 user_guide_src/build/*
 user_guide_src/cilexer/build/*

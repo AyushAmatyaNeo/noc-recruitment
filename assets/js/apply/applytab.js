@@ -39,6 +39,7 @@
         form.find('.next').click(function() {
           if('validations' in args && typeof args.validations === 'object' && !$.isArray(args.validations)){
             if(!('noValidate' in args) || (typeof args.noValidate === 'boolean' && !args.noValidate)){
+              // console.log(args.validations);
               form.validate(args.validations);
               if(form.valid() == true){
                 form.navigateTo(curIndex() + 1);

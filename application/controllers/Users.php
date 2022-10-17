@@ -35,39 +35,37 @@ Class Users extends CI_Controller
         }
     }
 
-    public function login()
-    { 
+    public function login() { 
+
         $data = array();
         
         /**
          * ON FINDING USER SESSION ID
          * */
-        if ($this->isUserLoggedIn)
-        {
+        if ( $this->isUserLoggedIn ) {
 
-            $checkpwStatus = $this->UserModel->checkpwResetstatus($this->session->userdata('userId'));
+            $checkpwStatus = $this->UserModel->checkpwResetstatus( $this->session->userdata( 'userId' ) );
                 
-                if ($checkpwStatus == 1)
-                {
-                        $this->session->set_flashdata('msg', 'Please update your password before enter!');
-                            redirect('users/updatepassword');
+                if ( $checkpwStatus == 1 ) {
+
+                        $this->session->set_flashdata( 'msg', 'Please update your password before enter!' );
+                            redirect( 'users/updatepassword' );
+
                 }
             
-                redirect('vacancy/vacancylist'); 
+                redirect( 'vacancy/vacancylist' ); 
         
         } else {
 
             // Get messages from the session 
-            if ($this->session->userdata('success_msg'))
-            { 
+            if ( $this->session->userdata( 'success_msg' ) ) { 
                 
-                $data['success_msg'] = $this->session->userdata('success_msg'); 
-                    $this->session->unset_userdata('success_msg'); 
+                $data[ 'success_msg' ] = $this->session->userdata( 'success_msg' ); 
+                    $this->session->unset_userdata( 'success_msg' ); 
             
             } 
         
-            if ($this->session->userdata('error_msg'))
-            { 
+            if ( $this->session->userdata( 'error_msg' )) { 
             
                 $data['error_msg'] = $this->session->userdata('error_msg'); 
                     $this->session->unset_userdata('error_msg'); 
@@ -75,25 +73,22 @@ Class Users extends CI_Controller
             } 
         
             // If login request submitted 
-            if ($this->input->post('loginSubmit'))
-            {  
+            if ($this->input->post('loginSubmit')) {  
 
                 $this->form_validation->set_rules('email', 'email/Username', 'required'); 
                 $this->form_validation->set_rules('password', 'password', 'required');
                 
-                if ($this->form_validation->run() == true)
-                {     
+                if ( $this->form_validation->run() == true ) {     
                 
                     
                     // check active status
-                    if (emailCheckValid($this->input->post('email'))) 
-                    {
+                    if ( emailCheckValid($this->input->post('email')) ) {
                     
-                        $cond['email']['EMAIL_ID']= $this->input->post('email');
+                        $cond['email']['EMAIL_ID'] = $this->input->post('email');
 
                     } else {
                         
-                        $cond['email']['USERNAME']= $this->input->post('email');
+                        $cond['email']['USERNAME'] = $this->input->post('email');
                         
                     }
                 
@@ -103,8 +98,7 @@ Class Users extends CI_Controller
                      *  ACTIVE STATUS ->>>>>> D : 'NOT EMAIL VERIFIED' || E:  'EMAIL VERIFIED'
                      * */
                 
-                    if ($checkactiveStatus['ACTIVE_STATUS'] == 'D')
-                    {
+                    if ( $checkactiveStatus['ACTIVE_STATUS'] == 'D' ) {
                     
                         $this->session->set_flashdata('msg', 'Please verify your Email before enter!');
                             redirect('users/login');
@@ -122,11 +116,11 @@ Class Users extends CI_Controller
                     if (emailCheckValid($this->input->post('email'))) 
                     {
                      
-                        $con['conditions']['EMAIL_ID']= $this->input->post('email');
+                        $con['conditions']['EMAIL_ID'] = $this->input->post('email');
 
                     } else {
                         
-                        $con['conditions']['USERNAME']= $this->input->post('email');
+                        $con['conditions']['USERNAME'] = $this->input->post('email');
 
                     }
                     
@@ -376,7 +370,7 @@ Class Users extends CI_Controller
         ); 
         $checkEmail = $this->UserModel->getRows($con); 
         // echo '<pre>'; print_r($checkEmail); die;
-            if($checkEmail > 0){ 
+            if ($checkEmail > 0) { 
                 $this->form_validation->set_message('email_check', 'The given email already exists.'); 
                 return FALSE; 
             }else{ 
@@ -582,16 +576,16 @@ Class Users extends CI_Controller
     * */
     public function register_email_exists()
     {
-        // print_r($_POST); die;
-        if (array_key_exists('email_id',$_POST)) 
-        {
-         if ( $this->UserModel->email_exists2($this->input->post('email_id')) == TRUE ) 
-            {
-            echo json_encode(FALSE);
-            } 
-        else 
-            {
-                echo json_encode(TRUE);
+        if ( array_key_exists('email_id', $_POST) ) {
+            
+            if ( $this->UserModel->email_exists2($this->input->post('email_id') ) == TRUE ) {
+                
+                echo json_encode(false);
+            
+            } else {
+
+                echo json_encode(true);
+            
             }
         }
     } 
@@ -600,18 +594,19 @@ Class Users extends CI_Controller
      * CHECK UNIQUE MOBILE NO. WHILE SIGNUP
      * 
      * */
-    public function register_mobile_exists()
-    {
+    public function register_mobile_exists() {
+
         // print_r($_POST); die;
-        if (array_key_exists('mobile_no',$_POST)) 
-        {
-         if ( $this->UserModel->mobile_exists2($this->input->post('mobile_no')) == TRUE ) 
-            {
-            echo json_encode(FALSE);
-            } 
-        else 
-            {
+        if ( array_key_exists('mobile_no',$_POST) ) {
+            
+            if ( $this->UserModel->mobile_exists2($this->input->post('mobile_no')) == TRUE ) {
+            
+                echo json_encode(FALSE);
+            
+            } else {
+            
                 echo json_encode(TRUE);
+            
             }
         }
     }  
@@ -659,6 +654,22 @@ Class Users extends CI_Controller
                 $this->form_validation->set_rules('email_id', 'Email Id', 'required'); 
                 $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check'); 
                 $this->form_validation->set_rules('password', 'Password', 'required');
+                $this->form_validation->set_rules('name_nepali', 'Name in Nepali', 'required');
+
+
+                /* EXTRA LEVEL OF VERIFICATION */
+                
+
+                // $this->_checkInUserSameValue($_POST);
+
+
+                // echo "<pre>";
+
+                // print_r($this->input->post());
+
+                // echo 'here only';
+
+                // die;
                 
                
                 $UserId = $this->UserModel->getMaxUserId();
@@ -672,7 +683,8 @@ Class Users extends CI_Controller
                     'EMAIL_ID' => strip_tags($this->input->post('email_id')),
                     'USERNAME' => $this->input->post('username'),
                     'PASSWORD' => $this->input->post('password'), 
-                    'CREATED_DT' => date('Y-m-d')
+                    'CREATED_DT' => date('Y-m-d'),
+                    'NAME_NEPALI' => $this->input->post('name_nepali')
                 );
 
 
@@ -760,16 +772,46 @@ Class Users extends CI_Controller
 
     }
 
+    /* CHECKING USER SAME VALUE [ONLY UNIQUE FIELD] */
+    // private function _checkInUserSameValue($postData) {
+        
+    //     /* CHECKING FOR EMAIL | MOBILE | USERNAME */
+
+    //     if ( $this->register_mobile_exists() == true ) {
+
+            
+
+    //     } else {
+
+    //         echo 'not unique';
+    //     }
+
+
+
+    //     $mobile   = $postData['mobile_no'];
+    //     $email    = $postData['email_id'];
+    //     $username = $postData['username'];
+
+    //     echo "<pre>";
+
+    //     print_r(array($mobile, $email, $username));
+
+    //     die;
+
+
+    // }
+
     /**
      *  CHECKING UNIQUE USERNAME BY SYSTEM SIDE
      * 
      * */
     public function username_check($username)
     {   
+
         if ($this->UserModel->columnDataExits('username', $username) == TRUE ) 
         {
                 
-            $this->form_validation->set_message('callback_username_check', 'This Username is already exists. Please Try Another One!');
+            $this->form_validation->set_message('username', 'This Username is already exists. Please Try Another One!');
 
             return FALSE;
 
@@ -803,6 +845,7 @@ Class Users extends CI_Controller
         // Display captcha image
         echo $captcha['image'];
     }
+
     public function logout()
     {
         $this->session->unset_userdata('isUserLoggedIn');

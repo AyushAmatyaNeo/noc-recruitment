@@ -119,6 +119,7 @@ if ( ! function_exists('connectipsHashGenerator')) {
             openssl_free_key($private_key);
 
         } else {
+            
             echo "Error: Unable openssl_sign";
             exit;
         } 

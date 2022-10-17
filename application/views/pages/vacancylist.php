@@ -98,7 +98,7 @@
 
 								<?php } elseif (($application['PAYMENT_PAID'] == 'Y') AND ($application['PAYMENT_VERIFIED'] == 'N')) { ?>
 
-										<td colspan="3"><h5 class="text-center">Paid Made but yet to verify</h5></td>
+										<td colspan="3"><p class="text-center"><strong>Payment Made but yet to verify</strong></p></td>
 
 								<?php } else {
 
@@ -132,18 +132,14 @@
 									<input type="hidden" name="base" id="baseurl" value="<?php echo base_url(); ?>" /> 
 
 
-									<span>
-										<!-- <input type="image" name="esewa_submit" src="<?php echo base_url('assets/images/khalti.png');  ?>" style="width: 80%; padding-top: 8px; margin-left: 6px;"> -->
-									</span>
-
-
+									<!-- ConnectIPS Starts -->
 									<span>
 
 										<!-- ConnectIPS Payment Form Starts -->
-										<form action="https://uat.connectips.com:7443/connectipswebgw/loginpage" id="ipsDataSubmit" method="post">
+										<form action="<?php echo $this->config->item('connectips_url');?>" id="ipsDataSubmit<?php echo $application['APPLICATION_ID'];?>" method="post">
 
 											<!-- <input type="hidden" name="applicationIdPay" id="applicationIdPay" value=""> -->
-											<input type="hidden" name="MERCHANTID" id="MERCHANTID" value="<?php echo $connectips['merchant_id']; ?>"/>
+											<!-- <input type="hidden" name="MERCHANTID" id="MERCHANTID" value="<?php echo $connectips['merchant_id']; ?>"/>
 											<input type="hidden" name="APPID" id="APPID" value="<?php echo $connectips['app_id']; ?>"/>
 											<input type="hidden" name="APPNAME" id="APPNAME" value="<?php echo $connectips['app_name']; ?>"/>
 											<input type="hidden" name="TXNID" id="TXNID<?php echo $application['APPLICATION_ID'];?>" value="<?php echo $connectips['txn_id']; ?>"/> 
@@ -153,8 +149,19 @@
 											<input type="hidden" name="REFERENCEID" id="REFERENCEID" value="<?php echo $connectips['referenceId']; ?>"/>
 											<input type="hidden" name="REMARKS" id="REMARKS" value="<?php echo $connectips['remarks']; ?>"/>
 											<input type="hidden" name="PARTICULARS" id="PARTICULARS" value="<?php echo $connectips['particulars']; ?>"/>
-											<input type="hidden" name="TOKEN" id="TOKEN<?php echo $application['APPLICATION_ID']; ?>" value="<?php echo connectipsHashGenerator($connectips); ?>"/>
-											<!-- <input type="image" name="connectips_submit" class="connectips_submit" src="<?php echo base_url('assets/images/connectips.png');  ?>" style="width: 100%;"> -->
+											<input type="hidden" name="TOKEN" id="TOKEN<?php echo $application['APPLICATION_ID']; ?>" value="<?php echo connectipsHashGenerator($connectips); ?>"/> -->
+
+											<input type="hidden" name="MERCHANTID" id="MERCHANTID<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="APPID" id="APPID<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="APPNAME" id="APPNAME<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="TXNID" id="TXNID<?php echo $application['APPLICATION_ID'];?>" value=""/> 
+											<input type="hidden" name="TXNDATE" id="TXNDATE<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="TXNCRNCY" id="TXNCRNCY<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="TXNAMT" id="TXNAMT<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="REFERENCEID" id="REFERENCEID<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="REMARKS" id="REMARKS<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="PARTICULARS" id="PARTICULARS<?php echo $application['APPLICATION_ID']; ?>" value=""/>
+											<input type="hidden" name="TOKEN" id="TOKEN<?php echo $application['APPLICATION_ID']; ?>" value=""/>
 										</form>
 										<!-- ConnectIPS Payment Form Ends -->
 
@@ -162,6 +169,7 @@
 									<span  class="getConnectIPSPostData<?php echo $application['APPLICATION_ID']; ?>" style="display: none;">
 										<?php echo base64_encode(json_encode(array_merge($connectips, ['created_datetime' => $this->config->item('connectips_txn_date_for_system')])));?>
 									</span>
+									<!-- ConnectIPS Starts -->
 
 								<?php } ?>
 										
@@ -200,7 +208,7 @@
 		<div class="container-fluid">
 			<h5 class="main-title">Active Vacancies</h5>
 			<table class="table table-striped table-bordered table-sm table-responsive-md tbl-vacancies">
-				<thead style="font-size: 13px; color: #fff; background-color: #f90501; text-align: center; line-height: 34px;">
+				<thead style="font-size: 13px; color: #fff; background-color: #47759e; text-align: center; line-height: 34px;">
 					<tr>
 						<th scope="col" style="width: 5%">S.No.</th>
 						<th scope="col" style="width: 15%">Ad Number</th>
@@ -298,8 +306,6 @@
 	  		// GET RECRUITMENT LEVEL	  		
 	  		var recruitmentPostLevel = $('#' + getPaymentNameWithAppId).attr('recruitment_post_level');
 
-	  		// alert(recruitmentPostLevel);
-
 	  		// GET PAYMENT GATEWAY
 	  		var getPaymentName = getPaymentNameWithAppId.substr(0, getPaymentNameWithAppId.length - Number(atob(getPaymentId).toString().length));
 
@@ -317,6 +323,11 @@
 	  		{	
 
 	  			$('#esewaDataSubmit'+atob(getApplicationId)).submit();
+
+	  		// } else if (getPaymentName == 'connectips') {
+
+	  		// 	$('#ipsDataSubmit'+atob(getApplicationId)).submit();
+
 	  		
 	  		} else {
 
@@ -334,12 +345,44 @@
 						recruitmentPostLevel: recruitmentPostLevel,
 					},
 				success: function (response) {
-						if (response == '') 
-						{
-							window.location.replace(baseurl +  "vacancy/payment");					
-						} 
 
-						window.location.replace(response);
+						if (getPaymentName == 'connectips') {
+
+							// alert(response);
+
+							const obj = JSON.parse(response);
+							$('#MERCHANTID'+atob(getApplicationId)).val(obj.merchant_id);
+							$('#APPID'+atob(getApplicationId)).val(obj.app_id);
+							$('#APPNAME'+atob(getApplicationId)).val(obj.app_name);
+							$('#TXNID'+atob(getApplicationId)).val(obj.txn_id);
+							$('#TXNDATE'+atob(getApplicationId)).val(obj.txn_date);
+							$('#TXNCRNCY'+atob(getApplicationId)).val(obj.txn_currency);
+							$('#TXNAMT'+atob(getApplicationId)).val(obj.txn_amount);
+							$('#REFERENCEID'+atob(getApplicationId)).val(obj.reference_id);
+							$('#REMARKS'+atob(getApplicationId)).val(obj.remarks);
+							$('#PARTICULARS'+atob(getApplicationId)).val(obj.particulars);
+							$('#TOKEN'+atob(getApplicationId)).val(obj.token);
+							$('#ipsDataSubmit'+atob(getApplicationId)).submit();
+
+						} else {
+
+							if (response == '') 
+							{
+								window.location.replace(baseurl +  "vacancy/vacancylist");					
+							} 
+
+							window.location.replace(response);
+
+						}
+
+						
+
+						// if (response == '') 
+						// {
+						// 	window.location.replace(baseurl +  "vacancy/payment");					
+						// } 
+
+						// window.location.replace(response);
 
 						// window.location
 						// window.location.replace(response);
