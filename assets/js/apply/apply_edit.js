@@ -487,7 +487,7 @@ $(document).ready(function () {
   $('.inclusion').on('change', function () {
     // console.log('here');
     var val = [];
-    $(':checkbox:checked').each(function (i) {
+    $('.inclusion:checked').each(function (i) {
       val[i] = $(this).val();
     });
     var level_id = $('#functional_level_id').val();

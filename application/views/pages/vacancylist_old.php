@@ -78,44 +78,61 @@
 									
 									<?php 
 
-										} elseif ($application['PAYMENT_PAID'] == 'Y') {
-
-											 echo '<span class="text-center">Admit Card Will Be Issueing Soon</span>'; 
-
-										} else {
-
-											 echo '<span class="text-center">You will get Admit card after you pay</span>'; 
-
-										}
+										} else { echo 'You will get Admit card after you pay'; } 
 
 									?>
 								</td>
 								<td><?php echo $application['APPLICATION_AMOUNT']; ?></td>
 
-								<?php if (($application['PAYMENT_PAID'] == 'Y') AND ($application['PAYMENT_VERIFIED'] == 'Y')) { ?>
-										
-										<td colspan="3"><h5 class="text-center">Paid</h5></td>
-
-								<?php } elseif (($application['PAYMENT_PAID'] == 'Y') AND ($application['PAYMENT_VERIFIED'] == 'N')) { ?>
-
-										<td colspan="3"><h5 class="text-center">Paid Made but yet to verify</h5></td>
+								<?php if ($application['PAYMENT_STATUS'] == 'Y') { ?>
+								<td colspan="3">
+									Paid
+								</td>
 
 								<?php } else {
 
 									foreach ($payment_gateways as $payment_gateway) {
 											
 										echo "<td>";
-											echo "<a id=".strtolower($payment_gateway['GATEWAY_COMPANY']).$application['APPLICATION_ID']." class='payment_img_sec' name="."payment_id_".$payment_gateway['ID']." vacancy=".base64_encode($application['VACANCY_ID'])." application=".base64_encode($application['APPLICATION_ID'])." payment=".base64_encode($payment_gateway['ID'])." recruitment_post=".$application['DESIGNATION_TITLE']." recruitment_post_level=".$application['FUNCTIONAL_LEVEL_EDESC'].">";
+											echo "<a id=".strtolower($payment_gateway['GATEWAY_COMPANY']).$application['APPLICATION_ID']." class='payment_img_sec' name="."payment_id_".$payment_gateway['ID']." vacancy=".base64_encode($application['VACANCY_ID'])." application=".base64_encode($application['APPLICATION_ID'])." payment=".base64_encode($payment_gateway['ID']).">";
 												echo "<img src=".base_url('assets/images/').$payment_gateway['GATEWAY_LOGO']." alt=".$payment_gateway['GATEWAY_COMPANY']." class='payment_submit' />";
 											echo "</a>";
 										echo "</td>";
 
 
-									}
-								?>
+									} 
 
+								} ?>
+								
+									<!-- Payment Modal Starts -->
+									<!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLongTitle">Select Payment Method</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<select class="form-control paymentModalSelect" name="paymentMOdal" required>
+														<option value="" disabled selected>Select Payment Method</option>
+														<option value="esewa">eSewa</option>
+														<option value="ips">Connect IPS</option>
+													</select>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+												</div>
+											</div>
+										</div>
+									</div> -->
+									<!-- Payment Modal Ends -->
+
+										
 									<!-- Esewa Payment Form Starts -->
 									<form action="<?php echo $this->config->item('esewa_url'); ?>" id="esewaDataSubmit<?php echo $application['APPLICATION_ID'];?>" method="POST">
+
 
 										<input value="<?php echo $application['APPLICATION_AMOUNT'] ?>" name="tAmt" type="hidden">
 										<input value="<?php echo $application['APPLICATION_AMOUNT'] ?>" name="amt" type="hidden">
@@ -123,50 +140,67 @@
 										<input value="0" name="psc" type="hidden">
 										<input value="0" name="pdc" type="hidden">
 										<input value="<?php echo $this->config->item('esewa_merchant_id'); ?>" name="scd" type="hidden">
-										<input value="<?php echo $esewa['invoice'] . 'aid' . $application['APPLICATION_ID'] . 'vid' . $application['VACANCY_ID']; ?>" name="pid" type="hidden">
+										<input value="<?php echo $esewa['invoice'] . 'aid' . $application['APPLICATION_ID'] . 'vid' . $application['VACANCY_ID'] ?>" name="pid" type="hidden">
 										<input value="<?php echo $this->config->item('esewa_success_page_url'); ?>" type="hidden" name="su">
 										<input value="<?php echo $this->config->item('esewa_fail_page_url'); ?>" type="hidden" name="fu">
+
+										<!-- <input type="image" name="esewa_submit" src="<?php echo base_url('assets/images/esewa.png');  ?>" style="width: 80%; padding-top: 8px; margin-left: 6px;"> -->
+
+
+
+										<?php 
+
+											if ($this->UserModel->checkattributesWithStatus('hris_rec_application_payment', 'status', 'application_id', $application['APPLICATION_ID'], 'status' , 1) == false) 
+											{ 
+
+										?>
+									
+											<!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
+												PAY
+											</button> -->
 										
+										<?php  
+
+											} else {
+										
+												echo '<p id="amount">Paid</p>';
+											} 
+										?>
 									</form>
 									<!-- Esewa Payment Form Ends -->
-									<input type="hidden" name="base" id="baseurl" value="<?php echo base_url(); ?>" /> 
-
-
-									<span>
-										<!-- <input type="image" name="esewa_submit" src="<?php echo base_url('assets/images/khalti.png');  ?>" style="width: 80%; padding-top: 8px; margin-left: 6px;"> -->
-									</span>
-
-
-									<span>
-
-										<!-- ConnectIPS Payment Form Starts -->
-										<form action="https://uat.connectips.com:7443/connectipswebgw/loginpage" id="ipsDataSubmit" method="post">
-
-											<!-- <input type="hidden" name="applicationIdPay" id="applicationIdPay" value=""> -->
-											<input type="hidden" name="MERCHANTID" id="MERCHANTID" value="<?php echo $connectips['merchant_id']; ?>"/>
-											<input type="hidden" name="APPID" id="APPID" value="<?php echo $connectips['app_id']; ?>"/>
-											<input type="hidden" name="APPNAME" id="APPNAME" value="<?php echo $connectips['app_name']; ?>"/>
-											<input type="hidden" name="TXNID" id="TXNID<?php echo $application['APPLICATION_ID'];?>" value="<?php echo $connectips['txn_id']; ?>"/> 
-											<input type="hidden" name="TXNDATE" id="TXNDATE" value="<?php echo $connectips['txn_date']; ?>"/>
-											<input type="hidden" name="TXNCRNCY" id="TXNCRNCY" value="<?php echo $connectips['txn_cur']; ?>"/>
-											<input type="hidden" name="TXNAMT" id="TXNAMT" value="<?php echo $connectips['txn_amt'] = $application['APPLICATION_AMOUNT'];?>"/>
-											<input type="hidden" name="REFERENCEID" id="REFERENCEID" value="<?php echo $connectips['referenceId']; ?>"/>
-											<input type="hidden" name="REMARKS" id="REMARKS" value="<?php echo $connectips['remarks']; ?>"/>
-											<input type="hidden" name="PARTICULARS" id="PARTICULARS" value="<?php echo $connectips['particulars']; ?>"/>
-											<input type="hidden" name="TOKEN" id="TOKEN<?php echo $application['APPLICATION_ID']; ?>" value="<?php echo connectipsHashGenerator($connectips); ?>"/>
-											<!-- <input type="image" name="connectips_submit" class="connectips_submit" src="<?php echo base_url('assets/images/connectips.png');  ?>" style="width: 100%;"> -->
-										</form>
-										<!-- ConnectIPS Payment Form Ends -->
-
-									</span>
-									<span  class="getConnectIPSPostData<?php echo $application['APPLICATION_ID']; ?>" style="display: none;">
-										<?php echo base64_encode(json_encode(array_merge($connectips, ['created_datetime' => $this->config->item('connectips_txn_date_for_system')])));?>
-									</span>
-
-								<?php } ?>
-										
-									
+									<input type="hidden" name="base" id="baseurl" value="<?php echo base_url(); ?>" />
 								</td>
+
+								<td>
+									<!-- <input type="image" name="esewa_submit" src="<?php echo base_url('assets/images/khalti.png');  ?>" style="width: 80%; padding-top: 8px; margin-left: 6px;"> -->
+								</td>
+
+								<td>
+
+									<!-- ConnectIPS Payment Form Starts -->
+									<form action="https://uat.connectips.com:7443/connectipswebgw/loginpage" id="ipsDataSubmit" method="post">
+
+										<!-- <input type="hidden" name="applicationIdPay" id="applicationIdPay" value=""> -->
+										<input type="hidden" name="MERCHANTID" id="MERCHANTID" value="<?php echo $connectips['merchant_id']; ?>"/>
+										<input type="hidden" name="APPID" id="APPID" value="<?php echo $connectips['app_id']; ?>"/>
+										<input type="hidden" name="APPNAME" id="APPNAME" value="<?php echo $connectips['app_name']; ?>"/>
+										<input type="hidden" name="TXNID" id="TXNID<?php echo $application['APPLICATION_ID'];?>" value="<?php echo $connectips['txn_id']; ?>"/> 
+										<input type="hidden" name="TXNDATE" id="TXNDATE" value="<?php echo $connectips['txn_date']; ?>"/>
+										<input type="hidden" name="TXNCRNCY" id="TXNCRNCY" value="<?php echo $connectips['txn_cur']; ?>"/>
+										<input type="hidden" name="TXNAMT" id="TXNAMT" value="<?php echo $connectips['txn_amt'] = $application['APPLICATION_AMOUNT'];?>"/>
+										<input type="hidden" name="REFERENCEID" id="REFERENCEID" value="<?php echo $connectips['referenceId']; ?>"/>
+										<input type="hidden" name="REMARKS" id="REMARKS" value="<?php echo $connectips['remarks']; ?>"/>
+										<input type="hidden" name="PARTICULARS" id="PARTICULARS" value="<?php echo $connectips['particulars']; ?>"/>
+										<input type="hidden" name="TOKEN" id="TOKEN<?php echo $application['APPLICATION_ID']; ?>" value="<?php echo connectipsHashGenerator($connectips); ?>"/>
+										<!-- <input type="image" name="connectips_submit" class="connectips_submit" src="<?php echo base_url('assets/images/connectips.png');  ?>" style="width: 100%;"> -->
+									</form>
+									<!-- ConnectIPS Payment Form Ends -->
+
+								</td>
+								<span  class="getConnectIPSPostData<?php echo $application['APPLICATION_ID']; ?>" style="display: none;">
+									<?php echo base64_encode(json_encode(array_merge($connectips, ['created_datetime' => $this->config->item('connectips_txn_date_for_system')])));?>
+								</span>
+								
 
 								<td><?php echo $application['ROLL_NO']; ?></td>
 								<td><?php 
@@ -292,13 +326,7 @@
 			// GET PAYMENT ID	  		
 	  		var getPaymentId = $('#' + getPaymentNameWithAppId).attr('payment');
 
-	  		// GET RECRUITMENT POST	  		
-	  		var recruitmentPost = $('#' + getPaymentNameWithAppId).attr('recruitment_post');
-
-	  		// GET RECRUITMENT LEVEL	  		
-	  		var recruitmentPostLevel = $('#' + getPaymentNameWithAppId).attr('recruitment_post_level');
-
-	  		// alert(recruitmentPostLevel);
+	  		// alert(getApplicationId);
 
 	  		// GET PAYMENT GATEWAY
 	  		var getPaymentName = getPaymentNameWithAppId.substr(0, getPaymentNameWithAppId.length - Number(atob(getPaymentId).toString().length));
@@ -314,8 +342,7 @@
 
 
 	  		if (getPaymentName == 'esewa')
-	  		{	
-
+	  		{
 	  			$('#esewaDataSubmit'+atob(getApplicationId)).submit();
 	  		
 	  		} else {
@@ -323,26 +350,14 @@
 	  			$.ajax({
 				type: "POST",
 				url: baseurl + "vacancy/paymentProcess/",
-				crossDomain: true,
-				// dataType: 'jsonp',
 				data: {
 						application_id : getApplicationId,
 						vacancy_id : getVacancyId,
 						payment_gateway: getPaymentNameWithAppId,
 						payment_gateway_id: getPaymentId,
-						recruitmentPost: recruitmentPost,
-						recruitmentPostLevel: recruitmentPostLevel,
 					},
 				success: function (response) {
-						if (response == '') 
-						{
-							window.location.replace(baseurl +  "vacancy/payment");					
-						} 
-
-						window.location.replace(response);
-
-						// window.location
-						// window.location.replace(response);
+						alert(response)
 						// $('#ipsDataSubmit').submit();
 					}
 				});
@@ -424,7 +439,6 @@
          		 $.ajax({
 					type: "POST",
 					url: baseurl + "vacancy/saveTempPayment/",
-
 
 					// "merchantId":mId,
 						// "appId":aId,
