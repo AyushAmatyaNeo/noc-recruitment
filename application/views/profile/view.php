@@ -34,76 +34,67 @@
 							<h6 class="form-table-title">Personal Information</h6>
 							<hr>
 							<div class="form-row">
-								<div class="form-group col-md-3">
+								<div class="form-group col-md-4">
 									<label for="">First Name</label>
 									<input type="text" class="form-control" value="<?php echo $user['FIRST_NAME']; ?>" readonly>
 								</div>
-								<div class="form-group col-md-3">
+								<div class="form-group col-md-4">
 									<label for="">Middle Name</label>
 									<input type="text" class="form-control" value="<?php echo $user['MIDDLE_NAME']; ?>" readonly>
 								</div>
-								<div class="form-group col-md-3">
+								<div class="form-group col-md-4">
 									<label for="">Last Name</label>
 									<input type="text" class="form-control" value="<?php echo $user['LAST_NAME']; ?>" readonly>
 								</div>
-								<div class="form-group col-md-3">
-									<label for="">Religion</label>
-									<!-- <input type="text" class="form-control" value="<?php //echo $user['RELIGION']; ?>" readonly> -->
-									<?php
-										if($user['RELIGION'] == 'others'){
-											echo '<input class="form-control" value="'.$user['RELIGION_INPUT'].'" readonly>';
-										} else
-										{
-											echo '<input class="form-control" value="'.$user['RELIGION'].'" readonly>';
-										}
-									?>
-								</div>
 							</div>
+
 							<div class="form-row">
-								
-								<div class="form-group col-md-3">
-									<label for="">Region</label>
-									<!-- <input type="email" class="form-control" value="<?php //echo $user['REGION']; ?>" readonly> -->
-									<?php
-										if($user['REGION'] == 'others'){
-											echo '<input class="form-control" value="'.$user['REGION_INPUT'].'" readonly>';
-										} else
-										{
-											echo '<input class="form-control" value="'.$user['REGION'].'" readonly>';
-										}
-									?>
-								</div>								
 								<div class="form-group col-md-3">
 									<label>Date of Birth</label>
 									<input class="form-control" value="<?php echo $user['DOB']; ?>" readonly>
 								</div>
+
 								<div class="form-group col-md-3">
 									<label for="">Age</label>
 									<input class="form-control" value="<?php echo $user['AGE']; ?>" readonly>
 								</div>
+
+								<div class="form-group col-md-3">
+									<label>Gender</label>
+									<input class="form-control" value="<?php echo $user['GENDER_NAME']; ?>" readonly>
+								</div>
+
 								<div class="form-group col-md-3">
 									<label>Marital Status</label>
 									<input class="form-control" value="<?php echo $user['MARITAL_STATUS']; ?>" readonly>
 								</div>
+
+								
+							</div>
+
+							<hr>
+							<h6 class="form-table-title">Contact Information</h6>
+							<hr>
+
+							<div class="form-row">
 								<div class="form-group col-md-3">
-									<label>Employment status</label>
-									<input class="form-control" value="<?php echo $user['EMPLOYMENT_STATUS']; ?>" readonly>
+									<label for="">Mobile Number</label>
+									<input type="text" class="form-control" value="<?php echo $user['MOBILE_NO']; ?>" readonly>
 								</div>
 								<div class="form-group col-md-3">
-									<label>Mother Tongue</label>
-									<input class="form-control" value="<?php echo $user['MOTHER_TONGUE']; ?>" readonly>
+									<label for="">Phone Number</label>
+									<input type="text" class="form-control" value="<?php echo $user['PHONE_NO']; ?>" readonly>
 								</div>
 								<div class="form-group col-md-3">
 									<label for="">Email</label>
 									<input type="email" class="form-control" value="<?php echo $user['EMAIL_ID']; ?>" readonly>
 								</div>
-								
-								<div class="form-group col-md-3">
-									<label>Gender</label>
-									<input class="form-control" value="<?php echo $user['GENDER_NAME']; ?>" readonly>
-								</div>
-								
 							</div>
+
+							<hr>
+							<h6 class="form-table-title">Citizenship Information</h6>
+							<hr>
+
 							<div class="form-row">
 								<div class="form-group col-md-3">
 									<label for="">Citizenship Number</label>
@@ -117,61 +108,8 @@
 									<label for="">Issue District</label>
 									<input type="text" class="form-control" value="<?php echo $user['DISTRICT_NAME']; ?>" readonly>
 								</div>
-								<div class="form-group col-md-3">
-									<label for="">Blood Group</label>
-									<input type="text" class="form-control" value="<?php echo $user['BLOOD_GROUP']; ?>" readonly>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="">Mobile Number</label>
-									<input type="text" class="form-control" value="<?php echo $user['MOBILE_NO']; ?>" readonly>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="">Phone Number</label>
-									<input type="text" class="form-control" value="<?php echo $user['PHONE_NO']; ?>" readonly>
-								</div>
-								<div class="form-group col-md-3">
-									<label>Physical disability</label>
-									<input class="form-control" value="<?php echo $user['DISABILITY']; ?>" readonly> 
-									<?php 
-									if(!empty($documents)){
-										foreach($documents as $doc){
-											if(($doc['DOC_FOLDER'] == 'disability') && $user['DISABILITY'] == "Yes"){
-												echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" id="disability_view" style="margin:10px">View File</a>';
-											}
-										}
-									}
-									?>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="">Inclusion</label>									
-									<?php
-										if($user['ETHNIC_NAME'] == 'others'){
-											echo '<input class="form-control" value="'.$user['ETHNIC_INPUT'].'" readonly>';
-										} else
-										{
-											echo '<input class="form-control" value="'.$user['ETHNIC_NAME'].'" readonly>';
-										}
-										if(!empty($documents)){
-											foreach($documents as $doc){
-												if($doc['DOC_FOLDER'] == 'ethnicity'){
-													echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" style="margin:10px">View File</a>';
-												}
-											}
-										}										
-									?>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="">Are you NOC Employee?</label>
-									<input type="text" class="form-control" value="<?php echo $user['IN_SERVICE']; ?>" readonly>
-									<?php if(!empty($documents)){
-											foreach($documents as $doc){
-												if(($doc['DOC_FOLDER'] == 'in_service') && ($user['IN_SERVICE'] == 'YES')){
-													echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" style="margin:10px">View File</a>';
-												}
-											}
-										}  ?>
-								</div>
-							</div>							
+							</div>
+
 							<hr>
 							<h6 class="form-table-title">Family Information</h6>
 							<hr>
@@ -228,6 +166,106 @@
 									<input type="text" class="form-control" value="<?php echo $user['SPOUSE_NATIONALITY']; ?>" readonly>
 								</div>
 							</div>
+
+							<hr>
+							<h6 class="form-table-title">Extra Information</h6>
+							<hr>
+
+							<div class="form-row">
+								<div class="form-group col-md-4">
+									<label for="">Religion</label>
+									<!-- <input type="text" class="form-control" value="<?php //echo $user['RELIGION']; ?>" readonly> -->
+									<?php
+										if($user['RELIGION'] == 'others'){
+											echo '<input class="form-control" value="'.$user['RELIGION_INPUT'].'" readonly>';
+										} else
+										{
+											echo '<input class="form-control" value="'.$user['RELIGION'].'" readonly>';
+										}
+									?>
+								</div>
+								
+								<div class="form-group col-md-4">
+									<label for="">Region</label>
+									<!-- <input type="email" class="form-control" value="<?php //echo $user['REGION']; ?>" readonly> -->
+									<?php
+										if($user['REGION'] == 'others'){
+											echo '<input class="form-control" value="'.$user['REGION_INPUT'].'" readonly>';
+										} else
+										{
+											echo '<input class="form-control" value="'.$user['REGION'].'" readonly>';
+										}
+									?>
+								</div>
+								<div class="form-group col-md-4">
+									<label for="">Inclusion</label>									
+									<?php
+										if($user['ETHNIC_NAME'] == 'others'){
+											echo '<input class="form-control" value="'.$user['ETHNIC_INPUT'].'" readonly>';
+										} else
+										{
+											echo '<input class="form-control" value="'.$user['ETHNIC_NAME'].'" readonly>';
+										}
+										if(!empty($documents)){
+											foreach($documents as $doc){
+												if($doc['DOC_FOLDER'] == 'ethnicity'){
+													echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" style="margin:10px">View File</a>';
+												}
+											}
+										}										
+									?>
+								</div>
+							</div>							
+							<hr>
+
+							<div class="form-row">	
+								
+								<div class="form-group col-md-4">
+									<label>Mother Tongue</label>
+									<input class="form-control" value="<?php echo $user['MOTHER_TONGUE']; ?>" readonly>
+								</div>
+								<div class="form-group col-md-3">
+									<label for="">Blood Group</label>
+									<input type="text" class="form-control" value="<?php echo $user['BLOOD_GROUP']; ?>" readonly>
+								</div>
+								
+							</div>
+							<div class="form-row">
+
+								<div class="form-group col-md-4">
+									<label>Employment status</label>
+									<input class="form-control" value="<?php echo $user['EMPLOYMENT_STATUS']; ?>" readonly>
+								</div>
+								
+								<div class="form-group col-md-3">
+									<label for="">Are you NOC Employee?</label>
+									<input type="text" class="form-control" value="<?php echo $user['IN_SERVICE']; ?>" readonly>
+									<?php if(!empty($documents)){
+											foreach($documents as $doc){
+												if(($doc['DOC_FOLDER'] == 'in_service') && ($user['IN_SERVICE'] == 'YES')){
+													echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" style="margin:10px">View File</a>';
+												}
+											}
+										}  ?>
+								</div>
+							</div>	
+
+							<div class="form-row">
+								<div class="form-group col-md-3">
+									<label>Physical disability</label>
+									<input class="form-control" value="<?php echo $user['DISABILITY']; ?>" readonly> 
+									<?php 
+									if(!empty($documents)){
+										foreach($documents as $doc){
+											if(($doc['DOC_FOLDER'] == 'disability') && $user['DISABILITY'] == "Yes"){
+												echo '<a href="'. $doc['DOC_PATH'].'" target= "_blank" class="btn btn-primary" id="disability_view" style="margin:10px">View File</a>';
+											}
+										}
+									}
+									?>
+								</div>
+							</div>						
+							
 							<hr>
 							<h6 class="form-table-title">Address Information</h6>
 							<hr>
@@ -295,44 +333,44 @@
 </main>
 
  <script type="text/javascript">
-      /* -------------------------------------------------------------
-            bootstrapTabControl
-        ------------------------------------------------------------- */
-        function bootstrapTabControl(){
-            var i, items = $('.nav-link'), pane = $('.tab-pane');
-            // next
-            $('.nexttab').on('click', function(){
-                for(i = 0; i < items.length; i++){
-                    if($(items[i]).hasClass('active') == true){
-                        break;
-                    }
+  /* -------------------------------------------------------------
+        bootstrapTabControl
+    ------------------------------------------------------------- */
+    function bootstrapTabControl(){
+        var i, items = $('.nav-link'), pane = $('.tab-pane');
+        // next
+        $('.nexttab').on('click', function(){
+            for(i = 0; i < items.length; i++){
+                if($(items[i]).hasClass('active') == true){
+                    break;
                 }
-                if(i < items.length - 1){
-                    // for tab
-                    $(items[i]).removeClass('active');
-                    $(items[i+1]).addClass('active');
-                    // for pane
-                    $(pane[i]).removeClass('show active');
-                    $(pane[i+1]).addClass('show active');
-                }
+            }
+            if(i < items.length - 1){
+                // for tab
+                $(items[i]).removeClass('active');
+                $(items[i+1]).addClass('active');
+                // for pane
+                $(pane[i]).removeClass('show active');
+                $(pane[i+1]).addClass('show active');
+            }
 
-            });
-            // Prev
-            $('.prevtab').on('click', function(){
-                for(i = 0; i < items.length; i++){
-                    if($(items[i]).hasClass('active') == true){
-                        break;
-                    }
+        });
+        // Prev
+        $('.prevtab').on('click', function(){
+            for(i = 0; i < items.length; i++){
+                if($(items[i]).hasClass('active') == true){
+                    break;
                 }
-                if(i != 0){
-                    // for tab
-                    $(items[i]).removeClass('active');
-                    $(items[i-1]).addClass('active');
-                    // for pane
-                    $(pane[i]).removeClass('show active');
-                    $(pane[i-1]).addClass('show active');
-                }
-            });
-        }
-        bootstrapTabControl();
-    </script>
+            }
+            if(i != 0){
+                // for tab
+                $(items[i]).removeClass('active');
+                $(items[i-1]).addClass('active');
+                // for pane
+                $(pane[i]).removeClass('show active');
+                $(pane[i-1]).addClass('show active');
+            }
+        });
+    }
+    bootstrapTabControl();
+</script>

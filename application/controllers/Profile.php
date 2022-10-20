@@ -114,7 +114,7 @@ Class Profile extends CI_Controller
             $data['blood_groups'] = $this->VacancyModel->fetch_bloodGroup();
             $data['districts'] = $this->VacancyModel->districts();
             $data['documents'] = $this->UserModel->userdocuments($con);
-            // echo '<pre>'; print_r($data['blood_groups']); die;
+            // echo '<pre>'; print_r($data['documents']); die;
             // Pass the user data and load view
             $data['meta'] = array(
                 'title' => 'Noc | Profile Edit'
@@ -129,9 +129,10 @@ Class Profile extends CI_Controller
         if($this->input->post('profilupdate'))
         {
             $userdata = $_POST;
+            // echo "<pre>"; print_r($_FILES); die;
             // echo "<pre>"; print_r($userdata); die;
-            $uid = $this->session->userdata('userId');
 
+            $uid = $this->session->userdata('userId');
 
             $userData['users'] = array(
                 'first_name'                => strip_tags($this->input->post('first_name')),
@@ -140,6 +141,7 @@ Class Profile extends CI_Controller
                 'mobile_no'                 => strip_tags($this->input->post('mobile_no')),
                 'email_id'                  => strip_tags($this->input->post('email_id')),
             );
+
             $userData['registration'] = array(
                 'religion'                  => strip_tags($this->input->post('religion')),
                 'religion_input'            => strip_tags($this->input->post('religion_input')), 
@@ -169,10 +171,13 @@ Class Profile extends CI_Controller
                 'employment_status'         => strip_tags($this->input->post('employment')),
                 'employment_input'          => strip_tags($this->input->post('employment_input')),
                 'disability'                => strip_tags($this->input->post('disability')),
-                'disability_input'          => strip_tags($this->input->post('disability_input')),
+                'disability_input'          => ($this->input->post('disability') == 'Yes') ? $this->input->post('disability_input') : '',
                 'blood_group'               => strip_tags($this->input->post('blood_group')),
-                'in_service'               => strip_tags($this->input->post('in_service')),
+                'in_service'                => strip_tags($this->input->post('in_service')),
+                'dob_ad'                    => date('Y-m-d', strtotime($this->input->post('dob_ad'))),
+                'ctz_issue_date_ad'         => date('Y-m-d', strtotime($this->input->post('ctz_issue_date_ad'))),
             );
+
             $userData['address'] = array(
                 'per_province_id'           => strip_tags($this->input->post('per_province')),
                 'per_district_id'           => strip_tags($this->input->post('per_district')),
@@ -184,9 +189,10 @@ Class Profile extends CI_Controller
                 'mail_vdc_id'               => strip_tags($this->input->post('mail_vdc')),
                 'mail_ward_no'              => strip_tags($this->input->post('mail_ward_no')),
                 'mail_tole'                 => strip_tags($this->input->post('mail_tole')),
-                'per_house_no' => strip_tags($this->input->post('per_house_no')),
-                'mail_house_no' => strip_tags($this->input->post('mail_house_no'))
+                'per_house_no'              => strip_tags($this->input->post('per_house_no')),
+                'mail_house_no'             => strip_tags($this->input->post('mail_house_no'))
             );
+
             if($userData['registration']['religion'] == 'other'){
                 $userData['registration']['religion'] = 'others';
             }
@@ -201,21 +207,65 @@ Class Profile extends CI_Controller
             }
             // echo "<pre>"; print_r($_FILES); die;
 
+            // echo $this->input->post('previous_in_service');
+
+            // echo $userData['registration']['in_service'];
+
+            /* IN SERVICE SELECT NO HAVE REMOVE FILE*/
+
+            if (($userData['registration']['in_service'] == 'N') AND ($this->input->post('previous_in_service') !== '')) {
+
+
+                $oldfile  = $this->UserModel->FindAndDelImgName($this->session->userdata('userId') , $this->input->post('previous_in_service'));
+
+                if ($oldfile['status'] == 1) {
+
+                    unlink ("./uploads/noc_documents/users/registration/".$oldfile['oldimg']['DOC_FOLDER'].'/'.$oldfile['oldimg']['DOC_NEW_NAME'].'.'.$oldfile['oldimg']['DOC_TYPE']);
+                }
+
+
+            }
+
+            /* DISABILITY SELECT NO HAVE REMOVE FILE*/
+
+            if (($userData['registration']['disability'] == 'No') AND ($this->input->post('previous_disability') !== '')) {
+
+
+                $oldfile  = $this->UserModel->FindAndDelImgName($this->session->userdata('userId') , $this->input->post('previous_disability'));
+
+                if ($oldfile['status'] == 1) {
+
+                    unlink ("./uploads/noc_documents/users/registration/".$oldfile['oldimg']['DOC_FOLDER'].'/'.$oldfile['oldimg']['DOC_NEW_NAME'].'.'.$oldfile['oldimg']['DOC_TYPE']);
+                }
+
+
+            }
+
+            // print_r($_FILES['inservice_file']);
+            // die;
+
+
+            /* IN SERVICE SELECT NO HAVE REMOVE FILE*/
+
             $update = $this->UserModel->updateprofile($userData,$uid);
             // $update = true;
-            if($update == true){
+            if ($update == true) {
+
                 $_FILES['ethnicity_file']['folders'] = 'ethnicity';
                 $_FILES['disability_file']['folders'] = 'disability';
                 $_FILES['inservice_file']['folders'] = 'in_service';
                 $_FILES['ethnicity_file']['input_names'] = 'ethnicity_file';
                 $_FILES['disability_file']['input_names'] = 'disability_file';
                 $_FILES['inservice_file']['input_names'] = 'inservice_file';
-                foreach($_FILES as $file){                    
+
+                foreach($_FILES as $file) {
+
                     if(!empty($file['name'])) {
-                        // echo'<pre>'; print_r($file) ;
+                        // echo'<pre>'; print_r($file) ; die;
                         $this->file_update($file);
                     }
                 }
+
                 // die;
                 $this->session->set_flashdata('success_msg', 'Your Account has been updated!');
                 redirect('profile/view');
@@ -295,7 +345,6 @@ Class Profile extends CI_Controller
             // echo "<pre>"; print_r($userdata); die;
             $uid = $this->session->userdata('userId');
 
-
             $userData['users'] = array(
                 'first_name'                => strip_tags($this->input->post('first_name')),
                 'middle_name'                => strip_tags($this->input->post('middle_name')),
@@ -387,6 +436,8 @@ Class Profile extends CI_Controller
             }
         }
     }
+
+
     public function file_upload($input_id,$folder_name)
     {
         // echo'<pre>'; print_r($input_id) ; die; 
@@ -426,11 +477,16 @@ Class Profile extends CI_Controller
         // echo'<pre>'; print_r($file) ; die; 
         $folder_name = $file['folders'];
         $input_name = $file['input_names'];
-        $uid = $this->session->userdata('userId');
-        $oldfile = $this->UserModel->FindAndDelImg($uid,$folder_name);
+
+        $uid      = $this->session->userdata('userId');
+
+        // echo $uid; die;
+
+        $oldfile  = $this->UserModel->FindAndDelImg($uid,$folder_name);
         $Oldimage = $oldfile['oldimg']['DOC_NEW_NAME'].'.'.$oldfile['oldimg']['DOC_TYPE'];
         // echo'<pre>'; print_r($oldfile) ; die;
-        if($oldfile['status'] == true){
+        if ( $oldfile['status'] == true ) {
+
             $insert_img = $this->file_upload($input_name,$folder_name);
             if($insert_img == true)
             {

@@ -440,8 +440,10 @@ class UserModel extends CI_Model{
             $registration = $userData['registration'];
             $address      = $userData['address'];
             // echo "<pre>"; print_r($registration); die;
+            // echo "<pre>"; print_r($address); die;
             if(!empty($users))
             {
+
                 $users['MODIFIED_DT'] = DATE("Y-m-d");
                 $akey = array_keys($users);
                 $keydata = implode(',', $akey);
@@ -454,13 +456,17 @@ class UserModel extends CI_Model{
 
             if(!empty($registration))
             {
+           
                 $users['MODIFIED_DT'] = DATE("Y-m-d");
                 $akey = array_keys($registration);
                 $keydata = implode(',', $akey);
                 $aval = array_values($registration);
                 $valdata = implode('\',\'', $aval);
-                // echo "<pre>"; print_r($keydata); die;
-                $update = $this->db->query("UPDATE HRIS_REC_USERS_REGISTRATION  SET ($keydata) = ('$valdata')  where USER_ID = $uid");
+                // echo "<pre>"; print_r($registration); echo "<br>";
+                // echo "<pre>"; print_r($keydata); echo "<br>";
+                // echo "<pre>"; print_r($valdata); die;
+                // echo "<pre>"; print_r("UPDATE HRIS_REC_USERS_REGISTRATION  SET ($keydata) = ('$valdata')  where USER_ID = $uid"); die;
+                $update = $this->db->query("UPDATE HRIS_REC_USERS_REGISTRATION  SET ($keydata) = ('$valdata')  where USER_ID = '$uid'");
                 // return true;
             }
             if(!empty($address))
@@ -471,6 +477,8 @@ class UserModel extends CI_Model{
                 $aval = array_values($address);
                 $valdata = implode('\',\'', $aval);
                 // echo "<pre>"; print_r($keydata); die;
+                //  echo "<pre>"; print_r($keydata); echo "<br>";
+                // echo "<pre>"; print_r($valdata); die;
                 $update = $this->db->query("UPDATE HRIS_REC_USERS_ADDRESS  SET ($keydata) = ('$valdata')  where USER_ID = $uid");
                 // return true;
             }
@@ -721,6 +729,7 @@ class UserModel extends CI_Model{
         }
     }
     public function FindAndDelImg($uid,$folder_name){
+
         $query = $this->db->query("SELECT * FROM HRIS_REC_APPLICATION_DOCUMENTS WHERE DOC_FOLDER = '$folder_name' AND USER_ID = $uid");
         $result['oldimg'] = ($query->num_rows() > 0) ? ($query->row_array()):FALSE;
         $result['status'] = 0;
@@ -728,9 +737,25 @@ class UserModel extends CI_Model{
         if($query->num_rows() > 0) {
             // echo ' ffff'; die;
             $query = $this->db->query("DELETE FROM HRIS_REC_APPLICATION_DOCUMENTS WHERE DOC_FOLDER = '$folder_name' AND USER_ID = $uid");
-            $result['status'] = ($this->db->affected_rows() > 0)?TRUE:FALSE;
+            $result['status'] = ($this->db->affected_rows() > 0) ? TRUE : FALSE;
             // $result['status'] = true;
-                return $result;
+            return $result;
+        }
+        return $result;
+    }
+
+    public function FindAndDelImgName($uid, $folder_name){
+
+        $query = $this->db->query("SELECT * FROM HRIS_REC_APPLICATION_DOCUMENTS WHERE DOC_OLD_NAME = '$folder_name' AND USER_ID = $uid");
+        $result['oldimg'] = ($query->num_rows() > 0) ? ($query->row_array()):FALSE;
+        $result['status'] = 0;
+        // echo'<pre>'; print_r($result) ; die;
+        if($query->num_rows() > 0) {
+            // echo ' ffff'; die;
+            $query = $this->db->query("DELETE FROM HRIS_REC_APPLICATION_DOCUMENTS WHERE DOC_OLD_NAME = '$folder_name' AND USER_ID = $uid");
+            $result['status'] = ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+            // $result['status'] = true;
+            return $result;
         }
         return $result;
     }
