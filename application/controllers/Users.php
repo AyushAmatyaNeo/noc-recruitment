@@ -678,7 +678,7 @@ Class Users extends CI_Controller
                 $this->form_validation->set_rules('email_id', 'Email Id', 'required'); 
                 $this->form_validation->set_rules('username', 'Username', 'required'); 
                 $this->form_validation->set_rules('password', 'Password', 'required');
-                $this->form_validation->set_rules('name_nepali', 'Name in Nepali', 'required');
+                // $this->form_validation->set_rules('name_nepali', 'Name in Nepali', 'required');
 
 
                 /* EXTRA LEVEL OF VERIFICATION */
@@ -713,7 +713,7 @@ Class Users extends CI_Controller
                     'USERNAME' => $this->input->post('username'),
                     'PASSWORD' => $this->input->post('password'), 
                     'CREATED_DT' => date('Y-m-d'),
-                    'NAME_NEPALI' => $this->input->post('name_nepali')
+                    // 'NAME_NEPALI' => $this->input->post('name_nepali')
                 );
 
 
