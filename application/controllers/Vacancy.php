@@ -790,13 +790,14 @@ class Vacancy extends CI_Controller
 
 
             // GET PIDX RELATED ROW
-            $transaction_detail = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_APPLICATION_PAYMENT', '', 'PAYMENT_UNIQUE_ID', $data['pidx'], 'row_array');
+            $transaction_detail = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_APPLICATION_PAYMENT', '*', 'PAYMENT_UNIQUE_ID', $data['pidx'], 'row_array');
+
 
             /** ---INSERT DATA PAYMENT MADE BUT NOT VERIFIED YET ---- */
 
             $this->VacancyModel->paymentUpdateWithKey('HRIS_REC_APPLICATION_PAYMENT', 
                                                      ['STATUS' => 1, 'PAYMENT_PAID' => 'Y'], 
-                                                     'PAYMENT_UNIQUE_ID', $transaction_detail['pidx']);
+                                                     'PAYMENT_UNIQUE_ID', $data['pidx']);
 
             $this->VacancyModel->paymentUpdateWithKey('HRIS_REC_VACANCY_APPLICATION', 
                                                       ['PAYMENT_ID' => $transaction_detail['PAYMENT_ID'], 'PAYMENT_PAID' => 'Y' ], 

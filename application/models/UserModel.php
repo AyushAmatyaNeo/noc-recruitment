@@ -79,7 +79,8 @@ class UserModel extends CI_Model{
             // }
             $data = implode('\',\'', $data);
 
-            $insert = $this->db->query("INSERT INTO $this->table (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,MOBILE_NO,EMAIL_ID,USERNAME,PASSWORD,CREATED_DT, NAME_NEPALI) values ('$data')"); 
+            // $insert = $this->db->query("INSERT INTO $this->table (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,MOBILE_NO,EMAIL_ID,USERNAME,PASSWORD,CREATED_DT, NAME_NEPALI) values ('$data')"); 
+            $insert = $this->db->query("INSERT INTO $this->table (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,MOBILE_NO,EMAIL_ID,USERNAME,PASSWORD,CREATED_DT) values ('$data')"); 
             // print_r($insert); die;
              return true;
         } 
