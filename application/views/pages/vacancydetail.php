@@ -100,7 +100,9 @@
                                
                                     echo '<a class="btn btn-primary btn-noc" href="' . base_url("vacancy/apply/") . $vid . '" role="button">Apply Now</a>';
                                 } else {
-                                    echo '<a class="btn btn-primary btn-noc" href="' . base_url("vacancy/edit/") . $vid . '" role="button">Edit</a>';
+                                    
+                                    /* echo '<a class="btn btn-primary btn-noc" href="' . base_url("vacancy/edit/") . $vid . '" role="button">Edit</a>'; */
+                                    echo '<a class="btn btn-primary btn-apply" href="' . base_url("vacancy/viewApplication/") . $vid . '" role="button">View Application</a>';
                                 } ?>
                         </div>
                     </div>

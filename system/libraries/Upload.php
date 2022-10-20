@@ -395,7 +395,6 @@ class CI_Upload {
 				$_file = $_file[$field];
 			}
 		}
-
 		if ( ! isset($_file))
 		{
 			$this->set_error('upload_no_file_selected', 'debug');
@@ -992,18 +991,16 @@ class CI_Upload {
 			$this->set_error('upload_no_filepath', 'error');
 			return FALSE;
 		}
-
 		if (realpath($this->upload_path) !== FALSE)
 		{
 			$this->upload_path = str_replace('\\', '/', realpath($this->upload_path));
 		}
-
 		if ( ! is_dir($this->upload_path))
 		{
-			$this->set_error('upload_no_filepath', 'error');
-			return FALSE;
+			mkdir($this->upload_path);
+			// $this->set_error('upload_no_filepath', 'error');
+			// return FALSE;
 		}
-
 		if ( ! is_really_writable($this->upload_path))
 		{
 			$this->set_error('upload_not_writable', 'error');

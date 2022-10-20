@@ -644,6 +644,7 @@ $(document).ready(function () {
   });
   // Add required if skill checkbox selected
   $('.inclusion').on('click', function () {
+    console.log('asdf');
     if ($(this).closest(".inclusion").is(":checked")) {
       var Input = $(this).attr('inclusionName');
       console.log(Input);

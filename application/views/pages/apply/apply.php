@@ -370,6 +370,7 @@
 					</div>
 			<?php }
 			?>
+			<?php /*
 			<?php
 			if ($vacancylists[0]['SKILL_ID'] != "") { ?>
 			<!-- Select Skills -->
@@ -395,6 +396,7 @@
 				</div>				
 			</div>
 			<?php } } }?>
+			*/ ?>
 			<!-- G. Educational Qualification -->
 			<div class="card mt-3">
 				<h6 class="form-table-title">Educational Qualification</h6>
@@ -732,11 +734,13 @@
 											$b = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']);
 										?>
 											<div class="row">
-												<div class="col-md-8">
-													<input type="file" class="form-control-file" id="<?php $CertId = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']); echo $CertId;  ?>" name="<?php echo $CertId; ?>" onchange="return fileValidation($id = '<?php $CertId = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']); echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
-												</div>
-												<div class="col-md-4">
-													<i class="fa fa-plus-circle" onclick="addNewImage('<?php echo $c ?>','<?php echo $b; ?>')" aria-hidden="true" style="color: green; cursor: pointer"></i>	
+												<div class="col-md-10">
+													<label for="trascript">Trabscript/Grade Sheet/Marksheet <span style="color: red;">*</span></label>
+													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
+													<label style="margin-top:20px;" for="character">Character Certificate <span style="color: red;">*</span></label>
+													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
+													<label style="margin-top:20px;" for="equivalent">Equivalent Certificate</label>
+													<input type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
 												</div>
 											</div>
 										</td>										

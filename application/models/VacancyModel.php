@@ -352,15 +352,20 @@ class VacancyModel extends CI_Model
         }
         return false;
     }
-    public function insertimg($image)
+    public function insertimg($image, $inclusionName = '')
     {
-        // echo '<pre>'; print_r(($image)); die;
         if(!empty($image)){ 
-            $image = implode('\',\'', $image);
-            // echo '<pre>'; print_r(($image)); die;
-            $insert = $this->db->query("INSERT INTO HRIS_REC_APPLICATION_DOCUMENTS (REC_DOC_ID,APPLICATION_ID,VACANCY_ID,USER_ID,DOC_OLD_NAME,DOC_NEW_NAME,DOC_PATH,DOC_TYPE,DOC_FOLDER)
-            values ('$image')");
-            return true;
+            if($image['folder']=='inclusion'){
+                $image = implode('\',\'', $image);
+                $insert = $this->db->query("INSERT INTO HRIS_REC_APPLICATION_DOCUMENTS (REC_DOC_ID,APPLICATION_ID,VACANCY_ID,USER_ID,DOC_OLD_NAME,DOC_NEW_NAME,DOC_PATH,DOC_TYPE,DOC_FOLDER,VACANCY_INCLUSION_ID)
+                values ('$image', (select option_id from HRIS_REC_OPTIONS where option_edesc = '$inclusionName'))");
+                return true;
+            }else{
+                $image = implode('\',\'', $image);
+                $insert = $this->db->query("INSERT INTO HRIS_REC_APPLICATION_DOCUMENTS (REC_DOC_ID,APPLICATION_ID,VACANCY_ID,USER_ID,DOC_OLD_NAME,DOC_NEW_NAME,DOC_PATH,DOC_TYPE,DOC_FOLDER)
+                values ('$image')");
+                return true;
+            }
         }
         else{
             return false;

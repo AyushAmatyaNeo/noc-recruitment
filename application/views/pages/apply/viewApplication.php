@@ -195,14 +195,13 @@
 					<?php $inc=0; foreach($vacancylists[0]['INCLUSION_ID'] as $inclusion) {?>
 					<div class="col-lg-12">
 						<div class="form-check form-check-inline">
-							<input <?php foreach($Selectedinclusions as $Selectedinclusion){ $checked = ($Selectedinclusion == $inclusion['INCLUSION_ID']) ? 'checked' :'' ;  echo $checked; }?> 
+							<input disabled <?php foreach($Selectedinclusions as $Selectedinclusion){ $checked = ($Selectedinclusion == $inclusion['INCLUSION_ID']) ? 'checked' :'' ;  echo $checked; }?> 
 							class="form-check-input inclusion" type="checkbox" name="inclusion_id[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>" >
 							<label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
 							
 						</div>
 						<?php if($inclusion['UPLOAD_FLAG'] == 'Y'){ ?>
 							<div class="col-md-8 form-check-inline">
-							<input type="file" class="form-control-file inclusion_file"  name="<?php echo $inclusion['OPTION_EDESC'];?>" />
 							<div class="col-md-4">
 								<?php if(!empty($documents['inclusionDocs'][$inclusion['INCLUSION_ID']]['DOC_PATH'])) { ?>
 							<input type="hidden" name="inclusion_id[]" value="<?php  echo $documents['inclusionDocs'][$inclusion['INCLUSION_ID']]['REC_DOC_ID']; ?>" />
@@ -212,7 +211,6 @@
 							<?php } ?>
 							</div>
 							</div>								
-							<p style="color: #47759e;">Only choose new file to update previous one.</p>							
 							<?php $inc++; } ?>
 					</div>
 					<?php } ?>
@@ -264,27 +262,27 @@
 			<h6 class="form-table-title">Education Description</h6>
 					<div class="col-lg-12 my-3" id="max_education">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="1" <?php $checked =  ($applications[0]['MAX_QUALIFICATION_ID'] == '1') ? 'checked' : ''; echo $checked; ?> />
+							<input disabled class="form-check-input" type="radio" name="max_education" value="1" <?php $checked =  ($applications[0]['MAX_QUALIFICATION_ID'] == '1') ? 'checked' : ''; echo $checked; ?> />
 							<label class="form-check-label">SLC</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="2" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '2') ? 'checked' : ''; echo $checked; ?> />
+							<input disabled class="form-check-input" type="radio" name="max_education" value="2" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '2') ? 'checked' : ''; echo $checked; ?> />
 							<label class="form-check-label">+2 / Intermediate</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="3" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '3') ? 'checked' : ''; echo $checked; ?>>
+							<input disabled class="form-check-input" type="radio" name="max_education" value="3" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '3') ? 'checked' : ''; echo $checked; ?>>
 							<label class="form-check-label">Bachelors</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="4" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '4') ? 'checked' : ''; echo $checked; ?>>
+							<input disabled class="form-check-input" type="radio" name="max_education" value="4" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '4') ? 'checked' : ''; echo $checked; ?>>
 							<label class="form-check-label">Masters</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="5" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '5') ? 'checked' : ''; echo $checked; ?>>
+							<input disabled class="form-check-input" type="radio" name="max_education" value="5" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '5') ? 'checked' : ''; echo $checked; ?>>
 							<label class="form-check-label">M.phil</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="11" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '11') ? 'checked' : ''; echo $checked; ?>>
+							<input disabled class="form-check-input" type="radio" name="max_education" value="11" <?php  $checked = ($applications[0]['MAX_QUALIFICATION_ID'] == '11') ? 'checked' : ''; echo $checked; ?>>
 							<label class="form-check-label">others</label>
 						</div>
 					</div>
@@ -304,7 +302,6 @@
 									<th rowspan="2">University/Board</th>
 									<th rowspan="2">Major Subject</th>
 									<th rowspan="2" width="10%">Passed Year (AD)</th>
-									<th rowspan="2"></th>
 								</tr>
 								<tr>
 									<th>Rank Type</th>
@@ -317,14 +314,14 @@
 								<tr>
 									<td>
 										<div for="edu_institute" class="form-group">
-											<input type="text" name="edu_institute[]" id="edu_institute<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['EDUCATION_INSTITUTE']  ?>">
+											<input readonly type="text" name="edu_institute[]" id="edu_institute<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['EDUCATION_INSTITUTE']  ?>">
 											<input type="hidden" name="education_id[]" value="<?php echo $education['EDUCATION_ID'] ?>" class="form-control form-control-sm" >
 										</div>
 										<?php echo form_error('edu_institute', '<p class="help-block error">', '</p>'); ?>
 									</td>
 									<td>
 										<div for="level_id" class="form-group">
-											<select class="form-control form-control-sm" name="level_id[]" id="level_id<?php echo $counter;?>">
+											<select disabled class="form-control form-control-sm" name="level_id[]" id="level_id<?php echo $counter;?>">
 												<option value="">-- Select -- </option>
 												<?php foreach ($degrees as $degree) { ?>
 													<?php $selected = ($education['LEVEL_ID'] == $degree['ACADEMIC_DEGREE_ID'])? 'selected': '' ?>
@@ -336,13 +333,13 @@
 									</td>
 									<td>
 										<div for="facalty" class="form-group">
-											<input type="text" name="facalty[]" id="facalty<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['FACALTY'] ?>">
+											<input readonly type="text" name="facalty[]" id="facalty<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['FACALTY'] ?>">
 											<?php echo form_error('facalty', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
 										<div class="form-group">
-											<select class="form-control form-control-sm" id="rank_type<?php echo $counter;?>" name="rank_type[]">
+											<select disabled class="form-control form-control-sm" id="rank_type<?php echo $counter;?>" name="rank_type[]">
 												<option value="">---</option>
 												<option <?php if($education['RANK_TYPE'] === 'GPA') { echo 'selected';} ?> value="GPA">GPA</option>
 												<option <?php if($education['RANK_TYPE'] === 'Percentage'){ echo 'selected';} ?> value="Percentage">Percentage</option>
@@ -352,93 +349,30 @@
 									</td>
 									<td>
 										<div for="rank_value" class="form-group">
-											<input type="text" name="rank_value[]" id="rank_value<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['RANK_VALUE'] ?>">
+											<input readonly type="text" name="rank_value[]" id="rank_value<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['RANK_VALUE'] ?>">
 											<?php echo form_error('rank_value', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
 										<div for="university_board" class="form-group" id="rank_value_error">
-											<input type="text" name="university_board[]" id="university_board" class="form-control form-control-sm" value="<?php echo $education['UNIVERSITY_BOARD'] ?>">
+											<input readonly type="text" name="university_board[]" id="university_board" class="form-control form-control-sm" value="<?php echo $education['UNIVERSITY_BOARD'] ?>">
 											<?php echo form_error('university_board', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
 										<div for="major_subject" class="form-group">
-											<input type="text" name="major_subject[]" id="major_subject<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['MAJOR_SUBJECT'] ?>">
+											<input readonly type="text" name="major_subject[]" id="major_subject<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['MAJOR_SUBJECT'] ?>">
 											<?php echo form_error('major_subject', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
 									<td>
 										<div for="passed_year" class="form-group">
-											<input type="text" name="passed_year[]" id="passed_year<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['PASSED_YEAR'] ?>">
+											<input readonly type="text" name="passed_year[]" id="passed_year<?php echo $counter;?>" class="form-control form-control-sm" value="<?php echo $education['PASSED_YEAR'] ?>">
 											<?php echo form_error('passed_year', '<p class="help-block error">', '</p>'); ?>
 										</div>
 									</td>
-									<td> <?php if(($educations[0] == $education )) {
-											echo '<i class="fa fa-plus-circle btn-add-edu" aria-hidden="true" style="color: green; cursor: pointer"></i>';											
-									} else 
-									{
-										echo '<i class="fa fa-minus-circle btn-edu-remove" aria-hidden="true" style="color: red; cursor: pointer"></i><input type="hidden" class="btn-edu-remove btn-remove-edu" value="'.$education["EDUCATION_ID"].'"/>';
-									} ?>
-									</td>
 								</tr>
-								<?php } } else{ ?>
-									<tr>
-									<td>
-										<div for="edu_institute" class="form-group">
-											<input type="text" name="edu_institute[]" id="edu_institute" class="form-control form-control-sm" >
-										</div>
-										<?php echo form_error('edu_institute', '<p class="help-block error">', '</p>'); ?>
-									</td>
-									<td>
-										<div for="level_id" class="form-group">
-											<select class="form-control form-control-sm" name="level_id[]" id="level_id">
-												<option value="">-- Select -- </option>
-												<?php foreach ($degrees as $degree) { ?>
-													<option value="<?php echo $degree['ACADEMIC_DEGREE_ID'] ?>"><?php echo $degree['ACADEMIC_DEGREE_NAME'] ?></option>
-												<?php } ?>
-											</select>
-											<?php echo form_error('level_id', '<p class="help-block error">', '</p>'); ?>
-										</div>
-									</td>
-									<td>
-										<div for="facalty" class="form-group">
-											<input type="text" name="facalty[]" id="facalty" class="form-control form-control-sm">
-											<?php echo form_error('facalty', '<p class="help-block error">', '</p>'); ?>
-										</div>
-									</td>
-									<td>
-										<div class="form-group">
-											<select class="form-control form-control-sm" id="rank_type" name="rank_type[]">
-												<option value="">---</option>
-												<option value="GPA">GPA</option>
-												<option value="Percentage">Percentage</option>
-											</select>
-										</div>
-									</td>
-									<td>
-										<div for="rank_value" class="form-group">
-											<input type="text" name="rank_value[]" id="rank_value" class="form-control form-control-sm" >
-											<?php echo form_error('rank_value', '<p class="help-block error">', '</p>'); ?>
-										</div>
-									</td>
-									<td>
-										<div for="major_subject" class="form-group">
-											<input type="text" name="major_subject[]" id="major_subject" class="form-control form-control-sm" >
-											<?php echo form_error('major_subject', '<p class="help-block error">', '</p>'); ?>
-										</div>
-									</td>
-									<td>
-										<div for="passed_year" class="form-group">
-											<input type="text" name="passed_year[]" id="passed_year" class="form-control form-control-sm" >
-											<?php echo form_error('passed_year', '<p class="help-block error">', '</p>'); ?>
-										</div>
-									</td>
-									<td>
-										<i class="fa fa-plus-circle btn-add-edu" aria-hidden="true" style="color: green; cursor: pointer"></i>
-									</td>
-								</tr>
-									<?php }?>
+								<?php } }?>
 							</tbody>
 						</table>
 					</div>
@@ -458,7 +392,6 @@
 								<th width="12%">Employee Type</th>
 								<th>Start From</th>
 								<th>Till Date</th>
-								<th><?php if(empty($experiences)){ ?> <i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i> <?php } ?></th>
 							</tr>
 						</thead>
 						<tbody id="experiancebody">
@@ -467,28 +400,28 @@
 							<tr>
 								<td>
 									<div for="org_name" class="form-group">
-										<input type="text" name="org_name[]" id="org_name" class="form-control form-control-sm validate-field" value="<?php echo $experience['ORGANISATION_NAME'] ?>">
+										<input readonly type="text" name="org_name[]" id="org_name" class="form-control form-control-sm validate-field" value="<?php echo $experience['ORGANISATION_NAME'] ?>">
 										<input type="hidden" name="experience_id[]" value="<?php echo $experience['EXPERIENCE_ID'] ?>" class="form-control form-control-sm" >
 									</div>
 								</td>
 								<td>
 									<div for="post_name" class="form-group">
-										<input type="text" name="post_name[]" id="post_name" class="form-control form-control-sm validate-field" value="<?php echo $experience['POST_NAME'] ?>">
+										<input readonly type="text" name="post_name[]" id="post_name" class="form-control form-control-sm validate-field" value="<?php echo $experience['POST_NAME'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="service_name" class="form-group">
-										<input type="text" name="service_name[]" id="service_name" class="form-control form-control-sm validate-field" value="<?php echo $experience['SERVICE_NAME'] ?>">
+										<input readonly type="text" name="service_name[]" id="service_name" class="form-control form-control-sm validate-field" value="<?php echo $experience['SERVICE_NAME'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="org_level" class="form-group">
-										<input type="number" name="org_level[]" id="org_level" class="form-control form-control-sm validate-field" value="<?php echo $experience['LEVEL_ID'] ?>">
+										<input readonly type="number" name="org_level[]" id="org_level" class="form-control form-control-sm validate-field" value="<?php echo $experience['LEVEL_ID'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="employee_type" class="form-group">
-										<select name="employee_type[]" id="employee_type" class="form-control form-control-sm">
+										<select disabled name="employee_type[]" id="employee_type" class="form-control form-control-sm">
 											<option></option>
 											<option <?php if($experience['EMPLOYEE_TYPE_ID'] == 1) { echo 'selected'; } ?> value="1">Permanent</option>
 											<option <?php if($experience['EMPLOYEE_TYPE_ID'] == 2) { echo 'selected'; } ?> value="2">Temporary</option>
@@ -500,18 +433,15 @@
 									<div for="from_date" class="form-group">
 										<!-- <input name="from_date" type="text" class="date-picker form-control form-control-sm"> -->
 										
-										<input type="text" class="date-picker form-control selectNepaliDate1 fromDate" name="from_date[]" id="from_date_ad" data-single="true" placeholder="Date(AD)" value="<?php echo $experience['FROM_DATE'] ?>">
+										<input readonly type="text" class="date-picker form-control selectNepaliDate1 fromDate" name="from_date[]" id="from_date_ad" data-single="true" placeholder="Date(AD)" value="<?php echo $experience['FROM_DATE'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="to_date" class="form-group">
 										<!-- <input name="to_date" type="text" class="form-control form-control-sm"> -->
 										
-										<input type="text" class="date-picker form-control selectNepaliDate1 toDate" name="to_date_bs[]" id="to_date_ad" data-single="true" placeholder=" Date(AD)" value="<?php echo $experience['TO_DATE'] ?>">
+										<input readonly type="text" class="date-picker form-control selectNepaliDate1 toDate" name="to_date_bs[]" id="to_date_ad" data-single="true" placeholder=" Date(AD)" value="<?php echo $experience['TO_DATE'] ?>">
 									</div>
-								</td>
-								<td>
-									<i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i>
 								</td>
 							</tr>
 							<?php } } ?>
@@ -546,7 +476,6 @@
 								<th>To Date</th>
 								<th width="12%">Period (Days)</th>
 								<th>Description</th>
-								<th><?php if(empty($trainings)) { echo '<i class="fa fa-plus-circle btn-add-tr" aria-hidden="true" style="color: green; cursor: pointer"></i>'; } ?></th>
 							</tr>
 						</thead>
 						<tbody id="trainingbody">
@@ -555,37 +484,34 @@
 							<tr>
 								<td>
 									<div for="training_name" class="form-group">
-										<input type="text" name="training_name[]" id="training_name" class="form-control form-control-sm" value="<?php echo $training['TRAINING_NAME'] ?>">
+										<input readonly type="text" name="training_name[]" id="training_name" class="form-control form-control-sm" value="<?php echo $training['TRAINING_NAME'] ?>">
 										<input type="hidden" name="training_id[]" value="<?php echo $training['TRAINING_ID'] ?>" class="form-control form-control-sm" >
 									</div>
 								</td>
 								<td>
 									<div for="certificate" class="form-group">
-										<input type="text" name="certificate[]" id="certificate" class="form-control form-control-sm" value="<?php echo $training['CERTIFICATE'] ?>">
+										<input readonly type="text" name="certificate[]" id="certificate" class="form-control form-control-sm" value="<?php echo $training['CERTIFICATE'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="tr_from_date" class="form-group">
-										<input type="text" name="tr_from_date[]" id="tr_from_date" class="form-control form-control-sm selectNepaliDate tr_from_date" data-single="true" placeholder="Select Date(s)" value="<?php echo $training['FROM_DATE'] ?>">
+										<input readonly type="text" name="tr_from_date[]" id="tr_from_date" class="form-control form-control-sm selectNepaliDate tr_from_date" data-single="true" placeholder="Select Date(s)" value="<?php echo $training['FROM_DATE'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="tr_to_date" class="form-group">
-										<input type="text" name="tr_to_date[]" id="tr_to_date" class="form-control form-control-sm selectNepaliDate tr_to_date" data-single="true" placeholder="Select Date(s)" value="<?php echo $training['TO_DATE'] ?>">
+										<input readonly type="text" name="tr_to_date[]" id="tr_to_date" class="form-control form-control-sm selectNepaliDate tr_to_date" data-single="true" placeholder="Select Date(s)" value="<?php echo $training['TO_DATE'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="period" class="form-group">
-										<input type="number" name="period[]" id="total_days" class="form-control form-control-sm period" value="<?php echo $training['TOTAL_DAYS'] ?>">
+										<input readonly type="number" name="period[]" id="total_days" class="form-control form-control-sm period" value="<?php echo $training['TOTAL_DAYS'] ?>">
 									</div>
 								</td>
 								<td>
 									<div for="description" class="form-group">
-										<input type="text" name="description[]" id="description" class="form-control form-control-sm" value="<?php echo $training['DESCRIPTION'] ?>">
+										<input readonly type="text" name="description[]" id="description" class="form-control form-control-sm" value="<?php echo $training['DESCRIPTION'] ?>">
 									</div>
-								</td>
-								<td>
-									<i class="fa fa-plus-circle btn-add-tr" aria-hidden="true" style="color: green; cursor: pointer"></i>
 								</td>
 							</tr>
 							<?php } } ?>
@@ -603,31 +529,13 @@
 					<td>
 						<p>Front citizenship</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="nagrita_front" src="<?php if (!empty($documents)){ echo $documents['userdoc'][0]['DOC_PATH']; } else { echo base_url('assets/images/ctz_front.png');} ?>" alt="nagrita_front" />
+							<img style="width: 100%; height: 100%" id="nagrita_front" src="<?php if (!empty($documents)){ echo $documents['userdocnew']['nagrita_front']['DOC_PATH']; } else { echo base_url('assets/images/ctz_front.png');} ?>" alt="nagrita_front" />
 						</div>
 					</td>
 					<td>
 						<p>Back citizenship</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="nagrita_back" src="<?php if (!empty($documents)){ echo $documents['userdoc'][1]['DOC_PATH']; } else { echo base_url('assets/images/ctz_back.png');} ?>" alt="nagrita_back" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td style="border-top:0;">
-						<div class="form-group">
-							<input type="hidden" name="image_ids[]" value="nagrita_frontimg" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][0]['REC_DOC_ID']; ?>" />
-							<input type="file" class="form-control-file" name="nagrita_front1" id="nagrita_frontimg" onchange="return fileValidation($id = 'nagrita_frontimg')" />
-							<p class="size"></p>
-						</div>
-					</td>
-					<td style="border-top:0;">
-						<div class="form-group">
-							<input type="hidden" name="image_ids[]" value="nagrita_backimg" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][1]['REC_DOC_ID']; ?>" />
-							<input type="file" class="form-control-file" name="nagrita_back1" id="nagrita_backimg" onchange="return fileValidation($id = 'nagrita_backimg')" />
-							<p class="size"></p>
+							<img style="width: 100%; height: 100%" id="nagrita_back" src="<?php if (!empty($documents)){ echo $documents['userdocnew']['nagrita_back']['DOC_PATH']; } else { echo base_url('assets/images/ctz_back.png');} ?>" alt="nagrita_back" />
 						</div>
 					</td>
 				</tr>
@@ -638,62 +546,25 @@
 					<td>
 						<p>Photograph</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="photograph" src="<?php if (!empty($documents)){ echo $documents['userdoc'][2]['DOC_PATH']; } else { echo base_url('assets/images/recent_ph2.png');} ?>" alt="photograph" />
+							<img style="width: 100%; height: 100%" id="photograph" src="<?php if (!empty($documents)){ echo $documents['userdocnew']['photograph']['DOC_PATH']; } else { echo base_url('assets/images/recent_ph2.png');} ?>" alt="photograph" />
 						</div>
 					</td>
 					<td>
 						<p>Signature</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="recent_sign" src="<?php if (!empty($documents)){ echo $documents['userdoc'][3]['DOC_PATH']; } else { echo base_url('assets/images/recent_sign.png');} ?>" alt="Signature" />
+							<img style="width: 100%; height: 100%" id="recent_sign" src="<?php if (!empty($documents)){ echo $documents['userdocnew']['signature']['DOC_PATH']; } else { echo base_url('assets/images/recent_sign.png');} ?>" alt="Signature" />
 						</div>
 					</td>
 					<td>
 						<p>Right finger thumb</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="right_finger" src="<?php if (!empty($documents)){ echo $documents['userdoc'][4]['DOC_PATH']; } else { echo base_url('assets/images/recent_right_finger.png');} ?>" alt="finger_right" />
+							<img style="width: 100%; height: 100%" id="right_finger" src="<?php if (!empty($documents)){ echo $documents['userdocnew']['fingerright']['DOC_PATH']; } else { echo base_url('assets/images/recent_right_finger.png');} ?>" alt="finger_right" />
 						</div>
 					</td>
 					<td>
 						<p>Left finger thumb</p>
 						<div style="border: 1px solid; width: 160px; height: 140px;background-color:#f2f2f2;">
-							<img style="width: 100%; height: 100%" id="left_finger" src="<?php if (!empty($documents)){ echo $documents['userdoc'][5]['DOC_PATH']; } else { echo base_url('assets/images/recent_left_finger.png');} ?>" alt="finger_left" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td style="border-top:0;">
-						<div class="form-group">
-							<input type="hidden" name="image_ids[]" value="recent_photo" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][2]['REC_DOC_ID']; ?>" />
-							<input type="file" class="form-control-file" name="recent_photo1" id="recent_photo" onchange="return fileValidation($id = 'recent_photo')">
-							<p class="size"></p>
-							<?php if (isset($upload_error_photo)) {
-								echo $upload_error_photo;
-							} ?>
-						</div>
-					</td>
-					<td style="border-top:0;">
-						<div class="form-group">
-							<input type="hidden" name="image_ids[]" value="signature" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][3]['REC_DOC_ID']; ?>" />
-							<input type="file" class="form-control-file" name="signature1" id="signature" onchange="return fileValidation($id = 'signature')">
-							<p class="size"></p>
-						</div>
-					</td>
-					<td style="border-top:0;">
-						<div class="form-group">
-							<input type="hidden" name="image_ids[]" value="right_finger_scan" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][4]['REC_DOC_ID']; ?>" />
-							<input type="file" class="form-control-file" name="right_finger_scan1" id="right_finger_scan" onchange="return fileValidation($id = 'right_finger_scan')">
-							<p class="size"></p>
-						</div>
-					</td>
-					<td style="border-top:0;">
-						<div class="form-group">
-							<input type="hidden" name="image_ids[]" value="left_finger_scan" />
-							<input type="hidden" name="doc_id[]" value="<?php echo $documents['userdoc'][5]['REC_DOC_ID']; ?>" />
-							<input type="file" class="form-control-file" name="left_finger_scan1" id="left_finger_scan" onchange="return fileValidation($id = 'left_finger_scan')">
-							<p class="size"></p>
+							<img style="width: 100%; height: 100%" id="left_finger" src="<?php if (!empty($documents)){ echo $documents['userdocnew']['fingerleft']['DOC_PATH']; } else { echo base_url('assets/images/recent_left_finger.png');} ?>" alt="finger_left" />
 						</div>
 					</td>
 				</tr>
@@ -712,7 +583,6 @@
 								<tr class="UploadDoc">
 									<td>S.No</td>
 									<td>Document Name</td>
-									<td>Upload</td>
 									<td>View</td>
 								</tr>
 							</thead>
@@ -726,18 +596,15 @@
 												<p><?php echo ucfirst($certificate['ACADEMIC_DEGREE_NAME']);  ?></p>										
 											</div>
 										</td>
-										<td class='certInput'>
-											<input type="hidden" name="certificates_id[]" value="<?php echo $documents['certificates'][$d]['REC_DOC_ID']; ?>" />
-											<input type="file" class="form-control-file" name="<?php echo $certificate['ACADEMIC_DEGREE_NAME'];?>" />
-										</td>
 										<td colspan="7">
-										<?php if(!empty($documents['certificates'][$d]['DOC_PATH'])) { ?>
-										<a href="<?php echo $documents['certificates'][$d]['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">View</a>
-										<?php } ?>
+											<a href="<?php echo $documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript']['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">Transcript</a>
+											<a href="<?php echo $documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character']['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">Character</a>
+											<?php if(!empty($documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent']['DOC_PATH'])){ ?>
+											<a href="<?php echo $documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent']['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">Equivalent</a>
+											<?php } ?>
 										</td>
 									</tr>
 									<?php $c++; $d++;} ?>
-									<p style="color: #47759e;">Only choose new file to update previous one.</p>
 								</tr>
 								<tr>
 									<!-- <td colspan="7">
@@ -758,7 +625,9 @@
 			<div style="float:right; margin-top: 5px;">
 				<button type="button" class="previous">Previous</button>
 				<button type="button" class="next">Next</button>
-				<button type="submit" class="submit" name="applyedit" value="Update">Update</button>
+				<a  class="btn btn-primary submit" href="<?php echo base_url('vacancy');; ?>">
+				Back
+				</a>
 			</div>
 		</div>
 		<?= form_close(); ?>

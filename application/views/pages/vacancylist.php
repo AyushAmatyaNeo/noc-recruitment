@@ -263,7 +263,8 @@
 										echo '<td><a class="btn btn-primary btn-apply age_apply" role="button">Apply</a><a class="btn btn-primary btn-apply" href="' . base_url("vacancy/vacancydetail/") . $vacancy_id . '" role="button">View</a></td>';
 									}
 								} else {
-									echo '<td><a class="btn btn-primary btn-apply" href="' . base_url("vacancy/edit/") . $vacancy_id . '" role="button">Edit</a><a class="btn btn-primary btn-apply" href="' . base_url("vacancy/vacancydetail/") . $vacancy_id . '" role="button">View</a></td>';
+									/* echo '<td><a class="btn btn-primary btn-apply" href="' . base_url("vacancy/edit/") . $vacancy_id . '" role="button">Edit</a><a class="btn btn-primary btn-apply" href="' . base_url("vacancy/vacancydetail/") . $vacancy_id . '" role="button">View</a></td>'; */
+									echo '<td><a class="btn btn-primary btn-apply" href="' . base_url("vacancy/viewApplication/") . $vacancy_id . '" role="button">View Application</a><a class="btn btn-primary btn-apply" href="' . base_url("vacancy/vacancydetail/") . $vacancy_id . '" role="button">View</a></td>';
 								} ?>
 							 </tr>
 					<?php  

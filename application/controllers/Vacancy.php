@@ -876,7 +876,7 @@ class Vacancy extends CI_Controller
             
             if ( $this->input->post('applySubmit') ) {
 
-
+// print_r('asdf');die;
                 
 
                 $vid     = base64_decode($this->uri->segment('3'));
@@ -1059,17 +1059,13 @@ class Vacancy extends CI_Controller
 
                 }
                     
-                // echo '<pre>'; print_r($application); die;
                 // Inserting Folder Names                
                 if ($this->form_validation->run('noc_apply_form') == true) {
-
 
                     $insert_info = $this->VacancyModel->insert($application);
 
                     // $insert_info = true;
                     if ($insert_info) {
-
-
                         // Inserting Folder Names
                         $_FILES['nagrita_front']['folders'] = 'nagrita_front';
                         $_FILES['nagrita_back']['folders'] = 'nagrita_back';
@@ -1097,7 +1093,7 @@ class Vacancy extends CI_Controller
 
                             for ($i=0; $i < $nagF; $i++) {
 
-                                $_FILES[array_keys($_FILES)[$i]]['folders'] = 'skills';
+                                $_FILES[array_keys($_FILES)[$i]]['folders'] = 'inclusion';
                                 $_FILES[array_keys($_FILES)[$i]]['input_names'] = array_keys($_FILES)[$i];
 
                             }                            
@@ -1105,7 +1101,7 @@ class Vacancy extends CI_Controller
 
                         for ( $i= $nagL+1; $i < $fileCount; $i++) {
 
-                            $_FILES[array_keys($_FILES)[$i]]['folders'] = 'certificates';
+                            $_FILES[array_keys($_FILES)[$i]]['folders'] = array_keys($_FILES)[$i];
                             $_FILES[array_keys($_FILES)[$i]]['input_names'] = array_keys($_FILES)[$i];
 
                         }   
@@ -1230,7 +1226,6 @@ class Vacancy extends CI_Controller
                 'id' => $this->session->userdata('userId')
             );
             if($this->input->post('applyedit')){
-                // echo '<pre>'; print_r($_POST); die;
                 $uid = $this->session->userdata('userId');
                 $data['details'] = array(
                     'application_amount'  => strip_tags($this->input->post('inclusion_amount')),
@@ -1450,6 +1445,7 @@ class Vacancy extends CI_Controller
             $data['selectedskills']         = $this->VacancyModel->Vacancyskills($data['applications'][0]['APPLICATION_ID']);    // MS office package id: 3
             $data['selectedskills']         = explode(',', $data['selectedskills']['SKILL_ID']);
             $data['documents']['skills']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','skills','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['inclusion']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','inclusion','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             $data['documents']['certificates']  = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','certificates','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             $data['documents']['userdoc']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'not in ',"certificates','skills",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             // $data['inclusions']              = $this->VacancyModel->VacancyInclusions($data['applications'][0]['APPLICATION_ID'],$vid);  // Selected Inclusion per vacancies
@@ -1467,8 +1463,14 @@ class Vacancy extends CI_Controller
             }
             // echo '<pre>';print_r($data['educations']); die;
             $data['vacancylists'][0]['SKILL_ID'] = $Vskills;
-            // echo '<pre>';print_r($data['documents']); die;
-            // echo '<pre>';print_r($data['vacancylists']); die;
+
+            $data['documents']['inclusionDocs'] = [];
+            foreach($data['documents']['inclusion'] as $incDocs){
+                $data['documents']['inclusionDocs'][$incDocs['VACANCY_INCLUSION_ID']] = $incDocs;
+            }
+            // echo '<pre>';print_r($data['documents']['inclusionDocs']); die;
+
+            // echo '<pre>';print_r($data['vacancylists'][0]['INCLUSION_ID']); die;
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/apply/edit', $data);
@@ -1494,7 +1496,7 @@ class Vacancy extends CI_Controller
 
         $this->load->library('upload',$config, $folder_name);
         $this->$folder_name->initialize($config);
-        // echo $folder_name; die;
+
         if($this->$folder_name->do_upload($input_id))
         {
             $imageMaxId              = $this->VacancyModel->getMaxIds('REC_DOC_ID','HRIS_REC_APPLICATION_DOCUMENTS');
@@ -1508,8 +1510,7 @@ class Vacancy extends CI_Controller
             $image['fullpath']       = base_url('uploads/noc_documents/users/'.$folder_name.'/'.$uploadData['raw_name'].$uploadData['file_ext']);
             $image['type']           = ltrim($uploadData['file_ext'], '.'); 
             $image['folder']         = $folder_name;
-            // echo'<pre>'; print_r($image) ; die;
-            $insert_img = $this->VacancyModel->insertimg($image);
+            $insert_img = $this->VacancyModel->insertimg($image, $input_id);
             if($insert_img == true)
             {
                 return true;
@@ -1740,6 +1741,274 @@ class Vacancy extends CI_Controller
 		$this->pdf->render();
 		// Output the generated PDF (1 = download and 0 = preview)
 		$this->pdf->stream("Admin_card.pdf", array("Attachment"=> 0));
+    }
+
+    public function viewApplication()
+    {
+        if ($this->isUserLoggedIn) {
+            $con = array(
+                'id' => $this->session->userdata('userId')
+            );
+            if($this->input->post('applyedit')){
+                // echo '<pre>'; print_r($_POST); die;
+                $uid = $this->session->userdata('userId');
+                $data['details'] = array(
+                    'application_amount'  => strip_tags($this->input->post('inclusion_amount')),
+                );
+                // Skills
+                $Appskills = $this->input->post('skills');
+                if(!empty($Appskills)){
+                    foreach($Appskills as $skills){
+                        $appSkill[] =  ($skills);                        
+                    }
+                }else{
+                    $appSkill[] = '';
+                }
+                $AppsIncs = $this->input->post('inclusion_id');
+                if(!empty($AppsIncs)){
+                    foreach($AppsIncs as $AppsInc){
+                        $appInclusion[] =  ($AppsInc);                        
+                    }
+                }else{
+                    $appInclusion[] = '';
+                }
+                $appSkill = implode(',',$appSkill);
+                $appInclusions = implode(',',$appInclusion);
+                $data['personal'] = array(
+                    'skill_id'          => $appSkill,
+                    'inclusion_id'      => $appInclusions,
+                    'modified_date'     => date('Y-m-d')
+                );
+                // echo '<pre>'; print_r(($data)); die;
+                $data['education_id']   = $this->input->post('education_id');
+                $data['edu_institute']  = $this->input->post('edu_institute');
+                $data['level_id']       = $this->input->post('level_id');
+                $data['facalty']        = $this->input->post('facalty');
+                $data['rank_type']      = $this->input->post('rank_type');
+                $data['rank_value']     = $this->input->post('rank_value');
+                $data['major_subject']  = $this->input->post('major_subject');
+                $data['passed_year']    = $this->input->post('passed_year');
+                $data['university_board'] = $this->input->post('university_board');
+                $eduId   = $this->VacancyModel->getMaxIds('EDUCATION_ID','HRIS_REC_APPLICATION_EDUCATION');               
+                $data['educations'] = [];
+                for($i=0; $i < count($data['edu_institute']); $i++)
+                    {
+                        $data['educations'][$i]['education_id']        = (!empty($data['education_id'][$i])) ? ($data['education_id'][$i]) : ($eduId['MAXID'] + 1);
+                        if(empty($data['education_id'][$i]))
+                        {
+                            $data['educations'][$i]['application_id']        = $this->input->post('application_id');
+                            $data['educations'][$i]['user_id']               = $this->session->userdata('userId');
+                            $data['educations'][$i]['ad_no']                 = $this->input->post('vacancy_id');
+                        }
+                        $data['educations'][$i]['education_institute'] = $data['edu_institute'][$i];
+                        $data['educations'][$i]['level_id']            = $data['level_id'][$i];
+                        $data['educations'][$i]['facalty']             = $data['facalty'][$i];
+                        $data['educations'][$i]['rank_type']           = $data['rank_type'][$i];
+                        $data['educations'][$i]['rank_value']          = $data['rank_value'][$i];
+                        $data['educations'][$i]['major_subject']       = $data['major_subject'][$i];
+                        $data['educations'][$i]['passed_year']         = $data['passed_year'][$i];
+                        $data['educations'][$i]['university_board']    = $data['university_board'][$i];
+                    }
+                // Experience
+                $data['experience_id']  = $this->input->post('experience_id');
+                $data['org_name']       = $this->input->post('org_name');
+                $data['post_name']      = $this->input->post('post_name');
+                $data['service_name']   = $this->input->post('service_name');
+                $data['org_level']      = $this->input->post('org_level');
+                $data['employee_type']  = $this->input->post('employee_type');
+                $data['from_date']      = $this->input->post('from_date');
+                $data['to_date']        = $this->input->post('to_date');
+                $expId   = $this->VacancyModel->getMaxIds('EXPERIENCE_ID','HRIS_REC_APPLICATION_EXPERIENCES');
+                $data['experiences'] = [];
+                if(isset($data['org_name'])) {
+                    for($i=0; $i < count($data['org_name']); $i++)
+                    {
+                        $data['experiences'][$i]['experience_id']        = (!empty($data['experience_id'][$i])) ? ($data['experience_id'][$i]) : ($expId['MAXID'] + 1);
+                        
+                        if(empty($data['experience_id'][$i]))
+                        {
+                            $data['experiences'][$i]['application_id']        = $this->input->post('application_id');
+                            $data['experiences'][$i]['user_id']               = $this->session->userdata('userId');
+                        }
+                        // $data['experiences'][$i]['experience_id']     = $data['experience_id'][$i];
+                        $data['experiences'][$i]['organisation_name'] = $data['org_name'][$i];
+                        $data['experiences'][$i]['post_name']         = $data['post_name'][$i];
+                        $data['experiences'][$i]['service_name']      = $data['service_name'][$i];
+                        $data['experiences'][$i]['level_id']          = $data['org_level'][$i];
+                        $data['experiences'][$i]['employee_type_id']  = $data['employee_type'][$i];
+                        $data['experiences'][$i]['from_date']         = $data['from_date'][$i];
+                        $data['experiences'][$i]['to_date']           = $data['to_date'][$i];
+                    }
+                }                
+                    // echo '<pre>'; print_r($data['experiences']); die;
+                // Training
+                $data['training_id']    = $this->input->post('training_id');
+                $data['training_name']  = $this->input->post('training_name');
+                $data['certificate']    = $this->input->post('certificate');
+                $data['tr_from_date']   = $this->input->post('tr_from_date');
+                $data['tr_to_date']     = $this->input->post('tr_to_date');
+                $data['period']         = $this->input->post('period');
+                $data['description']    = $this->input->post('description');
+                $trnId   = $this->VacancyModel->getMaxIds('TRAINING_ID','HRIS_REC_APPLICATION_TRAININGS');
+                $data['trainings'] = [];
+                if(isset($data['training_name'])){
+                    for($i=0; $i < count($data['training_name']); $i++)
+                    {
+                        $data['trainings'][$i]['training_id']  = (!empty($data['training_id'][$i])) ? ($data['training_id'][$i]) : ($trnId['MAXID'] + 1);
+                        
+                        if(empty($data['training_id'][$i]))
+                        {
+                            $data['trainings'][$i]['application_id']        = $this->input->post('application_id');
+                            $data['trainings'][$i]['user_id']               = $this->session->userdata('userId');
+                        }
+                        $data['trainings'][$i]['training_id']   = $data['training_id'][$i];
+                        $data['trainings'][$i]['training_name'] = $data['training_name'][$i];
+                        $data['trainings'][$i]['certificate']   = $data['certificate'][$i];
+                        $data['trainings'][$i]['from_date']     = $data['tr_from_date'][$i];
+                        $data['trainings'][$i]['to_date']       = $data['tr_to_date'][$i];
+                        $data['trainings'][$i]['total_days']    = $data['period'][$i];
+                        $data['trainings'][$i]['description']   = $data['description'][$i];
+                    }
+                }
+                
+                $appId = $this->input->post('application_id');
+                $vid = $this->input->post('vacancy_id');
+                $update = $this->VacancyModel->updateapplication($data,$uid,$appId);
+                // $update = true;
+                if($update == true){
+                    // echo '<pre>'; print_r($_FILES); die;
+                    $files = $_FILES;
+                    $doc_id = $this->input->post('doc_id[]');
+                    $skill_id = $this->input->post('skill_id[]');
+                    $certificates_id = $this->input->post('certificates_id[]');
+                    $nagF = array_search('nagrita_front1', array_keys($files));   // nagF = Nagrita document first index
+                    $nagL = array_search('left_finger_scan1', array_keys($files));   // nagL = Finger document Last index
+                    $fileCount = count($files);
+                    // echo '<pre>'; print_r($files); die;
+                    if($files)
+                    {
+                        if($nagF != 0){
+                            for($i=0; $i < $nagF; $i++){
+                                if(!empty($skill_id[$i])){
+                                    $files[array_keys($_FILES)[$i]]['skill_id'] = $skill_id[$i];
+                                }                               
+                                $files[array_keys($_FILES)[$i]]['folders'] = 'skills';
+                                $files[array_keys($_FILES)[$i]]['input_names'] = array_keys($_FILES)[$i];
+                            }                            
+                        }
+                        $certArray = 0;
+                            for($i= $nagL+1; $i < $fileCount; $i++){
+                                if(!empty($certificates_id[$certArray])){
+                                    $files[array_keys($_FILES)[$i]]['certificates_id'] = $certificates_id[$certArray];
+                                } 
+                                $files[array_keys($_FILES)[$i]]['folders'] = 'certificates';
+                                $files[array_keys($_FILES)[$i]]['input_names'] = array_keys($_FILES)[$i];
+                                $certArray++;
+                            }
+                        // if()  
+                            // Inserting Document Id to identify files to update
+                            $files['nagrita_front1']['doc_id'] = $this->input->post('doc_id[0]');
+                            $files['nagrita_back1']['doc_id'] = $this->input->post('doc_id[1]');
+                            $files['recent_photo1']['doc_id'] = $this->input->post('doc_id[2]');
+                            $files['signature1']['doc_id'] = $this->input->post('doc_id[3]');
+                            $files['right_finger_scan1']['doc_id'] = $this->input->post('doc_id[4]');
+                            $files['left_finger_scan1']['doc_id'] = $this->input->post('doc_id[5]');
+                            // Inserting Folder name
+                            $files['nagrita_front1']['folders'] = 'nagrita_front';
+                            $files['nagrita_back1']['folders'] = 'nagrita_back';
+                            $files['recent_photo1']['folders'] = 'photograph';
+                            $files['signature1']['folders'] = 'signature';
+                            $files['right_finger_scan1']['folders'] = 'fingerright';
+                            $files['left_finger_scan1']['folders'] = 'fingerleft';
+                            //Input Names
+                            $files['nagrita_front1']['input_names'] = 'nagrita_front1';
+                            $files['nagrita_back1']['input_names'] = 'nagrita_back1';
+                            $files['recent_photo1']['input_names'] = 'recent_photo1';
+                            $files['signature1']['input_names'] = 'signature1';
+                            $files['right_finger_scan1']['input_names'] = 'right_finger_scan1';
+                            $files['left_finger_scan1']['input_names'] = 'left_finger_scan1';
+                            // echo '<pre>'; print_r($files); die;
+                        foreach($files as $file)
+                        {
+                            if($file['error'] == 0 && $file['tmp_name'] != '')
+                            {
+                                if(!isset($files['skill_id'])){
+                                    $upload_fun = $this->file_upload($file['input_names'],$file['folders'],$appId,$vid);
+                                }else{
+                                    $update_files = $this->file_update($file);
+                                }                                
+                            }   
+                        }
+                    }
+                    $this->session->set_flashdata('msg', 'Your Application has been updated!');
+                    redirect('vacancy/vacancylist'); 
+                }else{ 
+                    $data['error_msg'] = 'Some problems occured, please try again.'; 
+                }
+            }
+            $data['user'] = $this->UserModel->getRows($con);
+            $data['meta'] = array(
+                'title' => 'NOC | Vacancy Edit',
+                'Description' => 'Vacancy Edit'
+            );
+            $vid                            =  base64_decode($this->uri->segment('3'));
+            $uid                            = $this->session->userdata('userId');
+            $maxRegId                       = $this->VacancyModel->getMaxIdapplication($vid);
+            $data['vacancylists']           = $this->VacancyModel->fetchVacancyById($vid);
+            $data['vacancylists'][0]['maxregId'] = $maxRegId['MAXID'];
+            $data['options']                = $this->VacancyModel->options($vid);
+            $data['proviences']             = $this->VacancyModel->fetch_provience();
+            $data['districts']              = $this->VacancyModel->districts();
+            $data['degrees']                = $this->VacancyModel->degree();
+            $data['divisions']              = $this->VacancyModel->division();
+            $data['user_details']           = $this->UserModel->user($uid);
+            $data['applications']           = $this->VacancyModel->applicationById($vid,$uid,'HRIS_REC_APPLICATION_PERSONAL');
+            $data['Selectedinclusions']     = explode(',', $data['applications'][0]['INCLUSION_ID']);
+            $data['educations']             = $this->VacancyModel->applicationById($vid,$uid,'HRIS_REC_APPLICATION_EDUCATION');
+            $data['experiences']            = $this->VacancyModel->applicationById($vid,$uid,'HRIS_REC_APPLICATION_EXPERIENCES');
+            $data['trainings']              = $this->VacancyModel->applicationById($vid,$uid,'HRIS_REC_APPLICATION_TRAININGS');
+            $data['selectedskills']         = $this->VacancyModel->Vacancyskills($data['applications'][0]['APPLICATION_ID']);    // MS office package id: 3
+            $data['selectedskills']         = explode(',', $data['selectedskills']['SKILL_ID']);
+            $data['documents']['skills']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','skills','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['inclusion']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','inclusion','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['certificates']  = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','certificates','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['userdoc']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'not in ',"certificates','skills",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            // $data['inclusions']              = $this->VacancyModel->VacancyInclusions($data['applications'][0]['APPLICATION_ID'],$vid);  // Selected Inclusion per vacancies
+            $data['certificates']            = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_CODE']);
+            //Inclusion Data 
+            $Vacancyinclusions      = explode(',',$data['vacancylists'][0]['INCLUSION_ID'] );
+            foreach($Vacancyinclusions as $datainc){
+                $Vacancyinclusion[] = $this->VacancyModel->fetchinclusions($datainc);
+            }
+            $data['vacancylists'][0]['INCLUSION_ID'] = $Vacancyinclusion;
+            //Skills Data
+            $skills     = explode(',',$data['vacancylists'][0]['SKILL_ID'] );
+            foreach($skills as $VacancySkill){
+                $Vskills[] = $this->VacancyModel->fetchSkills($VacancySkill);
+            }
+            // echo '<pre>';print_r($data['educations']); die;
+            $data['vacancylists'][0]['SKILL_ID'] = $Vskills;
+
+            $data['documents']['inclusionDocs'] = [];
+            foreach($data['documents']['inclusion'] as $incDocs){
+                $data['documents']['inclusionDocs'][$incDocs['VACANCY_INCLUSION_ID']] = $incDocs;
+            }
+            // echo '<pre>';print_r($data['documents']['inclusionDocs']); die;
+
+            $data['documents']['userdocnew'] = [];
+            foreach($data['documents']['userdoc'] as $userDocs){
+                $data['documents']['userdocnew'][$userDocs['DOC_FOLDER']] = $userDocs;
+            }
+            // echo '<pre>';print_r($data['documents']['certificates']); die;
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('pages/apply/viewApplication', $data);
+            $this->load->view('templates/footer');
+        }
+        else
+        {
+            redirect('users/login');
+        }
     }
 
    
