@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+ 
     // District & VDC Selected for edit page START --------------
     $(window).on("load",function(){
         var province_id = $('#per_province_selected').val();

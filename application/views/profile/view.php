@@ -1,3 +1,16 @@
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&display=swap');
+							
+/*body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Mukta",sans-serif;
+}*/
+
+
+</style>
+
 <main class="main-user-profile bg-light">
 	<section class="user-profile-sec sec-padd">
 		<div class="container">
@@ -118,7 +131,7 @@
 								</div>
 								<div class="form-group col-md-3">
 									<label>Physical disability</label>
-									<input class="form-control" value="<?php echo $user['DISABILITY']; ?>" readonly>
+									<input class="form-control" value="<?php echo $user['DISABILITY']; ?>" readonly> 
 									<?php 
 									if(!empty($documents)){
 										foreach($documents as $doc){
@@ -273,9 +286,53 @@
 								</div>
 							</div>
 						</form>
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 </main>
+
+ <script type="text/javascript">
+      /* -------------------------------------------------------------
+            bootstrapTabControl
+        ------------------------------------------------------------- */
+        function bootstrapTabControl(){
+            var i, items = $('.nav-link'), pane = $('.tab-pane');
+            // next
+            $('.nexttab').on('click', function(){
+                for(i = 0; i < items.length; i++){
+                    if($(items[i]).hasClass('active') == true){
+                        break;
+                    }
+                }
+                if(i < items.length - 1){
+                    // for tab
+                    $(items[i]).removeClass('active');
+                    $(items[i+1]).addClass('active');
+                    // for pane
+                    $(pane[i]).removeClass('show active');
+                    $(pane[i+1]).addClass('show active');
+                }
+
+            });
+            // Prev
+            $('.prevtab').on('click', function(){
+                for(i = 0; i < items.length; i++){
+                    if($(items[i]).hasClass('active') == true){
+                        break;
+                    }
+                }
+                if(i != 0){
+                    // for tab
+                    $(items[i]).removeClass('active');
+                    $(items[i-1]).addClass('active');
+                    // for pane
+                    $(pane[i]).removeClass('show active');
+                    $(pane[i-1]).addClass('show active');
+                }
+            });
+        }
+        bootstrapTabControl();
+    </script>

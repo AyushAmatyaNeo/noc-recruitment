@@ -89,9 +89,9 @@ class UserModel extends CI_Model{
     public function registerUser($data = array()) 
     { 
         // echo '<pre>'; print_r(count($data)); die;
-        // echo '<pre>'; print_r(($data)); die;
         if(!empty($data))
             { 
+        // echo '<pre>'; print_r(($data)); die;
                 $registration =  $data['registration'];
                 $address = $data['address'];
                 // echo '<pre>'; print_r(( $address)); die;
@@ -173,13 +173,15 @@ class UserModel extends CI_Model{
     {
         if($user_id)
         {
-            $query = $this->db->query("SELECT FIRST_NAME,MIDDLE_NAME,LAST_NAME,MOBILE_NO,EMAIL_ID,USERNAME,AGE,CTZ_ISSUE_DATE,GENDER_NAME,FATHER_NAME,CITIZENSHIP_NO,DOB,DISTRICT_NAME,MOTHER_NAME,MARITAL_STATUS,EMPLOYMENT_STATUS,EMPLOYMENT_INPUT,DISABILITY,DISABILITY_INPUT FROM HRIS_REC_VACANCY_USERS UR
-            LEFT JOIN HRIS_REC_USERS_REGISTRATION HR ON HR.USER_ID = UR.USER_ID
-            LEFT JOIN HRIS_GENDERS HG ON HG.GENDER_ID = HR.GENDER_ID
-            LEFT JOIN HRIS_DISTRICTS HD ON HD.DISTRICT_ID = HR.CTZ_ISSUE_DISTRICT_ID
-            WHERE UR.user_id = $user_id");
-            $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
-            return $result;
+            $query = $this->db->query("SELECT 
+                FIRST_NAME,MIDDLE_NAME,LAST_NAME,MOBILE_NO,EMAIL_ID,USERNAME,AGE,CTZ_ISSUE_DATE,GENDER_NAME,FATHER_NAME,CITIZENSHIP_NO,DOB,DISTRICT_NAME,MOTHER_NAME,MARITAL_STATUS,EMPLOYMENT_STATUS,EMPLOYMENT_INPUT,DISABILITY,DISABILITY_INPUT, PHONE_NO, EMAIL_ID
+                FROM HRIS_REC_VACANCY_USERS UR
+                LEFT JOIN HRIS_REC_USERS_REGISTRATION HR ON HR.USER_ID = UR.USER_ID
+                LEFT JOIN HRIS_GENDERS HG ON HG.GENDER_ID = HR.GENDER_ID
+                LEFT JOIN HRIS_DISTRICTS HD ON HD.DISTRICT_ID = HR.CTZ_ISSUE_DISTRICT_ID
+                WHERE UR.user_id = $user_id");
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                return $result;
         }
         else
         {
@@ -303,59 +305,96 @@ class UserModel extends CI_Model{
     // Forgot password End --
     public function userDetails($params = array())
     {
-        $where = "";
-        if(array_key_exists("conditions", $params)){ 
-            foreach($params['conditions'] as $key => $val){ 
-                $where.= "and $key = '$val'"; 
-            }
-        }
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count')
-        { 
-            $rawquery = $this->db->query("SELECT COUNT('*') FROM $this->table");
-            $result = $rawquery->current_row;
-        }else{ 
-            if(array_key_exists("id", $params) || $params['returnType'] == 'single'){ 
-                if(!empty($params['id']))
-                { 
-                     $pid = $params['id'];
-                    $where.= "HU.USER_ID = $pid";
-                } 
-                $query  = $this->db->query("SELECT HUR.REGISTRATION_ID,HUR.USER_ID,HUR.RELIGION,HUR.RELIGION_INPUT,HUR.REGION,HUR.REGION_INPUT,HUR.ETHNIC_NAME,HUR.ETHNIC_INPUT,HUR.MOTHER_TONGUE,HUR.CITIZENSHIP_NO,HUR.CTZ_ISSUE_DATE,HUR.CTZ_ISSUE_DISTRICT_ID,HUR.DOB,HUR.AGE,HUR.PHONE_NO,HUR.GENDER_ID,HUR.FATHER_NAME,HUR.FATHER_QUALIFICATION,HUR.MOTHER_NAME,HUR.MOTHER_QUALIFICATION,HUR.FM_OCCUPATION,HUR.FM_OCCUPATION_INPUT,HUR.GRANDFATHER_NAME,HUR.GRANDFATHER_NATIONALITY,HUR.SPOUSE_NAME,HUR.SPOUSE_NATIONALITY,HUR.PROFILE_STATUS,HUR.MARITAL_STATUS,HUR.EMPLOYMENT_STATUS,HUR.EMPLOYMENT_INPUT,(CASE WHEN HUR.IN_SERVICE = 'Y' THEN 'YES' ELSE 'NO' END) AS IN_SERVICE,HUR.DISABILITY,HUR.DISABILITY_INPUT,HUR.STATUS,HUR.CREATED_DT,HUR.MODIFIED_DT,BG.BLOOD_GROUP_CODE as BLOOD_GROUP,
-                HU.FIRST_NAME,HU.MIDDLE_NAME,HU.LAST_NAME,HU.MOBILE_NO,HU.EMAIL_ID,HU.USERNAME,HG.*,HD.*,HUA.*,
-                HP.PROVINCE_NAME AS PER_PROVINCE,
-                HP1.PROVINCE_NAME AS MAIL_PROVINCE,
-                HD1.DISTRICT_NAME AS PER_DISTRICT,
-                HD2.DISTRICT_NAME AS MAIL_DISTRICT,
-                HM1.VDC_MUNICIPALITY_NAME AS PER_VDC,
-                HM2.VDC_MUNICIPALITY_NAME AS MAIL_VDC
 
-                FROM $this->table HU
-                LEFT JOIN HRIS_REC_USERS_REGISTRATION HUR ON HUR.USER_ID = HU.USER_ID
-                LEFT JOIN HRIS_REC_USERS_ADDRESS HUA ON HUA.USER_ID = HU.USER_ID
-                LEFT JOIN HRIS_GENDERS AS HG ON HG.GENDER_ID = HUR.GENDER_ID
-                LEFT JOIN HRIS_DISTRICTS AS HD ON HD.DISTRICT_ID = HUR.CTZ_ISSUE_DISTRICT_ID                
-                LEFT JOIN HRIS_PROVINCES AS HP ON HP.PROVINCE_ID = HUA.PER_PROVINCE_ID
-                LEFT JOIN HRIS_PROVINCES AS HP1 ON HP1.PROVINCE_ID = HUA.MAIL_PROVINCE_ID
-                LEFT JOIN HRIS_DISTRICTS AS HD1 ON HD1.DISTRICT_ID = HUA.PER_DISTRICT_ID
-                LEFT JOIN HRIS_DISTRICTS AS HD2 ON HD2.DISTRICT_ID = HUA.MAIL_DISTRICT_ID
-                LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM1 ON HM1.VDC_MUNICIPALITY_ID = HUA.PER_VDC_ID
-                LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM2 ON HM2.VDC_MUNICIPALITY_ID = HUA.MAIL_VDC_ID
-                LEFT JOIN HRIS_BLOOD_GROUPS AS BG ON BG.BLOOD_GROUP_ID = HUR.BLOOD_GROUP
-                where $where ");
-                // echo $this->db->last_query();
-                $result = $query->row_array();
-            }else{ 
+
+        $where = "";
+
+        if ( array_key_exists("conditions", $params) ) { 
+
+            foreach ( $params['conditions'] as $key => $val ) { 
+                
+                $where.= "and $key = '$val'"; 
+            
+            }
+        
+        }
+
+        if ( array_key_exists("returnType", $params) && $params['returnType'] == 'count' ) { 
+
+            $rawquery = $this->db->query("SELECT COUNT('*') FROM $this->table");
+            $result   = $rawquery->current_row;
+
+        } else { 
+
+            if ( array_key_exists("id", $params) || $params['returnType'] == 'single' ) { 
+
+
+                if ( !empty($params['id']) ) { 
+
+                    $pid   = $params['id'];
+                    $where.= "HU.USER_ID = $pid";
+
+                } 
+
+                $query = $this->db->query("SELECT 
+                        HU.FIRST_NAME, HU.MIDDLE_NAME, HU.LAST_NAME, HU.MOBILE_NO, HU.EMAIL_ID, HU.USERNAME,  HU.NAME_NEPALI,
+                        HUR.REGISTRATION_ID, HUR.USER_ID, HUR.RELIGION, HUR.RELIGION_INPUT, HUR.REGION, HUR.REGION_INPUT, HUR.ETHNIC_NAME, HUR.ETHNIC_INPUT, 
+                        HUR.MOTHER_TONGUE, HUR.CITIZENSHIP_NO, HUR.CTZ_ISSUE_DATE, HUR.CTZ_ISSUE_DISTRICT_ID, HUR.DOB, HUR.AGE, HUR.PHONE_NO, HUR.GENDER_ID,
+                        HUR.FATHER_NAME, HUR.FATHER_QUALIFICATION, HUR.MOTHER_NAME, HUR.MOTHER_QUALIFICATION, HUR.FM_OCCUPATION, HUR.FM_OCCUPATION_INPUT, HUR.GRANDFATHER_NAME,
+                        HUR.GRANDFATHER_NATIONALITY, HUR.SPOUSE_NAME, HUR.SPOUSE_NATIONALITY, HUR.PROFILE_STATUS, HUR.MARITAL_STATUS, HUR.EMPLOYMENT_STATUS, 
+                        HUR.EMPLOYMENT_INPUT, HUR.CTZ_ISSUE_DATE_AD, HUR.DOB_AD,
+                        (CASE 
+                            WHEN HUR.IN_SERVICE = 'Y' THEN 'YES' ELSE 'NO' 
+                        END) AS IN_SERVICE,
+                        HUR.DISABILITY, HUR.DISABILITY_INPUT, HUR.STATUS, HUR.CREATED_DT, HUR.MODIFIED_DT,
+
+                        BG.BLOOD_GROUP_CODE as BLOOD_GROUP, BG.BLOOD_GROUP_ID,
+                        HG.*,
+                        HD.*,
+                        HUA.*,
+                        HP.PROVINCE_NAME AS PER_PROVINCE,
+                        HP1.PROVINCE_NAME AS MAIL_PROVINCE,
+                        HD1.DISTRICT_NAME AS PER_DISTRICT,
+                        HD2.DISTRICT_NAME AS MAIL_DISTRICT,
+                        HM1.VDC_MUNICIPALITY_NAME AS PER_VDC,
+                        HM2.VDC_MUNICIPALITY_NAME AS MAIL_VDC
+
+                        FROM $this->table HU
+
+                        LEFT JOIN HRIS_REC_USERS_REGISTRATION HUR ON HUR.USER_ID = HU.USER_ID
+                        LEFT JOIN HRIS_REC_USERS_ADDRESS HUA ON HUA.USER_ID = HU.USER_ID
+                        LEFT JOIN HRIS_GENDERS AS HG ON HG.GENDER_ID = HUR.GENDER_ID
+                        LEFT JOIN HRIS_DISTRICTS AS HD ON HD.DISTRICT_ID = HUR.CTZ_ISSUE_DISTRICT_ID                
+                        LEFT JOIN HRIS_PROVINCES AS HP ON HP.PROVINCE_ID = HUA.PER_PROVINCE_ID
+                        LEFT JOIN HRIS_PROVINCES AS HP1 ON HP1.PROVINCE_ID = HUA.MAIL_PROVINCE_ID
+                        LEFT JOIN HRIS_DISTRICTS AS HD1 ON HD1.DISTRICT_ID = HUA.PER_DISTRICT_ID
+                        LEFT JOIN HRIS_DISTRICTS AS HD2 ON HD2.DISTRICT_ID = HUA.MAIL_DISTRICT_ID
+                        LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM1 ON HM1.VDC_MUNICIPALITY_ID = HUA.PER_VDC_ID
+                        LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM2 ON HM2.VDC_MUNICIPALITY_ID = HUA.MAIL_VDC_ID
+                        LEFT JOIN HRIS_BLOOD_GROUPS AS BG ON BG.BLOOD_GROUP_ID = HUR.BLOOD_GROUP
+                        WHERE $where ");
+                        // echo $this->db->last_query();
+                        $result = $query->row_array();
+
+            } else { 
                 
                 $this->db->order_by('USER_ID', 'desc'); 
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){ 
+
+                if ( array_key_exists("start",$params) && array_key_exists("limit",$params) ) { 
+                   
                     $this->db->limit($params['limit'],$params['start']); 
-                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){ 
+                
+                } elseif ( !array_key_exists("start",$params) && array_key_exists("limit",$params) ) { 
+                    
                     $this->db->limit($params['limit']); 
+                
                 } 
+
                 // $query  = $this->db->query("SELECT * FROM $this->table NU LEFT JOIN HRIS_GENDERS HG ON HG.GENDER_ID = NU.GENDER where 1=1 $where ");
                 $query  = $this->db->query("SELECT * FROM $this->table where 1=1 $where ");
                 // $query = $this->db->get($rawquery); 
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE; 
+
+                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE; 
             } 
         } 
         return $result; 

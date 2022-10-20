@@ -22,16 +22,45 @@ $(document).ready(function () {
 	var val = {
 		// Specify validation rules
 		rules: {
+			religion: "required",
+			region: "required",
+			ethnicity: "required",
 			marital: "required",
 			disability: "required",
 			employment: "required",
-			father_name: "required",
-			mother_name: "required",
+			mother_tongue: "required",
+			blood_group : "required",
+			in_service : "required",
+			dateOfBirth_ad: "required",
+			dateOfBirth_bs: "required",
+			// age : "required",
+			age: {
+				required: true,
+				min: 16,
+				max: 60,
+				digits: true
+			},	
+			phone_no: {
+				minlength: 6,
+				maxlength: 9,
+				digits: true
+			},
 			gender: "required",
-			last_name: "required",
-			Issued_date: "required",
-			Issuedistrict: "required",
-			dateOfBirth: "required",
+			citizenship_no: {
+				required: true,
+				minlength: 3,
+				maxlength: 32
+			},
+			issued_date_bs: "required",
+			issued_date_ad: "required",
+			issuedistrict: "required",
+			father_name: "required",
+			fatherEdu: "required",
+			mother_name: "required",
+			motherEdu: "required",
+			fmoccupation: "required",
+			grandfather_name: "required",
+			grandfather_nationality: "required",
 			per_province: "required",
 			per_district: "required",
 			per_vdc: "required",
@@ -40,37 +69,9 @@ $(document).ready(function () {
 			mail_province: "required",
 			mail_district: "required",
 			mail_vdc: "required",
-			ethnicity: "required",
-			region: "required",
-			religion: "required",
-			mother_tongue: "required",
-			religion: "required",
 			mail_ward: "required",
 			mail_tole: "required",
-			grandfather_name: "required",
-			fatherEdu: "required",
-			motherEdu: "required",
-			fmoccupation: "required",
-			grandfather_nationality: "required",
-			blood_group : "required",
-			in_service		: "required",
-			Citizenship_no: {
-				required: true,
-				minlength: 3,
-				maxlength: 32
-			},
-			phone_no: {
-				minlength: 6,
-				maxlength: 9,
-				digits: true
-			},
-			// age : "required",
-			age: {
-				required: true,
-				min: 16,
-				max: 60,
-				digits: true
-		},	 
+			 
 	},
 		// Specify validation error messages
 		messages: {
@@ -78,16 +79,17 @@ $(document).ready(function () {
 			father_name: "Father name is required",
 			mother_name: "Mother name is required",
 			gender: "Gender Field is required",
-			Issued_date: "Issue Date is required",
-			Issuedistrict: "Issue District is required",
-			dateOfBirth: "Date of Birth is required",
+			issued_date_bs: "Issue Date (B.S) is required",
+			issued_date_ad: "Issue Date (A.D) is required",
+			issuedistrict: "Issue District is required",
+			dateOfBirth_ad: "Date of Birth (A.D) is required",
+			dateOfBirth_bs: "Date of Birth (B.S) is required",
 			age: {
 				required: "Age is required",
 				min: "Age must be greater than 16",
 				max: "Age must be less than 60",
 				digits: "Please enter number only."
 			},
-			dateOfBirth: "Date of Birth is required",
 			per_province: "province is required",
 			per_district: "District is required",
 			per_vdc: "Muicipality/VDC is required",

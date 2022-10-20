@@ -554,6 +554,7 @@
 								<th width="12%">Employee Type</th>
 								<th>Start From</th>
 								<th>Till Date</th>
+								<th>File</th>
 								<th><i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i></th>
 							</tr>
 						</thead>
@@ -581,7 +582,7 @@
 			<!-- I. Training Detail -->
 			<div class="card mt-3">
 				<h6 class="form-table-title">Training Detail</h6>
-				
+
 				<div class="col-md-12 mt-3">
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>

@@ -100,42 +100,60 @@ class VacancyModel extends CI_Model
         // echo '<pre>';print_r($result); die;
         return $result;
     }
-    //Insert Application Details
+    
+    /**
+     *  Insert Application Details
+     *  
+     *  INSERTING INTO TABLES
+     * 
+     *  HRIS_REC_VACANCY_APPLICATION   |   HRIS_REC_APPLICATION_PERSONAL    |   HRIS_REC_APPLICATION_EDUCATION
+     *  HRIS_REC_APPLICATION_EXPERIENCES   |   HRIS_REC_APPLICATION_TRAININGS
+     * 
+     * 
+     *  */
     public function insert($data = array()) 
     { 
         if(!empty($data))
         { 
-            // echo '<pre>'; print_r(($data)); die;
-            $details = $data['details'];            
-            $personal = $data['personal'];
-            $education = $data['education'];
+            $details     = $data['details'];            
+            $personal    = $data['personal'];
+            $education   = $data['education'];
             $experiences = $data['experience'];
-            $training = $data['training'];
-            if(!empty($details))
-            {
-                $details = implode('\',\'', $details);
-                //  echo '<pre>'; print_r(($details)); die;
-                $sql = "INSERT INTO HRIS_REC_VACANCY_APPLICATION values ('$details')";
+            $training    = $data['training'];
+
+            if( !empty($details) ) {
+
+                // $details = implode('\',\'', $details);
+
+                $key   = arrayKeyImplode($details, 'c', 'key');
+                $value = arrayKeyImplode($details, 'qc', 'value');
+                
+                $sql = "INSERT INTO HRIS_REC_VACANCY_APPLICATION ($key) values ('$value')";
+
                 $insert = $this->db->query($sql);
             }
 
-            if(!empty($personal))
-            {
-                //  echo '<pre>'; print_r($personal); die;
-                $personal = implode('\',\'', $personal);
-                $sql = "INSERT INTO HRIS_REC_APPLICATION_PERSONAL values ('$personal')";
+
+            if (!empty($personal) ) {
+
+                $key   = arrayKeyImplode($personal, 'c', 'key');
+                $value = arrayKeyImplode($personal, 'qc', 'value');
+
+                $sql   = "INSERT INTO HRIS_REC_APPLICATION_PERSONAL ($key) values ('$value')";
                 $insert = $this->db->query($sql);          
             }
-            if(!empty($education))
-            {
+
+            if (!empty($education) ) {
+
                 for($i=0; $i < count($education); $i++) {
                     $education[$i] = implode('\',\'', $education[$i]);
                     $sql = "INSERT INTO HRIS_REC_APPLICATION_EDUCATION values ('$education[$i]')";
                     $insert = $this->db->query($sql);          
                 }
             }
-            if(!empty($experiences[0]['ORGANISATION_NAME'] && $experiences[0]['POST_NAME'] ))
-            {
+
+            if (!empty($experiences[0]['ORGANISATION_NAME'] && $experiences[0]['POST_NAME'] )) {
+
                 for($i=0; $i < count($experiences); $i++) {
                     $experiences[$i] = implode('\',\'', $experiences[$i]);
                     $sql = "INSERT INTO HRIS_REC_APPLICATION_EXPERIENCES values ('$experiences[$i]')";
@@ -143,8 +161,9 @@ class VacancyModel extends CI_Model
                     $insert = $this->db->query($sql);          
                 }
             }
-            if(!empty($training))
-            {
+
+            if (!empty($training)) {
+
                 for($i=0; $i < count($training); $i++) {
                     $training[$i] = implode('\',\'', $training[$i]);
                     $sql = "INSERT INTO HRIS_REC_APPLICATION_TRAININGS values ('$training[$i]')";
@@ -157,6 +176,7 @@ class VacancyModel extends CI_Model
         }
         return false; 
     }
+    
     // Update Application
     public function updateapplication($data,$uid,$appid)
     {
@@ -780,6 +800,11 @@ class VacancyModel extends CI_Model
     public function fetchAll($table)
     {
         $query = $this->db->query("SELECT * FROM {$table}");
+            return ($query->num_rows() > 0) ? $query->result_array() : false;
+    }
+
+    public function fetchAllStatus($table){
+        $query = $this->db->query("SELECT * FROM {$table} WHERE STATUS = '1'");
             return ($query->num_rows() > 0) ? $query->result_array() : false;
     }
 

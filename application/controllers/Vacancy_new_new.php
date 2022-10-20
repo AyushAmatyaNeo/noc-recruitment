@@ -877,8 +877,6 @@ class Vacancy extends CI_Controller
             if ( $this->input->post('applySubmit') ) {
 
 
-                
-
                 $vid     = base64_decode($this->uri->segment('3'));
                 $appId   = $this->VacancyModel->getMaxIds('APPLICATION_ID','HRIS_REC_VACANCY_APPLICATION');
                 $perId   = $this->VacancyModel->getMaxIds('PERSONAL_ID','HRIS_REC_APPLICATION_PERSONAL');
@@ -1064,9 +1062,9 @@ class Vacancy extends CI_Controller
                 if ($this->form_validation->run('noc_apply_form') == true) {
 
 
-                    $insert_info = $this->VacancyModel->insert($application);
+                    // $insert_info = $this->VacancyModel->insert($application);
 
-                    // $insert_info = true;
+                    $insert_info = true;
                     if ($insert_info) {
 
 
@@ -1077,6 +1075,11 @@ class Vacancy extends CI_Controller
                         $_FILES['signature']['folders'] = 'signature';
                         $_FILES['right_finger_scan']['folders'] = 'fingerright';
                         $_FILES['left_finger_scan']['folders'] = 'fingerleft';
+
+
+                        // $_FILES['experience']['folders'] = 'experiences';
+
+
                         // Inserting input Names - for indivisual function upload:
                         $_FILES['nagrita_front']['input_names'] = 'nagrita_front';
                         $_FILES['nagrita_back']['input_names'] = 'nagrita_back';
@@ -1084,11 +1087,18 @@ class Vacancy extends CI_Controller
                         $_FILES['signature']['input_names'] = 'signature';
                         $_FILES['right_finger_scan']['input_names'] = 'right_finger_scan';
                         $_FILES['left_finger_scan']['input_names'] = 'left_finger_scan';
+
+                        // $_FILES['experience']['input_names'] = 'experiences';
+
+
+                        
+
                         $list = $_FILES;
 
 
                         $nagF = array_search('nagrita_front', array_keys($list));
                         $nagL = array_search('left_finger_scan', array_keys($list));
+
 
 
                         $fileCount = count($_FILES);
@@ -1110,6 +1120,9 @@ class Vacancy extends CI_Controller
 
                         }   
 
+
+
+
                         $files = array_chunk($_FILES, 1);
 
                         // $imageCerts = [];
@@ -1119,6 +1132,8 @@ class Vacancy extends CI_Controller
                             foreach ($files as $key=>$uploadfile) {
                                     
                                 $folderName = $uploadfile[0]['folders'];
+
+
                                 
                                     /* GETTING RESPECTIVE FOLDER NAME */
                                     if ( is_array($folderName) ) {
@@ -1147,7 +1162,65 @@ class Vacancy extends CI_Controller
                                     $upload_fun = $this->file_upload($input_name, $folder_name, $appId, $vid);
                                
                             }
-                        } 
+
+                            /* Experience file*/
+                            // $experience = $_FILES['expFile'];
+
+                            // for ($i=0; $i < count($experience['name']) ; $i++) { 
+                               
+                            //     if ($experience['error'][$i] == 0) {
+                                    
+                            //         $filename = $experience['name'][$i];
+                            //         $tempname = $experience["tmp_name"][$i];
+                            //         $folder   = base_url()."uploads/noc_documents/users/experiences/" . $filename;
+                                 
+                            //         $db = mysqli_connect("localhost", "root", "", "geeksforgeeks");
+                                 
+                            //         // Get all the submitted data from the form
+                            //         $sql = "INSERT INTO image (filename) VALUES ('$filename')";
+
+
+                            //         $expId  = $this->VacancyModel->getMaxIds('REC_DOC_ID','HRIS_REC_APPLICATION_DOCUMENTS');
+
+                            //         $data = [
+                            //             'REC_DOC_ID' => $expId['MAXID'] + 1,
+                            //             'APPLICATION_ID' => ,
+                            //             'REC_DOC_ID' => $expId['MAXID'] + 1,
+                            //             'REC_DOC_ID' => $expId['MAXID'] + 1,
+                            //             'REC_DOC_ID' => $expId['MAXID'] + 1,
+                            //             'REC_DOC_ID' => $expId['MAXID'] + 1,
+                            //             'REC_DOC_ID' => $expId['MAXID'] + 1,
+                            //             'REC_DOC_ID' => $expId['MAXID'] + 1,
+                            //         ];
+
+                            //         $this->VacancyModel->insertExperience($filename, $appId, $vid);
+                                 
+                            //         // Execute query
+                            //         mysqli_query($db, $sql);
+                                 
+                            //         // Now let's move the uploaded image into the folder: image
+                            //         if (move_uploaded_file($tempname, $folder)) {
+                            //             echo "<h3>  Image uploaded successfully!</h3>";
+                            //         } else {
+                            //             echo "<h3>  Failed to upload image!</h3>";
+                            //         }
+                            //         $upload_fun = $this->file_upload($experience['name'][$i], 'experiences', $appId, $vid);
+
+                            //     }
+
+                            // }
+
+                            
+
+                            // echo "<pre>";
+
+                            // print_r($experience);
+                            // echo count($experience['name']);
+
+                            // die;
+                        }
+
+
                     }
                     redirect('vacancy/vacancylist');
                 } else {
@@ -1182,7 +1255,6 @@ class Vacancy extends CI_Controller
             $data['user_details'] = $this->UserModel->user($uid);
             $data['certificates'] = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_CODE']);
 
-           
             $incData = array(); 
             $data['inclusions'] = [];
             // var_dump($data['vacancylists'][0]['INCLUSION_ID']); die;

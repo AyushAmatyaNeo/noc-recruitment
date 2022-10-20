@@ -55,4 +55,6 @@ $route['404_override'] = 'Noc404';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['vacancy/connectIpsSuccess'] = 'vacancy/connectIpsSuccess';
+$route['profile/view']              = 'profile/view/$1';
+$route['profile/view/(:any)']       = 'profile/view/$1';
 
