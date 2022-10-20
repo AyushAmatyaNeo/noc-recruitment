@@ -75,15 +75,16 @@ $query_builder = TRUE;
 
 
 $db['default'] = array(
-	// 'dsn'	=> 'SAPHANA',
-	'dsn'	=> 'NEW_TEST_DB',
+	
 	/* NOC */
+	'dsn'	   => 'NEW_TEST_DB',
 	'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHRTEST;PWD=Noc$%^@123;Database=NOCHRTEST;',
-	'username' => 'NOCHRTEST', //NOC
-	'password' => 'Noc$%^@123', // NOC
+	'username' => 'NOCHRTEST',
+	'password' => 'Noc$%^@123',
 	/* NOC */
 	
 	/* NEO */
+	// 'dsn'	=> 'SAPHANA',
 	// 'hostname' => 'Driver={HDBODBC};ServerNode=10.10.10.92;UID=NOCHR;PWD=NocHR@123;Database=NOCHR;',
 	// 'username' => 'NOCHR', 
 	// 'password' => 'NocHR@123',

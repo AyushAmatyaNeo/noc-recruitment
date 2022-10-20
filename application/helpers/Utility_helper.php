@@ -33,14 +33,19 @@ if ( ! function_exists('sessionGenerator')) {
 if ( ! function_exists('sessionCheck')) {
 
 
-    function sessionCheck() {
+    function sessionCheck($error_message = NULL) {
 
         $CI =& get_instance();
         $CI->load->library('session');
 
 
         if (($CI->session->userdata('isUserLoggedIn') == NULL) AND ($CI->session->userdata('userId') == NULL))
-        {
+        {   
+            if ($error_message) {
+
+                $CI->session->set_flashdata('msg', $error_message);
+
+            }
             redirect('users/login');
         }
 

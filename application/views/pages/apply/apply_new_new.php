@@ -339,14 +339,11 @@
 					</div>
 					<?php
 					   foreach($inclusions as $inclusion) {?>
-						<div class="col-lg-12">
+						<div class="col-lg-2">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>" inclusionName="<?php echo $inclusion['OPTION_EDESC'];?>">
+								<input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>">
 								<label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
 							</div>
-							<?php if($inclusion['UPLOAD_FLAG'] == 'Y'){ ?>
-								<input type="file" accept=".png,.jpg,.pdf" class="form-control-file inclusion_file" id="<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId ?>" name="<?php echo $inclusion['OPTION_EDESC'];?>" onchange="return fileValidation($id = '<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId  ?>')"/>								
-							<?php } ?>
 						</div>
 					<?php } ?>
 					<div class="col-lg-3">
@@ -557,6 +554,7 @@
 								<th width="12%">Employee Type</th>
 								<th>Start From</th>
 								<th>Till Date</th>
+								<th>File</th>
 								<th><i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i></th>
 							</tr>
 						</thead>
@@ -584,7 +582,7 @@
 			<!-- I. Training Detail -->
 			<div class="card mt-3">
 				<h6 class="form-table-title">Training Detail</h6>
-				
+
 				<div class="col-md-12 mt-3">
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>

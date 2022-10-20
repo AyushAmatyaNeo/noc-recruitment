@@ -29,7 +29,7 @@
 						<th scope="col" rowspan="2">Post</th>
 						<th scope="col" rowspan="2" style="width: 10%">Admit Card</th>
 						<th scope="col" rowspan="2" style="width: 5%">Amount</th>
-						<th scope="col" colspan="3" width="16%">Payment</th>
+						<th scope="col" colspan="<?php echo count($payment_gateways);?>" width="16%">Payment</th>
 						<!-- <th scope="col" rowspan="2">Print Slip</th> -->
 						<!-- <th colspan="2">Verification</th> -->
 						<th scope="col" rowspan="2" style="width: 9%">Exam Roll No.</th>

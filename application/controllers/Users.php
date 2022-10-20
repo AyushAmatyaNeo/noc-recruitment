@@ -183,18 +183,40 @@ Class Users extends CI_Controller
 
         // echo "here"; die;
         // $userRegistred = false;
-        if($userRegistred == true)
-        {
+        if ( $userRegistred == true ) {
+
             $this->session->set_flashdata('msg', 'You have already registred! Please view or edit your details from here.');
             redirect('profile/view');
+
         }
-        if($this->isUserLoggedIn){             
-            if($this->input->post('registration'))
-            {
+
+        if ( $this->isUserLoggedIn ) {
+
+            if ( $this->input->post('registration') ) {
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "<br>";
+        // print_r($_FILES);
+        // die;
+
                 $this->form_validation->set_rules('religion', 'religion', 'required');
-                $userId = $this->UserModel->getMaxUserId();
+
+                /**
+                 *  HRIS_REC_VACANCY_USERS
+                 * */
+                $userId         = $this->UserModel->getMaxUserId();
+
+                /**
+                 *  HRIS_REC_USERS_REGISTRATION
+                 * */
                 $registrationId = $this->UserModel->getMaxIdReg();
-                $addressId = $this->UserModel->getMaxIdaddress();
+
+                /**
+                 *  HRIS_REC_USERS_ADDRESS
+                 * */
+                $addressId      = $this->UserModel->getMaxIdaddress();
+
                 $userData['registration'] = array(
                     'registration_id'          => $registrationId['MAXID']+1,
                     'user_id'                  => $this->session->userdata('userId'),
@@ -205,10 +227,10 @@ Class Users extends CI_Controller
                     'ethnicity'                => strip_tags($this->input->post('ethnicity')),
                     'ethnicity_input'          => strip_tags($this->input->post('ethnicity_input')),
                     'mother_tongue'            => strip_tags($this->input->post('mother_tongue')),
-                    'Citizenship_no'           => strip_tags($this->input->post('Citizenship_no')),
-                    'Issued_date'              => strip_tags($this->input->post('Issued_date')),
-                    'Issuedistrict'            => strip_tags($this->input->post('Issuedistrict')),
-                    'dob'                      => strip_tags($this->input->post('dateOfBirth')),
+                    'Citizenship_no'           => strip_tags($this->input->post('citizenship_no')),
+                    'CTZ_ISSUE_DATE'           => strip_tags($this->input->post('issued_date_bs')),
+                    'CTZ_ISSUE_DISTRICT_ID'    => strip_tags($this->input->post('issuedistrict')),
+                    'dob'                      => strip_tags($this->input->post('dateOfBirth_bs')),
                     'age'                      => $this->input->post('age'),                  
                     'phone_no'                 => $this->input->post('phone_no'),
                     'gender'                   => strip_tags($this->input->post('gender')),
@@ -230,29 +252,32 @@ Class Users extends CI_Controller
                     'DISABILITY_INPUT'         => strip_tags($this->input->post('disability_input')),   
                     'status'                   => 'D',
                     'created_dt'               => date('Y-m-d'),                    
-                    'modified_dt'              =>' ',
+                    'modified_dt'              => '',
                     'blood_group'              => strip_tags($this->input->post('blood_group')),
-                    'in_service'              => strip_tags($this->input->post('in_service')),   
+                    'in_service'               => strip_tags($this->input->post('in_service')),   
+                    'dob_ad'                   => date('Y-m-d', strtotime($this->input->post('dateOfBirth_ad'))),
+                    'CTZ_ISSUE_DATE_AD'        => date('Y-m-d', strtotime($this->input->post('issued_date_ad'))),
+                );
 
-                );                 
+
                 // echo '<pre>'; print_r($userData) ; die;
                 $userData['address'] = array(
-                    'address_id' => $addressId['MAXID']+1,
-                    'user_id' => $this->session->userdata('userId'),
-                    'per_province' => strip_tags($this->input->post('per_province')),
-                    'per_district' => strip_tags($this->input->post('per_district')), 
-                    'per_vdc' => strip_tags($this->input->post('per_vdc')),
-                    'per_ward' => strip_tags($this->input->post('per_ward')),
-                    'per_tole' => strip_tags($this->input->post('per_tole')),
+                    'address_id'    => $addressId['MAXID']+1,
+                    'user_id'       => $this->session->userdata('userId'),
+                    'per_province'  => strip_tags($this->input->post('per_province')),
+                    'per_district'  => strip_tags($this->input->post('per_district')), 
+                    'per_vdc'       => strip_tags($this->input->post('per_vdc')),
+                    'per_ward'      => strip_tags($this->input->post('per_ward')),
+                    'per_tole'      => strip_tags($this->input->post('per_tole')),
                     'mail_province' => strip_tags($this->input->post('mail_province')),
                     'mail_district' => strip_tags($this->input->post('mail_district')),
-                    'mail_vdc' => strip_tags($this->input->post('mail_vdc')),
-                    'mail_ward' => strip_tags($this->input->post('mail_ward')),
-                    'mail_tole' => strip_tags($this->input->post('mail_tole')),
-                    'status' => 'E',
-                    'created_dt' => date('Y-m-d'),
-                    'modified_dt' =>' ',
-                    'per_house_no' => strip_tags($this->input->post('per_house_no')),
+                    'mail_vdc'      => strip_tags($this->input->post('mail_vdc')),
+                    'mail_ward'     => strip_tags($this->input->post('mail_ward')),
+                    'mail_tole'     => strip_tags($this->input->post('mail_tole')),
+                    'status'        => 'E',
+                    'created_dt'    => date('Y-m-d'),
+                    'modified_dt'   =>' ',
+                    'per_house_no'  => strip_tags($this->input->post('per_house_no')),
                     'mail_house_no' => strip_tags($this->input->post('mail_house_no'))
                     
                 );
@@ -263,23 +288,25 @@ Class Users extends CI_Controller
                     if($insert == true)
                     {
                         // echo '<pre>' ;print_r($_FILES); die;
-                        $_FILES['ethnicity_file']['folders'] = 'ethnicity';
-                        $_FILES['disability_file']['folders'] = 'disability';
-                        $_FILES['inservice_file']['folders'] = 'in_service';
-                        $_FILES['ethnicity_file']['input_names'] = 'ethnicity_file';
+                        $_FILES['ethnicity_file']['folders']      = 'ethnicity';
+                        $_FILES['disability_file']['folders']     = 'disability';
+                        $_FILES['inservice_file']['folders']      = 'in_service';
+                        $_FILES['ethnicity_file']['input_names']  = 'ethnicity_file';
                         $_FILES['disability_file']['input_names'] = 'disability_file';
-                        $_FILES['inservice_file']['input_names'] = 'inservice_file';
+                        $_FILES['inservice_file']['input_names']  = 'inservice_file';
+
                         $files = array_chunk($_FILES,1);
+
                         // echo '<pre>' ;print_r($files); die;
-                        foreach($files as $file){
+                        foreach($files as $file) {
                             // echo '<pre>' ;print_r($file[0]); die;
-                            if(!empty($file[0]['name'])){
+                            if(!empty($file[0]['name'])) {
                                 // echo '<pre>';print_r($file); die;
                                 $upload_fun = $this->file_upload($file[0]['input_names'],$file[0]['folders']); 
-                                if($upload_fun == true){
+                                if ($upload_fun == true) {
                                     $this->session->set_flashdata('success_msg', 'Your account registration has been successful. Please Check your Information.'); 
                                     
-                                }else{
+                                } else {
                                     $this->session->set_flashdata('error_msg', 'Your account registration has been successful but image upload failed.');
                                 }
                             }
@@ -635,41 +662,43 @@ Class Users extends CI_Controller
      * 
      * 
      * */
-    public function signup()
-    {
+    public function signup() {
 
-        if ($this->isUserLoggedIn) 
-        { 
+        if ( $this->isUserLoggedIn ) { 
         
             redirect('vacancy/vacancylist'); 
         
         } else {
 
-            if ($this->input->post('signup'))
-            {
+            if ( $this->input->post('signup') ) {
 
                 $this->form_validation->set_rules('first_name', 'First Name', 'required');
                 $this->form_validation->set_rules('last_name', 'Last Name', 'required'); 
                 $this->form_validation->set_rules('mobile_no', 'Mobile Number', 'required');
                 $this->form_validation->set_rules('email_id', 'Email Id', 'required'); 
-                $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check'); 
+                $this->form_validation->set_rules('username', 'Username', 'required'); 
                 $this->form_validation->set_rules('password', 'Password', 'required');
                 $this->form_validation->set_rules('name_nepali', 'Name in Nepali', 'required');
 
 
                 /* EXTRA LEVEL OF VERIFICATION */
-                
+                if ( $this->register_email_exists() == false ) {
 
-                // $this->_checkInUserSameValue($_POST);
+                    $this->form_validation->set_message('email_id', 'Email ID already exists');
 
+                }
 
-                // echo "<pre>";
+                if ( $this->register_mobile_exists() == false ) {
 
-                // print_r($this->input->post());
+                    $this->form_validation->set_message('mobile_no', 'Mobile number already exists');
 
-                // echo 'here only';
+                }
 
-                // die;
+                if ( $this->register_username_exists() == false ) {
+
+                    $this->form_validation->set_message('username', 'Username already exists');
+
+                }
                 
                
                 $UserId = $this->UserModel->getMaxUserId();
@@ -768,57 +797,6 @@ Class Users extends CI_Controller
             $this->load->view('users/signup', $data); 
             $this->load->view('templates/footer');
         
-        }
-
-    }
-
-    /* CHECKING USER SAME VALUE [ONLY UNIQUE FIELD] */
-    // private function _checkInUserSameValue($postData) {
-        
-    //     /* CHECKING FOR EMAIL | MOBILE | USERNAME */
-
-    //     if ( $this->register_mobile_exists() == true ) {
-
-            
-
-    //     } else {
-
-    //         echo 'not unique';
-    //     }
-
-
-
-    //     $mobile   = $postData['mobile_no'];
-    //     $email    = $postData['email_id'];
-    //     $username = $postData['username'];
-
-    //     echo "<pre>";
-
-    //     print_r(array($mobile, $email, $username));
-
-    //     die;
-
-
-    // }
-
-    /**
-     *  CHECKING UNIQUE USERNAME BY SYSTEM SIDE
-     * 
-     * */
-    public function username_check($username)
-    {   
-
-        if ($this->UserModel->columnDataExits('username', $username) == TRUE ) 
-        {
-                
-            $this->form_validation->set_message('username', 'This Username is already exists. Please Try Another One!');
-
-            return FALSE;
-
-        } else {
-
-            return TRUE;
-
         }
 
     }
