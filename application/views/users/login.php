@@ -6,25 +6,43 @@
 						<div class="col-lg-6 offset-lg-3 col-md-12 card">
 							<div class="left-form p-5">
 								<div class="main-title">
-								<?php
-								// Reset Password Notification message!
-									if($this->session->flashdata('msg') == 'Password sent to your email!') {
-								?>
-									<div class="status-msg success"><?php echo $this->session->flashdata('msg'); ?></div>
 
-								<?php } else { ?>
-									<div class="status-msg error"><?php echo $this->session->flashdata('msg'); ?></div>
-										<?php }	?>
+									<?php
+										// Reset Password Notification message!
+										if ( $this->session->flashdata('msg') !== NULL ) {
+
+											if( $this->session->flashdata('msg') == 'Password sent to your email!') {
+
+												echo '<div class="status-msg alert alert-success">'.$this->session->flashdata('msg').'</div>';
+													
+											} else { 
+
+												echo '<div class="status-msg alert alert-danger">'.$this->session->flashdata('msg').'</div>';
+
+											}
+
+										}
+
+									?>
+
 									<h5>User Login</h5>
 									<p>Login with your registered Email & Password.</p>
 								</div>
-								<?php  
-									if(!empty($success_msg)){ 
-										echo '<p class="status-msg success">'.$success_msg.'</p>'; 
-									}elseif(!empty($error_msg)){ 
-										echo '<p class="status-msg error">'.$error_msg.'</p>'; 
-									} 
+
+								<?php
+
+									if( !empty( $success_msg ) ) {
+
+										echo '<p class="status-msg alert alert-success">'.$success_msg.'</p>';
+
+									} elseif ( !empty( $error_msg ) ) {
+
+										echo '<p class="status-msg alert alert-danger">'.$error_msg.'</p>'; 
+
+									}
+
     							?>
+
 								<form method="post">
 									<div class="form-row">
 										<div class="form-group col-md-12 cstm-form-grp">

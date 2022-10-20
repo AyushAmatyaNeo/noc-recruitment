@@ -41,34 +41,39 @@ class Vacancy extends CI_Controller
      *  SHOWING APPLYING VACANCY LIST
      * 
      * */
-    public function vacancylist()
-    { 
+    public function vacancylist() {
+
         sessionCheck();
 
         $con = ['id' => $this->session->userdata('userId')];
 
-        $data['vacancylists'] = $this->VacancyModel->fetchvacancy();
+        $data['vacancylists']     = $this->VacancyModel->fetchvacancy();
         $data['payment_gateways'] = $this->VacancyModel->fetchAll('HRIS_REC_PAYMENT_GATEWAY');
 
+        // echo "<pre>";
 
-        if ($data['vacancylists'] != '')
-        {            
+        // print_r($data['vacancylists']);
+
+        // die;
+
+
+        if ( $data['vacancylists'] != '' ) {            
             
-            for ($i=0; $i < count($data['vacancylists']); $i++)
-            {
+            for ( $i=0; $i < count( $data['vacancylists'] ); $i++ ) {
                 
                 $IncName = array();
                 
-                if ($data['vacancylists'][$i]['INCLUSION_ID'] != null) 
-                {
+                if ( $data['vacancylists'][$i]['INCLUSION_ID'] != null )  {
                     
                     $data['vacancylists'][$i]['INCLUSION_ID'] = explode(',' , $data['vacancylists'][$i]['INCLUSION_ID']);
+
                     $incNumbers = $data['vacancylists'][$i]['INCLUSION_ID'];
                         
-                        foreach($incNumbers as $incNumber)
-                        {
+                        foreach($incNumbers as $incNumber) {
+
                             // echo '<pre>'; print_r($incNumber); die;
                             $IncName[] = $this->VacancyModel->fetchinclusions($incNumber);
+
                         }
                 
                 }
@@ -498,10 +503,6 @@ class Vacancy extends CI_Controller
 
         $application  = $this->VacancyModel->applicationDetailsRow($userId);
 
-        // echo "<pre>";
-
-        // print_r($txd_id); die;
-
         /**
          *  FAILED DATA
          *  
@@ -520,109 +521,6 @@ class Vacancy extends CI_Controller
         $this->load->view('templates/footer');
 
         
-    }
-
-
-    public function saveTempPayment()
-    {
-
-        $application_id = $this->input->post('application_id');
-        $token = $this->input->post('token');
-        $txnID = $this->input->post('txnID');
-        $connectIPSData = $this->input->post('details');
-
-        $decodedConnectIPSData = json_decode(base64_decode($connectIPSData));
-
-        // echo date('Y-m-d H:i:s.v', strtotime($decodedConnectIPSData->txn_date));
-
-        // echo "<pre>";
-        // echo 'Application_id :'. ' ' .$application_id. '\n';
-        // echo print_r($token). '\n';
-        // echo 'txn id :'. ' '.$txnID. '\n';
-        // echo print_r($decodedConnectIPSData);
-        // echo "</pre>";
-        // die;
-
-        // $data    = $this->input->post('id');
-        // $amount  = $this->VacancyModel->getApplicationAmountpayment($data);
-
-        // $m_id    = $this->config->item('connectips_merchant_id');
-        // $appId   = $this->config->item('connectips_app_id');
-        // $txn     = $this->config->item('connectips_txnId');
-        // $txda    = $this->config->item('connectips_txn_date');
-        // $txc     = $this->config->item('connectips_txncrncy');
-        // $txa     = $amount;
-        // $ref     = 'REF'.rand(0, 10000000);
-        // $remarks = 'RMKS-00';
-        // $par     = 'PART-001';
-        
-        // $string  = "MERCHANTID=$m_id,APPID=$appId,APPNAME=NOC Recruitment,TXNID=$txn,TXNDATE=$txda,TXNCRNCY=$txc,TXNAMT=$txa,REFERENCEID=$ref,REMARKS=$remarks,PARTICULARS=$par,TOKEN=TOKEN";
-
-            // $hash = hash('sha256', $string);
-
-            // if (!$cert_store = file_get_contents("CREDITOR.pfx")) {
-            //     echo "Error: Unable to read the cert file\n";
-            //     exit;
-            // }
-
-            // if (openssl_pkcs12_read($cert_store, $cert_info, "123")) {
-            //     if($private_key = openssl_pkey_get_private($cert_info['pkey'])){
-            //         $array = openssl_pkey_get_details($private_key);
-            //         // print_r($array);
-            //     }
-            // } else {
-            //     echo "Error: Unable to read the cert store.\n";
-            //     exit;
-            // }
-            // $hash = "";
-            // if(openssl_sign($string, $signature , $private_key, "sha256WithRSAEncryption")){
-            //     $hash = base64_encode($signature);
-            //     openssl_free_key($private_key);
-            // } else {
-            //     echo "Error: Unable openssl_sign";
-            //     exit;
-        // } 
-
-        // $ips= [
-        //     'm_id' => $m_id,
-        //     'a_id' => $appId,
-        //     'txn' => $txn,
-        //     'txa' => $txa,
-        //     'txda' => $txda,
-        //     'txc' => $txc,
-        //     'ref' => $ref,
-        //     'remarks' => $remarks,
-        //     'par' => $par,
-        //     'token' => $hash,
-        // ];
-
-        $paymentId   = $this->VacancyModel->getMaxIds('Id','HRIS_REC_TEMP_PAYMENT');
-
-        // insertTempPayment
-        $payment['details'] = array(                     
-            'ID'    => (isset($paymentId)) ? $paymentId['MAXID'] + 1 : 1,
-            'APPLICATION_ID' => $application_id,
-            'MERCHANT_ID' => $decodedConnectIPSData->merchant_id,
-            'APP_ID' => $decodedConnectIPSData->app_id,
-            'APP_NAME' => $decodedConnectIPSData->app_name,
-            'TXN_ID' => $txnID,
-            'TXN_DATE' => date('Y-m-d', strtotime($decodedConnectIPSData->txn_date)),
-            'TXN_CUR'=> $decodedConnectIPSData->txn_cur,
-            'AMOUNT'=> $decodedConnectIPSData->txn_amt,
-            'REFERENCE_ID'=> $decodedConnectIPSData->referenceId,
-            'REMARKS'=> $decodedConnectIPSData->remarks,
-            'PARTICULARS'=> $decodedConnectIPSData->particulars,
-            'TOKEN'=> $token,
-            'STATUS' => 'processing',
-            'STATUSDESC'=> '',
-            'CREATED_DT'=> $decodedConnectIPSData->created_datetime,
-            'MODIFIED_DT'=> '',
-        );
-        
-        $this->VacancyModel->insertTempPayment($payment);
-
-        // echo json_encode($ips);
-        return true;
     }
 
 
@@ -1641,8 +1539,6 @@ class Vacancy extends CI_Controller
         }
     }
 
-    
-
 
     public function DeleteEdu(){
         if ($this->input->post('edid')) {
@@ -1737,6 +1633,7 @@ class Vacancy extends CI_Controller
         ');
         $mpdf->Output();
     }
+    
     public function inclusionamount()
     {
         $position = $this->input->post('position_id');
@@ -1770,44 +1667,5 @@ class Vacancy extends CI_Controller
     }
 
    
-
-    
-
-    public function tokenGenerator()
-    {
-        $m_id  = $this->config->item('connectips_merchant_id');
-        $appId = $this->config->item('connectips_app_id');
-        $ref   = $this->input->post('referenceId');
-        $amt   = $this->input->post('txnAmt');
-        
-        $string = "MERCHANTID=$m_id,APPID=$appId,REFERENCEID=$ref,TXNAMT=$amt";
-        $hash = hash('sha256', $string);
-        if (!$cert_store = file_get_contents("CREDITOR.pfx")) {
-        	echo "Error: Unable to read the cert file\n";
-        	exit;
-        }
-        if (openssl_pkcs12_read($cert_store, $cert_info, "123")) {
-        	if($private_key = openssl_pkey_get_private($cert_info['pkey'])){
-        		$array = openssl_pkey_get_details($private_key);
-        	    // print_r($array);
-        	}
-        } else {
-        	echo "Error: Unable to read the cert store.\n";
-        	exit;
-        }
-        $hash = "";
-        if(openssl_sign($string, $signature , $private_key, "sha256WithRSAEncryption")){
-	        $hash = base64_encode($signature);
-	        openssl_free_key($private_key);
-        } else {
-            echo "Error: Unable openssl_sign";
-            exit;
-        }    
-        echo json_encode($hash);
-    }
-
-   
-
-
     
 }
