@@ -517,6 +517,7 @@ $(document).ready(function () {
     $('.inclusion:checked').each(function (i) {
       val[i] = $(this).val();
     });
+    console.log(val);
     var level_id = $('#functional_level_id').val();
     var position_id = $('#position_id').val();
     var baseurl = $('#baseurl').val();
@@ -529,22 +530,26 @@ $(document).ready(function () {
           var response = jQuery.parseJSON(success);
           var now = new Date();
           console.log(response.NORMAL_AMOUNT);
+          console.log(response);
           var year = now.getFullYear();
           var month = now.getMonth() + 1;
           var day = now.getDate();
           month = (month < 10) ? (month = "-0" + month) : month;
           day = (day < 10) ? (day = "-0" + day) : day;
-          var Unix_today = new Date(year+'.'+month+'.'+day).getTime() / 1000;
+          var Unix_today = new Date(year+'-'+month+'-'+day).getTime() / 1000;
           Unix_end = new Date(response.END_DATE).getTime() / 1000;
+          console.log(new Date('2022-10-15').getTime() / 1000);
+          console.log(new Date('2022-10-16').getTime() / 1000);
+
           if (val.length == 1) {
-            if (Unix_end >= Unix_today) {
+            if (Unix_end <= Unix_today) {
               $('#inclusion_amount').val(response.LATE_AMOUNT);
             } else {
               $('#inclusion_amount').val(response.NORMAL_AMOUNT);
             }
 
           } else {
-            if (Unix_end >= Unix_today) {
+            if (Unix_end <= Unix_today) {
               let total = parseInt(response.LATE_AMOUNT) + parseInt(response.INCLUSION_AMOUNT) * (val.length - 1);
               $('#inclusion_amount').val(total);
             } else {
@@ -634,6 +639,18 @@ $(document).ready(function () {
     } else {
       var Input = $(this).attr('skillname');
       // console.log("Checkbox is unchecked.");
+      $('input[name="' + Input + '"]').removeAttr("required");
+    }
+  });
+  // Add required if skill checkbox selected
+  $('.inclusion').on('click', function () {
+    if ($(this).closest(".inclusion").is(":checked")) {
+      var Input = $(this).attr('inclusionName');
+      console.log(Input);
+      // console.log("Checkbox is checked.");
+      $('input[name="' + Input + '"]').attr("required", true);
+    } else {
+      var Input = $(this).attr('inclusionName');
       $('input[name="' + Input + '"]').removeAttr("required");
     }
   });

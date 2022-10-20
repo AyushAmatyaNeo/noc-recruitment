@@ -981,7 +981,7 @@ class Vacancy extends CI_Controller
             }
             
             if ($this->input->post('applySubmit')) {
-                // echo '<pre>'; print_r($_FILES); 
+                // echo '<pre>'; print_r($_FILES);die; 
                 // echo '<pre>'; print_r($_POST); die;
                 $vid     = base64_decode($this->uri->segment('3'));
                 $appId   = $this->VacancyModel->getMaxIds('APPLICATION_ID','HRIS_REC_VACANCY_APPLICATION');
@@ -1240,6 +1240,7 @@ class Vacancy extends CI_Controller
                 'title' => 'NOC | Vacancy Apply',
                 'Description' => 'Apply for vacancy'
             );
+            // echo('<pre>');print_r($data);die;
             $this->load->view('templates/header', $data);
             $this->load->view('pages/apply/apply', $data);
             $this->load->view('templates/footer');
@@ -1460,7 +1461,6 @@ class Vacancy extends CI_Controller
             $uid                            = $this->session->userdata('userId');
             $maxRegId                       = $this->VacancyModel->getMaxIdapplication($vid);
             $data['vacancylists']           = $this->VacancyModel->fetchVacancyById($vid);
-            // echo '<pre>';print_r($data['vacancylists']); die;
             $data['vacancylists'][0]['maxregId'] = $maxRegId['MAXID'];
             $data['options']                = $this->VacancyModel->options($vid);
             $data['proviences']             = $this->VacancyModel->fetch_provience();
@@ -1493,6 +1493,9 @@ class Vacancy extends CI_Controller
             }
             // echo '<pre>';print_r($data['educations']); die;
             $data['vacancylists'][0]['SKILL_ID'] = $Vskills;
+            // echo '<pre>';print_r($data['documents']); die;
+            // echo '<pre>';print_r($data['vacancylists']); die;
+
             $this->load->view('templates/header', $data);
             $this->load->view('pages/apply/edit', $data);
             $this->load->view('templates/footer');

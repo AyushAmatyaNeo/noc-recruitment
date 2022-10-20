@@ -43,7 +43,7 @@ class VacancyModel extends CI_Model
     public function fetchinclusions($Incid)
     {   
         // echo '<pre>';print_r($Incid); die;
-        $query  = $this->db->query("SELECT OPTION_ID AS INCLUSION_ID,OPTION_EDESC FROM HRIS_REC_OPTIONS where OPTION_ID = $Incid");
+        $query  = $this->db->query("SELECT OPTION_ID AS INCLUSION_ID,OPTION_EDESC, UPLOAD_FLAG FROM HRIS_REC_OPTIONS where OPTION_ID = $Incid");
         $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
         return $result;
     }
@@ -106,16 +106,21 @@ class VacancyModel extends CI_Model
         if(!empty($data))
         { 
             // echo '<pre>'; print_r(($data)); die;
-            $details = $data['details'];            
+            $details = $data['details'];   
+            // echo '<pre>'; print_r(($details)); die;
+
             $personal = $data['personal'];
             $education = $data['education'];
             $experiences = $data['experience'];
             $training = $data['training'];
             if(!empty($details))
             {
+                $key = arrayKeyImplode($details,'c','key');
+                // print_r($key);die;
                 $details = implode('\',\'', $details);
-                //  echo '<pre>'; print_r(($details)); die;
-                $sql = "INSERT INTO HRIS_REC_VACANCY_APPLICATION values ('$details')";
+                $sql = "INSERT INTO HRIS_REC_VACANCY_APPLICATION ($key) values ('$details')";
+                // echo '<pre>'; print_r(($sql)); die;
+
                 $insert = $this->db->query($sql);
             }
 
@@ -304,7 +309,10 @@ class VacancyModel extends CI_Model
     {
         $query = $this->db->query("SELECT NORMAL_AMOUNT,LATE_AMOUNT,INCLUSION_AMOUNT,END_DATE,EXTENDED_DATE FROM HRIS_REC_VACANCY_LEVELS NV
         LEFT JOIN HRIS_REC_OPENINGS HO ON NV.OPENING_ID = HO.OPENING_ID
-        WHERE FUNCTIONAL_LEVEL_ID = $level AND POSITION_ID = $position ORDER BY EFFECTIVE_DATE DESC");
+        WHERE FUNCTIONAL_LEVEL_ID = $level AND POSITION_ID = $position AND NV.STATUS = 'E' ORDER BY EFFECTIVE_DATE DESC");
+        // print_r("SELECT NORMAL_AMOUNT,LATE_AMOUNT,INCLUSION_AMOUNT,END_DATE,EXTENDED_DATE FROM HRIS_REC_VACANCY_LEVELS NV
+        // LEFT JOIN HRIS_REC_OPENINGS HO ON NV.OPENING_ID = HO.OPENING_ID
+        // WHERE FUNCTIONAL_LEVEL_ID = $level AND POSITION_ID = $position ORDER BY EFFECTIVE_DATE DESC");die;
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         
         return $result;

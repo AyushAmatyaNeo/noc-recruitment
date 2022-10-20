@@ -205,11 +205,14 @@
 					</div>
 					<?php
 					   foreach($inclusions as $inclusion) {?>
-						<div class="col-lg-2">
+						<div class="col-lg-12">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>">
+								<input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>" inclusionName="<?php echo $inclusion['OPTION_EDESC'];?>">
 								<label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
 							</div>
+							<?php if($inclusion['UPLOAD_FLAG'] == 'Y'){ ?>
+								<input type="file" accept=".png,.jpg,.pdf" class="form-control-file inclusion_file" id="<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId ?>" name="<?php echo $inclusion['OPTION_EDESC'];?>" onchange="return fileValidation($id = '<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId  ?>')"/>								
+							<?php } ?>
 						</div>
 					<?php } ?>
 					<div class="col-lg-3">
