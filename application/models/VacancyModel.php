@@ -422,11 +422,13 @@ class VacancyModel extends CI_Model
     }
     public function insertimg($image, $inclusionName = '')
     {
+        $inclusionNewName = str_replace("_"," ",$inclusionName);
+        // print_r(str_replace("_"," ",$inclusionName));die;
         if(!empty($image)){ 
             if($image['folder']=='inclusion'){
                 $image = implode('\',\'', $image);
                 $insert = $this->db->query("INSERT INTO HRIS_REC_APPLICATION_DOCUMENTS (REC_DOC_ID,APPLICATION_ID,VACANCY_ID,USER_ID,DOC_OLD_NAME,DOC_NEW_NAME,DOC_PATH,DOC_TYPE,DOC_FOLDER,VACANCY_INCLUSION_ID)
-                values ('$image', (select option_id from HRIS_REC_OPTIONS where option_edesc = '$inclusionName'))");
+                values ('$image', (select option_id from HRIS_REC_OPTIONS where option_edesc = '$inclusionNewName'))");
                 return true;
             }else{
                 $image = implode('\',\'', $image);
