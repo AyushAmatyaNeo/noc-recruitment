@@ -1,6 +1,5 @@
 <link href="<?= base_url(); ?>assets/css/apply.css" rel="stylesheet">
 <link href="<?= base_url(); ?>assets/global/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
-
 <main class="main-recruit-application bg-light sec-padd">
 	<section class="top-info-sec">
 		<div class="container">
@@ -832,12 +831,11 @@
 <script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply_edit.js'); ?>'></script>
 <script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply.js'); ?>'></script>
 <script type='text/javascript' src='<?php echo base_url('assets/global/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>'></script>
-
 <script>
-    document.levellist =<?=json_encode($degrees);?>;
-	document.faculties = <?=json_encode($faculties);?>;
-	document.univs = <?=json_encode($univs);?>;
-	document.majors = <?=json_encode($majors);?>;
+   document.levellist =<?=json_encode($degrees);?>;
+   document.faculties = <?=json_encode($faculties);?>;
+   document.univs = <?=json_encode($univs);?>;
+   document.majors = <?=json_encode($majors);?>;
 </script>
 <script type="text/javascript">
 	
