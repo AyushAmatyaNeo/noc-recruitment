@@ -30,60 +30,78 @@
 
                                         <p class="section-head">Account Information:</p>
 
+                                        <div class="alert-custom alert-custom-info d-flex align-items-center">
+                                            <i class="fa fa-info-circle" aria-hidden="true" style="padding-right: 20px;"></i> 
+                                            Please Fill Up form as mention in English or Nepali else form will be inappropriate
+                                        </div>
+
                                         <input type="hidden" id="base" value="<?php echo base_url(); ?>">
 
                                         <div class="form-row">
                                             <div class="form-group col-md-4">
-                                                <label for="first_name">First Name:</label>
+                                                <label for="first_name">First Name: 
+                                                    <span class="text-danger">*</span>
+                                                    <small class="text-primary">(English)</small>
+                                                </label>
                                                 <input type="text" name="first_name" class="form-control w-border" id="first_name" placeholder="enter your first name" value="<?php echo set_value('first_name'); ?>">
                                                 <?php echo form_error('first_name','<p class="help-block error">','</p>'); ?>
                                             </div>
 
                                             <div class="form-group col-md-4">
-                                                <label for="middle_name">Middle Name:</label>
+                                                <label for="middle_name">Middle Name:
+                                                    <small class="text-primary">(English)</small>
+                                                </label>
                                                 <input type="text" name="middle_name" class="form-control w-border" id="middle_name" placeholder="enter your middle name" value="<?php echo set_value('middle_name'); ?>">
                                                 <?php echo form_error('middle_name','<p class="help-block error">','</p>'); ?>
                                             </div>
 
 
                                             <div class="form-group col-md-4">
-                                                <label for="last_name">Last Name:</label>
+                                                <label for="last_name">Last Name:
+                                                    <span class="text-danger">*</span>
+                                                    <small class="text-primary">(English)</small>
+                                                </label>
                                                 <input type="text" name="last_name" class="form-control w-border" id="last_name" placeholder="enter your last name" value="<?php echo set_value('last_name'); ?>">
                                                 <?php echo form_error('last_name','<p class="help-block error">','</p>'); ?>
                                             </div>
 
                                             <div class="form-group col-md-12">
-                                                <label for="name_nepali">Full Name (नेपालीमा):</label>
+                                                <label for="name_nepali">Full Name: 
+                                                    <span class="text-danger">*</span>
+                                                    <small class="text-primary">(नेपालीमा)</small>
+                                                </label>
                                                 <input type="text" name="name_nepali" class="form-control w-border" id="name_nepali" placeholder="हजुर को नाम नेपालीमा लेख्नुस" value="<?php echo set_value('name_nepali'); ?>">
                                                 <?php echo form_error('name_nepali','<p class="help-block error">','</p>'); ?>
                                             </div>
 
                                             <div class="form-group col-md-12">
-                                                <label for="mobile_no">Mobile No:</label>
+                                                <label for="mobile_no">Mobile No:
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <input type="text" name="mobile_no" class="form-control w-border" id="mobile_no" placeholder="enter your mobile no (Ncell/NTC)" value="<?php echo set_value('mobile_no'); ?>">
                                                 <?php echo form_error('mobile_no','<p class="help-block error">','</p>'); ?>
                                             </div>
 
                                             <div class="form-group col-md-12">
-                                                <label for="email_id">Email:</label>
+                                                <label for="email_id">Email: <span class="text-danger">*</span></label>
                                                 <input type="email" name="email_id" class="form-control w-border" aria-describedby="emailHelp" id="email_id" placeholder="enter your email address" value="<?php echo set_value('email_id'); ?>">
                                                 <?php echo form_error('email_id','<p class="help-block error">','</p>'); ?>
                                             </div>
 
                                             <div class="form-group col-md-12">
-                                                <label for="username">Username:</label>
+                                                <label for="username">Username: <span class="text-danger">*</span></label>
                                                 <input type="text" name="username" class="form-control w-border" id="username" placeholder="enter username" value="<?php echo set_value('username'); ?>">
                                                 <?php echo form_error('username','<p class="help-block error">','</p>'); ?>
                                             </div>
 
                                             <div class="form-group col-md-12">
-                                                <label for="password">Password:</label>
+                                                <label for="password">Password: <span class="text-danger">*</span></label>
                                                 <input type="password" name="password" class="form-control w-border" id="password" placeholder="enter password">
                                                 <?php echo form_error('password','<p class="help-block error">','</p>'); ?>
                                             </div>
 
                                             <div class="form-group col-md-12">
-                                                <label for="conf_password">Confirm Password:</label>
+                                                <label for="conf_password">Confirm Password: <span class="text-danger">*</span></label>
                                                 <input type="password" name="conf_password" class="form-control w-border" id="conf_password" placeholder="enter confirm password" >
                                                 
                                             </div>
