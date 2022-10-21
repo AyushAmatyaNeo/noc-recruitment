@@ -514,19 +514,24 @@
 						<div class="form-row">
 							<div class="form-group col-md-4">
 								<label for="">Ward Number</label>
-								<input type="text" class="form-control" name="per_ward_no" value="<?php echo $user['PER_WARD_NO']; ?>">
+								<input type="number" class="form-control" name="per_ward_no" id="per_ward" value="<?php echo $user['PER_WARD_NO']; ?>">
 
 							</div>
 							<div class="form-group col-4">
 								<label for="">Tole Name</label>
-								<input type="text" class="form-control" name="per_tole" value="<?php echo $user['PER_TOLE']; ?>">
+								<input type="text" class="form-control" name="per_tole" id="per_tole" value="<?php echo $user['PER_TOLE']; ?>">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">House Number</label>
-								<input type="text" class="form-control" name="per_house_no" value="<?php echo $user['PER_HOUSE_NO']; ?>" >
+								<input type="text" class="form-control" name="per_house_no" id="per_house" value="<?php echo $user['PER_HOUSE_NO']; ?>" >
 							</div>
 						</div>
 						<label style="color: #47759e;"><u>Mailling Address</u></label>
+						<br>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input inclusion" type="checkbox" name="sameAsPermanent" id="sameAsPermanent" value="sameAsPermanent">
+							<label class="form-check-label">Same as Permanent Address</label>
+						</div>
 						<div class="form-row">
 							<div class="form-group col-md-4">
 								<label for="">Province</label>
@@ -562,15 +567,15 @@
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">Ward Number</label>
-								<input type="text" class="form-control" name="mail_ward_no" value="<?php echo $user['MAIL_WARD_NO']; ?>">
+								<input type="number" class="form-control" name="mail_ward_no" id="mail_ward" value="<?php echo $user['MAIL_WARD_NO']; ?>">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">Tole Name</label>
-								<input type="text" class="form-control" name="mail_tole" value="<?php echo $user['MAIL_TOLE']; ?>">
+								<input type="text" class="form-control" name="mail_tole" id="mail_tole" value="<?php echo $user['MAIL_TOLE']; ?>">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">House Number</label>
-								<input type="text" class="form-control" name="mail_house_no" value="<?php echo $user['MAIL_HOUSE_NO']; ?>" >
+								<input type="text" class="form-control" name="mail_house_no" id="mail_house" value="<?php echo $user['MAIL_HOUSE_NO']; ?>" >
 							</div>
 						</div>
 
@@ -831,6 +836,70 @@
 		}
 	});
 	app.startEndDatePickerWithNepali('dob_ad', 'dob', 'issue_date_ad', 'issue_date');
+
+	document.getElementById('sameAsPermanent').addEventListener('change', (event) => {
+         if (event.currentTarget.checked) {
+            $("#mail_province").val($("#per_province").val());
+            var province_id = $('#mail_province').val();
+            var base_url = $('#base').val();
+            
+            // var base_url = window.location;
+            
+            if(province_id != '')
+            {
+               $.ajax({
+                     url:base_url + "vacancy/fetch_district",
+                     method: "POST",
+                     data:{province_id:province_id},
+                     success:function(data) 
+                     {
+                        $('#mail_district').html(data);
+                        $("#mail_district").val($("#per_district").val());
+                        var district_id = $('#mail_district').val();
+                        var base_url = $('#base').val();
+                        
+                        // var base_url = window.location;
+                        
+                        if(district_id != '')
+                        {
+                           $.ajax({
+                                 url:base_url + "vacancy/fetch_vdc",
+                                 method: "POST",
+                                 data:{district_id:district_id},
+                                 success:function(data) 
+                                 {
+                                    $('#mail_vdc').html(data);
+                                    $("#mail_vdc").val($("#per_vdc").val());
+                                 }
+                           });
+                        }
+                        else
+                        {
+                           $('#mail_vdc').html('<option value=""> Select Municipality</option>');
+                        }
+                     }
+               });
+            }
+            else
+            {
+               $('#per_district').html('<option value=""> Select District</option>');
+            }
+
+            $("#mail_ward").val($("#per_ward").val());
+            $("#mail_tole").val($("#per_tole").val());
+            $("#mail_house").val($("#per_house").val());
+         } else {
+            $("#mail_province").val('');
+
+            $("#mail_district").val('');
+
+            $("#mail_vdc").val('');
+
+            $("#mail_ward").val('');
+            $("#mail_tole").val('');
+            $("#mail_house").val('');
+         }
+      });
 </script>
 
 <script src="<?php echo base_url(); ?>assets/js/profile/edit.js"></script>

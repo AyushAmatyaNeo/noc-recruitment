@@ -362,10 +362,10 @@ window.app = (function ($, toastr, App) {
         var fromEnglishDateValue = $fromEnglishDate.val();
         var toEnglishDateValue = $toEnglishDate.val();
         if (typeof fromEnglishDateValue !== 'undefined' && fromEnglishDateValue !== null && fromEnglishDateValue !== '') {
-            $fromNepaliDate.val(nepaliDatePickerExt.fromEnglishToNepali(fromEnglishDateValue));
+            // $fromNepaliDate.val(nepaliDatePickerExt.fromEnglishToNepali(fromEnglishDateValue));
         }
         if (typeof toEnglishDateValue !== 'undefined' && toEnglishDateValue !== null && toEnglishDateValue !== '') {
-            $toNepaliDate.val(nepaliDatePickerExt.fromEnglishToNepali(toEnglishDateValue));
+            // $toNepaliDate.val(nepaliDatePickerExt.fromEnglishToNepali(toEnglishDateValue));
         }
         /*
          * 
