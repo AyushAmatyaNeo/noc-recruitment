@@ -9,7 +9,7 @@
                <h3>Application form</h3>
             </div>
          </div>
-      </div>
+      </div> 
    </section>
    <!-- Personal Details of applicant  -->
    <section class="readonly-info-sec">
@@ -306,9 +306,7 @@
                      <p class="sm-bold-text"></p>
                   </div>
 
-                  <?php
-                     foreach($inclusions as $inclusion) { 
-                  ?>
+                  <?php foreach($inclusions as $inclusion) { ?>
                      <div class="col-lg-12 mt-3">
                         <div class="form-check form-check-inline">
                            <input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>" inclusionName="<?php echo $inclusion['OPTION_EDESC'];?>">
@@ -703,8 +701,8 @@
                <div class="col-lg-12 col-md-12">
                   
                   <div class="alert-custom alert-custom-info d-flex align-items-center mt-4">
-                     <strong>Note: </strong>
-                     <h6>This vacancy require <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents, Please upload  <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents ONLY</h6>
+                     
+                     <h6><strong>Note: </strong>This vacancy require <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents, Please upload  <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents ONLY</h6>
                   </div>
 
                   <table class="table table-responsive-lg table-striped table-bordered table-sm">
@@ -782,7 +780,6 @@
          <div class="row form-doc-check">
             <div class="col-md-12">
                <p class="text-danger">(required *)</p>
-
             </div>
             <div class="col-md-6 offset-md-1">
                <div class="card-inner">
