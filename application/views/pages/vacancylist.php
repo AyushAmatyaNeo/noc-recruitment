@@ -217,7 +217,7 @@
 						<th scope="col" style="width: 15%">Inclusive</th>
 						<th scope="col" style="width: 5%">Total No.</th>
 						<th scope="col" style="width: 15%;">Stage</th>
-						<th scope="col" style="width: 5%">File</th>
+						<?php /* <th scope="col" style="width: 5%">File</th> */ ?>
 						<th scope="col" style="width: 15%">Apply</th>
 					</tr>
 				</thead>
@@ -247,7 +247,7 @@
 								<td><?php echo $vacancylist['INCLUSION_ID']; ?></td>
 								<td><?php echo $vacancylist['VACANCY_RESERVATION_NO']; ?></td>
 								<td><?php echo $vacancylist['STAGE_EDESC']; ?></td>
-								<td style="text-align: center"><?php if ($vacancylist['FILE_NAME']) { ?><a target="_blank" href="<?php echo base_url() . '../hana-noc/neo-hris/public/uploads/noc_documents/' . $vacancylist['FILE_IN_DIR_NAME']; ?>"> <i class="fa fa-file" style="font-size: 25px"></i>&nbsp;</a> <?php  } ?></td>
+								<?php /* <td style="text-align: center"><?php if ($vacancylist['FILE_NAME']) { ?><a target="_blank" href="<?php echo base_url() . '../hana-noc/neo-hris/public/uploads/noc_documents/' . $vacancylist['FILE_IN_DIR_NAME']; ?>"> <i class="fa fa-file" style="font-size: 25px"></i>&nbsp;</a> <?php  } ?></td> */ ?>
 								<?php if ($this->VacancyModel->checkapplied($vacancylist['VACANCY_ID'], $this->session->userdata('userId')) == false) {
 									
 									if ($user_age['AGE'] < 41) {

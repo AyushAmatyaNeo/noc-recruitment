@@ -48,6 +48,7 @@ class Vacancy extends CI_Controller
         $con = ['id' => $this->session->userdata('userId')];
 
         $data['vacancylists']     = $this->VacancyModel->fetchvacancy();
+        // echo('<pre>');print_r($data['vacancylists']);die;
         $data['payment_gateways'] = $this->VacancyModel->fetchAllStatus('HRIS_REC_PAYMENT_GATEWAY');
 
 
@@ -848,7 +849,6 @@ class Vacancy extends CI_Controller
     public function apply()
     {
         $vid = base64_decode($this->uri->segment('3'));
-
         $userRegistred = $this->UserModel->userRegistred($this->session->userdata('userId'));
         // $userApplied = $this->UserModel->userApplied($this->session->userdata('userId'));
 
@@ -1190,7 +1190,11 @@ class Vacancy extends CI_Controller
                     $incData[] = $this->VacancyModel->fetchinclusions($inclusion);
                 }
                 $data['inclusions'] = $incData;
-            }       
+            }   
+            usort($data['inclusions'], function($a, $b) {
+                return $a['ORDER_NO'] <=> $b['ORDER_NO'];
+            });
+            // echo('<pre>');print_r($data['inclusions']);die;    
             
             $data['registration_no']  = ($this->VacancyModel->fetchvacancyByAdNo('HRIS_REC_VACANCY_APPLICATION',$vid)) + 1;
             if (isset($RegId['MAXID'])) {
@@ -1991,9 +1995,12 @@ class Vacancy extends CI_Controller
             $data['vacancylists'][0]['SKILL_ID'] = $Vskills;
 
             $data['documents']['inclusionDocs'] = [];
-            foreach($data['documents']['inclusion'] as $incDocs){
-                $data['documents']['inclusionDocs'][$incDocs['VACANCY_INCLUSION_ID']] = $incDocs;
+            if($data['documents']['inclusion']){
+                foreach($data['documents']['inclusion'] as $incDocs){
+                    $data['documents']['inclusionDocs'][$incDocs['VACANCY_INCLUSION_ID']] = $incDocs;
+                }
             }
+            
             // echo '<pre>';print_r($data['documents']['inclusionDocs']); die;
 
             $data['documents']['userdocnew'] = [];

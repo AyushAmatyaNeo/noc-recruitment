@@ -338,7 +338,7 @@ class UserModel extends CI_Model{
                 } 
 
                 $query = $this->db->query("SELECT 
-                        HU.FIRST_NAME, HU.MIDDLE_NAME, HU.LAST_NAME, HU.MOBILE_NO, HU.EMAIL_ID, HU.USERNAME,  HU.NAME_NEPALI,
+                        HU.FIRST_NAME, HU.MIDDLE_NAME, HU.LAST_NAME, HU.MOBILE_NO, HU.EMAIL_ID, HU.USERNAME,  '' as NAME_NEPALI, --HU.NAME_NEPALI,
                         HUR.REGISTRATION_ID, HUR.USER_ID, HUR.RELIGION, HUR.RELIGION_INPUT, HUR.REGION, HUR.REGION_INPUT, HUR.ETHNIC_NAME, HUR.ETHNIC_INPUT, 
                         HUR.MOTHER_TONGUE, HUR.CITIZENSHIP_NO, HUR.CTZ_ISSUE_DATE, HUR.CTZ_ISSUE_DISTRICT_ID, HUR.DOB, HUR.AGE, HUR.PHONE_NO, HUR.GENDER_ID,
                         HUR.FATHER_NAME, HUR.FATHER_QUALIFICATION, HUR.MOTHER_NAME, HUR.MOTHER_QUALIFICATION, HUR.FM_OCCUPATION, HUR.FM_OCCUPATION_INPUT, HUR.GRANDFATHER_NAME,
@@ -374,7 +374,7 @@ class UserModel extends CI_Model{
                         LEFT JOIN HRIS_VDC_MUNICIPALITIES AS HM2 ON HM2.VDC_MUNICIPALITY_ID = HUA.MAIL_VDC_ID
                         LEFT JOIN HRIS_BLOOD_GROUPS AS BG ON BG.BLOOD_GROUP_ID = HUR.BLOOD_GROUP
                         WHERE $where ");
-                        // echo $this->db->last_query();
+                        // echo('<pre>');print_r($query->row_array());die;
                         $result = $query->row_array();
 
             } else { 

@@ -607,6 +607,8 @@
 				</div>
 			</div>
 		</div>
+
+		 
 		<!-- Photograph and signature Documents -->
 		<div class="tab">
 			<!-- Citizenship Documents -->
@@ -756,7 +758,19 @@
 					<input type="text" name="" class="form-control form-control-sm">
 				</div> -->
 			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input declare_self" type="checkbox" name="declare_self" id="declare_self" value="declare_self">
+				<label class="form-check-label">मैले यस दरखास्तमा खुलाएका सम्पूर्ण विवरणहरु सत्य छन् । प्रचलित कानून बमोजिम सरकारी सेवाको निमित्त अयोग्य ठहरिने गरी सेवाबाट बर्खास्त भएको छैन र मेरो नियुक्तिको सम्बन्धमा असर पर्न सक्ने कामको अनुभव, वैयक्तिक विवरण, शैक्षिक योग्यता आदिका सम्बन्धमा कुनै कुरा ढाँटेको वा लुकाएको छैन । कुनै कुरा ढाँटेको वा लुकाएको ठहरेमा प्रचलित कानून बमोजिम सहनेछु, बुझाउनेछु । साथै पदपूर्ति समितिको परीक्षा संचालन सम्बन्धी कार्यविधी र परीक्षार्थीले पालना गर्नुपर्ने शर्तहरु बिपरीत हुने गरी परीक्षा भवन भित्र कुनै कार्य गरेमा तत्काल परीक्षाबाट निष्काशित गर्ने वा पदपूर्ति समितिबाट मेरो सम्पूर्ण परीक्षा रद्द गर्ने वा यसपछि संचालन हुने परीक्षामा बढीमा २ वर्षसम्म सहभागी हुन नपाउने गरी निर्णय भएमा मेरो पूर्ण मञ्जुरी छ । उम्मेदवारले पालना गर्नुपर्ने भनी यस दरखास्त फारामका पृष्ठहरुमा उल्लिखित सबै निर्देशनहरु मैले राम्ररी पढेँ र म ती सबैको पालना गर्न मञ्जुर गर्दछु । यस पदको लागि दरखास्त दिन आवश्यक पर्ने योग्यता नपुगेमा जुनसुकै बखत बोर्डबाट दरखास्त फारम रद्द गरेमा मेरो मन्जुरी छ ।</label>
+			</div>
+			<div class="form-check form-check-inline">
+				मैले यस अघि निगममा आरक्षण सुविधा लिएको 
+				<input type="radio" id="html" name="fav_language" value="HTML">
+				<label for="html">छु</label><br>
+				<input type="radio" id="css" name="fav_language" value="CSS">
+				<label for="css">छैन्।</label><br>
+			</div>
 		</div>
+		
 		<div style="overflow:auto;">
 			<div style="float:right; margin-top: 5px;">
 				<button type="button" class="previous ">Previous</button>
