@@ -737,7 +737,7 @@
 										?>
 											<div class="row">
 												<div class="col-md-10">
-													<label for="trascript">Trabscript/Grade Sheet/Marksheet <span style="color: red;">*</span></label>
+													<label for="trascript">Transcript/Grade Sheet/Marksheet <span style="color: red;">*</span></label>
 													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
 													<label style="margin-top:20px;" for="character">Character Certificate <span style="color: red;">*</span></label>
 													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>

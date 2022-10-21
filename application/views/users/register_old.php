@@ -517,12 +517,12 @@
           <input type="number" name="per_ward" class="form-control form-control-sm">
         </div>
         <div class="form-group col-4">
-          <label for="per_tole">Tole Name</label>
-          <input type="text" name="per_tole" class="form-control form-control-sm">
+<label for="per_tole">Tole Name</label>
+<input type="text" name="per_tole" class="form-control form-control-sm">
         </div>
         <div class="form-group col-4">
-          <label for="per_tole">House Number</label>
-          <input type="text" name="per_house_no" class="form-control form-control-sm">
+<label for="per_tole">House Number</label>
+<input type="text" name="per_house_no" class="form-control form-control-sm">
         </div>
       </div>
       <!-- Mailling Address -->

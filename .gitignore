@@ -8,9 +8,10 @@ application/logs/*
 
 !application/*/.htaccess
 
-htaccess
+.htaccess
 
 application/config/config.php
+application/config/database.php
 
 assets/captcha/*
 

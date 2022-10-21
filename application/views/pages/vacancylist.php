@@ -20,7 +20,17 @@
 
 			<?php } ?>
 
+
+
 			<h5 class="main-title">Applied Vacancies</h5>
+			
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert-custom alert-custom-info d-flex align-items-center"><i class="fa fa-info-circle" aria-hidden="true" style="padding-right: 20px;"></i> परीक्षा दस्तुर बुझाउदा यकीन गरी साबधानी पूर्वक बुझाउनु होला । परीक्षा दस्तुर बापत बुझाएको रकम फिर्ता हुनेछैन ।</div>
+				</div>
+			</div>
+
 			<table class="table table-striped table-bordered table-sm table-responsive-lg tbl-applied-vacancies">
 				<thead style="font-size: 13px; color: #fff; background-color: #47759E; text-align: center; line-height: 34px;" >
 					<tr>
@@ -33,7 +43,8 @@
 						<!-- <th scope="col" rowspan="2">Print Slip</th> -->
 						<!-- <th colspan="2">Verification</th> -->
 						<th scope="col" rowspan="2" style="width: 9%">Exam Roll No.</th>
-						<th scope="col" rowspan="2">Status</th>
+						<th scope="col" rowspan="2">Application Status</th>
+						<!-- APPLICATION STATUS : PENDING | VERIFIED | REJECT -->
 					</tr>
 				</thead>
 				
@@ -78,13 +89,15 @@
 									
 									<?php 
 
-										} elseif ($application['PAYMENT_PAID'] == 'Y') {
+										} 
+										// elseif ($application['PAYMENT_PAID'] == 'Y') {
 
-											 echo '<span class="text-center">Admit Card Will Be Issueing Soon</span>'; 
+										// 	 echo '<span class="text-center">Admit Card Not Generated</span>'; 
 
-										} else {
+										// } 
+										else {
 
-											 echo '<span class="text-center">You will get Admit card after you pay</span>'; 
+											 echo '<span class="text-center">Admit Card Not Generated</span>';  
 
 										}
 
@@ -92,13 +105,9 @@
 								</td>
 								<td><?php echo $application['APPLICATION_AMOUNT']; ?></td>
 
-								<?php if (($application['PAYMENT_PAID'] == 'Y') AND ($application['PAYMENT_VERIFIED'] == 'Y')) { ?>
+								<?php if ($application['PAYMENT_PAID'] == 'Y') { ?>
 										
-										<td colspan="3"><h5 class="text-center">Paid</h5></td>
-
-								<?php } elseif (($application['PAYMENT_PAID'] == 'Y') AND ($application['PAYMENT_VERIFIED'] == 'N')) { ?>
-
-										<td colspan="3"><p class="text-center"><strong>Payment Made but yet to verify</strong></p></td>
+										<td colspan="<?php echo count($payment_gateways);?>"><h6 class="text-center">Payment Successful</h6></td>
 
 								<?php } else {
 
@@ -284,6 +293,8 @@
 
 	  	$('.payment_submit').on('click', function() {
 
+
+
 	  		var getPaymentNameWithAppId   = $(this).parent('a').prop('id');
 
 	  		var getPaymentNameWithId = $('#' + getPaymentNameWithAppId).attr('name');
@@ -292,6 +303,7 @@
 	  		// GET APPLICATION ID
 	  		// var getApplicationId = getPaymentNameWithAppId.match(/\d/g);
 	  		var getApplicationId = $('#' + getPaymentNameWithAppId).attr('application');
+
 
 
 
@@ -312,6 +324,7 @@
 
 	  		// AVAILABLE PAYMENT
 	  		// var availablePayment = ['esewa', 'khalti', 'connectips'];
+
 
 	  		var baseurl = $('#baseurl').val();
 

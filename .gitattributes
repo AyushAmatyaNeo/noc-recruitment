@@ -23,3 +23,10 @@ user_guide_src
 
 # User Guide Compiled Files
 user_guide export-ignore
+
+.htaccess export-ignore
+
+uploads/* export-ignore
+
+application/config/config.php export-ignore
+application/config/database.php export-ignore

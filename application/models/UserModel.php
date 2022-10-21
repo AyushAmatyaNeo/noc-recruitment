@@ -654,40 +654,47 @@ class UserModel extends CI_Model{
     {
 
         $findEmailQuery = $this->db->query("SELECT * from $this->table where EMAIL_ID = '".$email."' ");
-        // $findEmailQuery = $this->db->query("SELECT * from $this->table where EMAIL_ID = 'bidud@gmail.com' ");
+        
+        $row            = $findEmailQuery->result_array();
+                
+        $textplain      = $this->EmailrandomText();
+
+        if ( $row ) {
+
+            $query     = $this->db->query("UPDATE $this->table SET (EMAIL_VERIFICATION_CODE, ACTIVE_STATUS) = ('$textplain','D') WHERE EMAIL_ID = '$email'");
+            $mail_message='Dear '.$row[0]['FIRST_NAME'].','. "<br \><br \>";
+            $mail_message.='Thanks for signup to Nepal Oil Corporation,<br> Your <b> verification link </b> is below : <br \><br \><a href="'.base_url('users/verify?evc='.$textplain.'&email='.$row[0]['EMAIL_ID']).'">Activate Account</a>';
+            // $mail_message.='<br>Please Update your password.';
+            $mail_message.='<br>Thanks & Regards';
+            $mail_message.='<br>Nepal Oil Corporation';        
+            date_default_timezone_set('Asia/Kathmandu');
+            $mail = new PHPMailer;
+            $mail->isSMTP();
+            $mail->Priority = 1;
+            $mail->SMTPSecure = "tls"; 
+            $mail->Debugoutput = 'html';
+            $mail->Host = "smtp.ionos.com";
+            $mail->Port = 587;
+            $mail->SMTPAuth = true;   
+            $mail->Username = "bidhya.singh@neosoftware.com.np";
+                // $mail->Username = "jasmin.tamang@neosoftware.com.np";
+            $mail->Password = "Bidhya@@Singh123";
+            // $mail->Password = "Jasmin@12345#";
+            $mail->setFrom('bidhya.singh@neosoftware.com.np', 'Nepal Oil Corporation');
+                // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
+            $mail->IsHTML(true);
+            $mail->addAddress($email);
+            $mail->Subject = 'Verification Link | NOC';
+            $mail->Body    = $mail_message;
+            $mail->AltBody = $mail_message;
+
+            return (!$mail->send()) ? false : true;
+        } 
+
+        return false;
+        
 
         
-        $row = $findEmailQuery->result_array();
-                
-        $textplain  = $this->EmailrandomText();
-        $query = $this->db->query("UPDATE $this->table SET EMAIL_VERIFICATION_CODE = '$textplain' , ACTIVE_STATUS = 'D' where EMAIL_ID = '$email'");
-        $mail_message='Dear '.$row[0]['FIRST_NAME'].','. "<br \><br \>";
-        $mail_message.='Thanks for signup to Nepal Oil Corporation,<br> Your <b> verification link </b> is below : <br \><br \><a href="'.base_url('users/verify?evc='.$textplain.'&email='.$row[0]['EMAIL_ID']).'">Activate Account</a>';
-        // $mail_message.='<br>Please Update your password.';
-        $mail_message.='<br>Thanks & Regards';
-        $mail_message.='<br>Nepal Oil Corporation';        
-        date_default_timezone_set('Etc/UTC');
-        $mail = new PHPMailer;
-        $mail->isSMTP();
-        $mail->Priority = 1;
-        $mail->SMTPSecure = "tls"; 
-        $mail->Debugoutput = 'html';
-        $mail->Host = "smtp.ionos.com";
-        $mail->Port = 587;
-        $mail->SMTPAuth = true;   
-        $mail->Username = "bidhya.singh@neosoftware.com.np";
-            // $mail->Username = "jasmin.tamang@neosoftware.com.np";
-        $mail->Password = "Bidhya@@Singh123";
-        // $mail->Password = "Jasmin@12345#";
-        $mail->setFrom('bidhya.singh@neosoftware.com.np', 'Nepal Oil Corporation');
-            // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
-        $mail->IsHTML(true);
-        $mail->addAddress($email);
-        $mail->Subject = 'Verification Link | NOC';
-        $mail->Body    = $mail_message;
-        $mail->AltBody = $mail_message;
-
-        return (!$mail->send()) ? false : true;
 
     }
 
