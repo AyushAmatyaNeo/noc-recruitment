@@ -602,9 +602,40 @@
 											<?php if(!empty($documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent']['DOC_PATH'])){ ?>
 											<a href="<?php echo $documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent']['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">Equivalent</a>
 											<?php } ?>
+											<?php if(!empty($documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council']['DOC_PATH'])){ ?>
+											<a href="<?php echo $documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council']['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">Council</a>
+											<?php } ?>
 										</td>
 									</tr>
 									<?php $c++; $d++;} ?>
+
+									<tr class="certificate">
+										<td><?php echo $c; ?></td>
+										<td>											
+											<div class="form-group">
+												<p>Experience</p>										
+											</div>
+										</td>
+										<td colspan="7">
+											<?php foreach($documents['experience'] as $experienceDoc){ ?>
+												<a href="<?php echo$experienceDoc['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">View</a>
+											<?php } ?>
+										</td>
+									</tr>
+
+									<tr class="certificate">
+										<td><?php echo $c; ?></td>
+										<td>											
+											<div class="form-group">
+												<p>Training</p>										
+											</div>
+										</td>
+										<td colspan="7">
+											<?php foreach($documents['training'] as $experienceDoc){ ?>
+												<a href="<?php echo$experienceDoc['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">View</a>
+											<?php } ?>
+										</td>
+									</tr>
 								</tr>
 								<tr>
 									<!-- <td colspan="7">

@@ -1211,6 +1211,7 @@ class Vacancy extends CI_Controller
 
             $RegId = $this->VacancyModel->registerId($uid);
             $data['vacancylists'] = $this->VacancyModel->fetchVacancyById($vid);
+            // echo('<pre>');print_r($data['vacancylists']);die;
             $data['vacancylists'][0]['maxregId'] = $maxRegId['MAXID'];
             $data['options'] = $this->VacancyModel->options($vid);
             $data['proviences'] = $this->VacancyModel->fetch_provience();
@@ -1223,7 +1224,7 @@ class Vacancy extends CI_Controller
 
             $data['divisions'] = $this->VacancyModel->division();
             $data['user_details'] = $this->UserModel->user($uid);
-            $data['certificates'] = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_CODE']);
+            $data['certificates'] = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_ID']);
 
            
             $incData = array(); 
@@ -2024,8 +2025,11 @@ class Vacancy extends CI_Controller
             $data['documents']['inclusion']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','inclusion','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             $data['documents']['certificates']  = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','certificates','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             $data['documents']['userdoc']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'not in ',"certificates','skills",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['experience']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like ',"experienceDoc%",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['training']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like ',"trainingDoc%",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             // $data['inclusions']              = $this->VacancyModel->VacancyInclusions($data['applications'][0]['APPLICATION_ID'],$vid);  // Selected Inclusion per vacancies
-            $data['certificates']            = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_CODE']);
+            // echo('<pre>');print_r($data['documents']['experience']);die;
+            $data['certificates']            = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_ID']);
             //Inclusion Data 
             $Vacancyinclusions      = explode(',',$data['vacancylists'][0]['INCLUSION_ID'] );
             foreach($Vacancyinclusions as $datainc){
@@ -2047,13 +2051,13 @@ class Vacancy extends CI_Controller
                 }
             }
             
-            // echo '<pre>';print_r($data['documents']['inclusionDocs']); die;
+            // echo '<pre>';print_r($data['documents']['inclusion']); die;
 
             $data['documents']['userdocnew'] = [];
             foreach($data['documents']['userdoc'] as $userDocs){
                 $data['documents']['userdocnew'][$userDocs['DOC_FOLDER']] = $userDocs;
             }
-            // echo '<pre>';print_r($data['documents']['certificates']); die;
+            // echo '<pre>';print_r($data['documents']['userdocnew']); die;
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/apply/viewApplication', $data);

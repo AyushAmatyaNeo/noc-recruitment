@@ -727,7 +727,7 @@
 										<td><?php echo $c; ?></td>
 										<td>											
 											<div class="form-group">
-												<p><?php echo ucfirst($certificate['ACADEMIC_DEGREE_NAME']);  ?></p>										
+												<p>Qualifications</p>										
 											</div>
 										</td>
 										<td class='certInput' id="td<?php echo $c; ?>">
@@ -741,13 +741,59 @@
 													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
 													<label style="margin-top:20px;" for="character">Character Certificate <span style="color: red;">*</span></label>
 													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
-													<label style="margin-top:20px;" for="equivalent">Equivalent Certificate</label>
+													<label style="margin-top:20px;" for="equivalent">Equivalent Certificate <span>(optional)</span></label>
 													<input type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
+													<label style="margin-top:20px;" for="council">Council Certificate <span>(optional)</span></label>
+													<input type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
 												</div>
 											</div>
 										</td>										
 									</tr>
 									<?php $c++; } ?>
+									<tr class="certificate">
+										<td>2</td>
+										<td>											
+											<div class="form-group">
+												<p>Experience</p>										
+											</div>
+										</td>
+										<td class='certInput' id="td2">
+
+										<?php
+											// $b = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']);
+										?>
+											<div class="row">
+												<div class="col-md-10">
+													<input required type="file" class="form-control-file" id="experienceDoc" name="experienceDoc" />
+												</div>
+												<div class="col-md-2">
+													<i class="fa fa-plus-circle" onclick="addNewImage('2','experienceDoc')" aria-hidden="true" style="color: green; cursor: pointer"></i>	
+												</div>
+											</div>
+										</td>										
+									</tr>
+									<tr class="certificate">
+										<td>3</td>
+										<td>											
+											<div class="form-group">
+												<p>Training</p>										
+											</div>
+										</td>
+										<td class='certInput' id="td3">
+
+										<?php
+											// $b = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']);
+										?>
+											<div class="row">
+												<div class="col-md-10">
+													<input required type="file" class="form-control-file" id="trainingDoc" name="trainingDoc" />
+												</div>
+												<div class="col-md-2">
+													<i class="fa fa-plus-circle" onclick="addNewImage('3','trainingDoc')" aria-hidden="true" style="color: green; cursor: pointer"></i>	
+												</div>
+											</div>
+										</td>										
+									</tr>
 								</tr>								
 							</tbody>
 						</table>
@@ -853,10 +899,10 @@
 		// console.log(b);
 		$('#td'+params).append(`
 		 <div class = "row" id = "deleteAdded`+certIdImage+`" >
-			<div class="col-md-8">
+			<div class="col-md-10">
 				<input type = "file" name = "`+b+``+certIdImage+`" class="form-control-file" id="`+b+`" accept=".png,.pdf,.jpg,.jpeg">
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-2">
 				<i class="fa fa-minus-circle" onclick= "removeCertImage('`+certIdImage+`')" aria-hidden="true" style="color: red; cursor: pointer"></i>
 			</div>
 		 </div>

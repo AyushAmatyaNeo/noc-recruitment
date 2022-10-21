@@ -452,7 +452,7 @@ class VacancyModel extends CI_Model
         $query = $this->db->query("SELECT NV.VACANCY_ID,
         (select STRING_AGG(inclusion_id, ',') from HRIS_REC_VACANCY where OPENING_ID = NV.OPENING_ID and vacancy_no=NV.vacancy_no)
         as INCLUSION_ID,GET_AD_NO(NV.OPENING_ID,NV.VACANCY_NO) as
-        AD_NO,DESIGNATION_TITLE,HD.DESIGNATION_ID,NV.STATUS,DEPARTMENT_NAME,FUNCTIONAL_LEVEL_EDESC,FUNCTIONAL_LEVEL_ID,INSTRUCTION_EDESC,ACADEMIC_DEGREE_CODE,ACADEMIC_DEGREE_NAME,SKILL_ID,EXPERIENCE FROM $this->table NV 
+        AD_NO,DESIGNATION_TITLE,HD.DESIGNATION_ID,NV.STATUS,DEPARTMENT_NAME,FUNCTIONAL_LEVEL_EDESC,FUNCTIONAL_LEVEL_ID,INSTRUCTION_EDESC,ACADEMIC_DEGREE_CODE,ACADEMIC_DEGREE_ID,ACADEMIC_DEGREE_NAME,SKILL_ID,EXPERIENCE FROM $this->table NV 
         LEFT JOIN HRIS_DESIGNATIONS HD ON NV.POSITION_ID = HD.DESIGNATION_ID
         LEFT JOIN HRIS_DEPARTMENTS HVD ON NV.DEPARTMENT_ID = HVD.DEPARTMENT_ID
         LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = NV.LEVEL_ID
@@ -467,7 +467,9 @@ class VacancyModel extends CI_Model
 
 
     public function academicDegree($academicCode){
-        $query = $this->db->query("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_CODE <= '$academicCode'");
+        // print_r("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_ID = $academicCode");die;
+        $query = $this->db->query("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_ID = $academicCode");
+        // $query = $this->db->query("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_CODE <= '$academicCode'");
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         // echo '<pre>';print_r($result); die;
         return $result;
