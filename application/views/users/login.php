@@ -54,7 +54,8 @@
 											<i class="fa fa-lock" aria-hidden="true"></i>
 											<input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password">
 											<?php echo form_error('password','<p class="help-block">','</p>'); ?>
-										</div>	
+										</div>
+
 										<div class="form-group form-check pl-4">
 											<input type="checkbox" class="form-check-input" id="rememberMe">
 											<label class="form-check-label" for="rememberMe">Remember me</label>

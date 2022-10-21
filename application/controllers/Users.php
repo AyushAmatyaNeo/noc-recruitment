@@ -38,7 +38,7 @@ Class Users extends CI_Controller
     public function login() { 
 
         $data = array();
-        
+
         /**
          * ON FINDING USER SESSION ID
          * */
@@ -141,6 +141,19 @@ Class Users extends CI_Controller
                         
                             $this->session->set_flashdata('msg', 'Please update your password before enter!');
                                 redirect('users/updatepassword');
+
+                        }
+
+
+                        /**
+                         *  CHECKING USER REGISTERED OR NOT
+                         * 
+                         * */
+                        $isUserRegistered = $this->UserModel->userRegistred($this->session->userdata('userId'));
+
+                        if ( $isUserRegistered ) {
+
+                            redirect('users/registration');
 
                         }
                         
@@ -730,7 +743,7 @@ Class Users extends CI_Controller
 
         if ( $this->isUserLoggedIn ) { 
         
-            redirect('vacancy/vacancylist'); 
+            redirect('vacancy/vacancylist');
         
         } else {
 

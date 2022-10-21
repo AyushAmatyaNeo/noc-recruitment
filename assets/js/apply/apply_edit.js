@@ -283,14 +283,14 @@ $(document).ready(function () {
                       </td>
                       <td>
                           <div for="from_date1" class="form-group">
-                            <input type="text" class="form-control  from_date_bs`+y+`" name="from_date_bs[]" id="from_date_bs`+y+`" placeholder="Date(Bs)">
-                              <input type="text" class="form-control from_date_ad`+y+`" name="from_date[]" id="from_date_ad`+y+`" placeholder="Date(Ad)" readonly>                                        
+                            <input type="text" class="form-control  from_date_bs`+y+`" name="from_date_bs[]" id="from_date_bs`+y+`" placeholder="Start Date)">
+                              <input type="text" class="form-control from_date_ad`+y+`" name="from_date[]" id="from_date_ad`+y+`" placeholder="End Date" readonly>                                        
                           </div>
                       </td>
                       <td>
                           <div for="to_date1" class="form-group">
-                            <input type="text" class="form-control to_date_bs`+y+`" name="to_date_bs[]" id="to_date_bs`+y+`" placeholder=" Date(Bs)">
-                            <input type="text" class="form-control  to_date_ad`+y+`" name="to_date[]" id="to_date_ad`+y+`" placeholder="Date(Ad)" readonly>                                        
+                            <input type="text" class="form-control to_date_bs`+y+`" name="to_date_bs[]" id="to_date_bs`+y+`" placeholder=" Start Date">
+                            <input type="text" class="form-control  to_date_ad`+y+`" name="to_date[]" id="to_date_ad`+y+`" placeholder="End Date" readonly>                                        
                           </div>
                       </td>
                       <td>
@@ -362,14 +362,14 @@ $(document).ready(function () {
                               <td>
                                   <div for="tr_from_date" class="form-group">
                                       
-                                      <input type="text" name="tr_from_date[]" id="tr_from_date_bs`+z+`" onchange = "getPeriodTrainingFromDays(`+z+`)" class="form-control form-control-sm tr_from_date_bs" placeholder="Date(Bs)" />
-                                      <input type="text" name="tr_from_date_bs" id="tr_from_date_ad`+z+`"  class="form-control form-control-sm tr_from_date" placeholder=" Date(Ad)" readonly/>
+                                      <input type="text" name="tr_from_date[]" id="tr_from_date_bs`+z+`" onchange = "getPeriodTrainingFromDays(`+z+`)" class="form-control form-control-sm tr_from_date_bs" placeholder="Start Date" />
+                                      <input type="text" name="tr_from_date_bs" id="tr_from_date_ad`+z+`"  class="form-control form-control-sm tr_from_date" placeholder="End Date" readonly/>
                                   </div>
                               </td>
                               <td>
                                   <div for="tr_to_date" class="form-group">                                   
-                                      <input type="text" name="tr_to_date[]" id="tr_to_date_bs`+z+`" onchange = "getPeriodTrainingToDays(`+z+`)" class="form-control form-control-sm  tr_to_date_bs" placeholder="Date(Bs)" />
-                                      <input type="text" name="tr_to_date_bs" id="tr_to_date_ad`+z+`"  class="form-control form-control-sm tr_to_date" placeholder=" Date(Ad)" readonly />
+                                      <input type="text" name="tr_to_date[]" id="tr_to_date_bs`+z+`" onchange = "getPeriodTrainingToDays(`+z+`)" class="form-control form-control-sm  tr_to_date_bs" placeholder="Start Date" />
+                                      <input type="text" name="tr_to_date_bs" id="tr_to_date_ad`+z+`"  class="form-control form-control-sm tr_to_date" placeholder="End Date" readonly />
                                   </div>
                               </td>
                               <td>

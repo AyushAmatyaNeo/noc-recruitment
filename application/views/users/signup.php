@@ -122,6 +122,41 @@
     </section>
 </main>
 
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="card-inner modal-notice">
+                    <h4>नेपाल आयल निगम लि. को मिति २०७९।०7।04 गते प्रकाशित सूचना अनुसारका विभिन्न पदहरुमा आवेदन गर्न दरखास्त फाराम भर्ने प्रकृया:</h4>
+                    <ul>
+                        <li>1. सर्वप्रथम <span>Sign-Up</span>  गर्नुपर्नेछ । त्यसको लागि <span>Screen</span> मा <span>Registration</span> मा <span>Click</span> गर्नुपर्नेछ ।</li>
+                        <ul>
+                            <li><span>Password</span> कम्तिमा <span>६ Character</span> को हुनु पर्नेछ, जसमध्ये कम्तिमा एउटा <span>Capital Letter</span>, एउटा <span>Symbol</span> र एउटा <span>Number</span> हुनुपर्नेछ ।</li>
+                            <li><span>Captcha Code</span> राख्दा देखिए अनुरुप लेखी <span>Continue</span> मा <span>Click</span> गर्नुपर्नेछ ।</li>
+                            <li><span>Registration</span> गर्दा राखिने इमेलमा दरखास्त स्वीकृत वा अस्वीकृत भएको जानकारी प्राप्त हुने भएकोले प्रयोग भइरहने आफ्नै इमेल राख्नु पर्नेछ ।</li>
+                            <li> <span>Register</span> मा <span>Click</span> गरेपछि आफ्नो <span>Email</span> मा <span>Verification Link</span> प्राप्त हुनेछ । उक्त <span>Link Verification</span> गरेर <span>Login Process</span> सम्पन्न भएपश्चात <span>Dashboard</span> मा प्रवेश गर्न सक्नुहुनेछ ।</li>
+                        </ul>
+                        <li>2. <span>Login Process</span> पहिले नै सम्पन्न भईसकेको भए सोझै आफ्नो <span>Email/Username</span> र <span>Password</span> को प्रयोग गरी <span>Login</span> गर्न सक्नुहुनेछ ।</li>
+                        <li>3. <span>Dashboard</span> मा <span>Click</span> गरी हाल चालू रहेका विज्ञापनहरूको विवरण हेर्न सक्नुहुनेछ ।</li>
+                        <li>4. यसपछि क्रमशः <span>Registration Details, Other Details, Contact Details, Education, Training</span> तथा <span>Experience</span> को विवरण नेपाली युनिकोडमा भरी आवश्यक <span>Document</span> हरु अनिवार्य रूपमा <span>jpg</span> वा <span>png format</span> मा <span>maximum 1MB</span> फाइल साइज प्रत्येक <span>document</span>  को <span>Upload</span> गर्नुपर्नेछ ।</li>
+                        <li>5. यस पश्चात आफूले भरेका सम्पूर्ण विवरणहरूको <span>Preview</span> हेरी <span>Submit</span> मा <span>Click</span> गरेर उपलब्ध बिज्ञापनहरू मध्य एक पटकमा एक पदको दर्खास्तमा <span>Apply</span> गरी सो पदको लागि खुलेको बिज्ञापन नम्बर/हरू Select गरी तोकिएको परीक्षा दस्तुर <span>Khalti</span>, वा <span>Connect IPS</span> मध्य कुनै एक माध्यम को प्रयोग गरि बुझाउनु पर्नेछ ।</li>
+                        <li>6. दरखास्त <span>Accept</span> वा <span>Incomplete</span> वा <span>Cancel</span> भएको जानकारी <span>Email</span> वा <span>Mobile</span> मार्फत प्राप्त हुनेछ वा <span>Login</span> गरी पनि हेर्न सकिनेछ । कारणबस <span>Incomplete</span> दरखास्तहरू दरखास्त दिने अन्तिम दिनसम्ममा सोही <span>Login</span> बाट आफैले सच्याउनु पर्ने भएमा सच्याएर पूनः पेश गर्न सकिनेछ ।</li>
+                        <li>7. दरखास्त दस्तुर भुक्तानी गर्दा कुनै समस्या आएमा, <span>Khalti</span> : <span class="text-primary">16600158888</span> र <span>Connect IPS</span> : <span class="text-primary">16600155306</span> मा सम्पर्क गर्न सक्नुहुनेछ ।</li>
+                        <li>8. दर्खास्त फारम भर्दा कुनै द्विविधा भएमा निगमको टेलिफोन नं. <span class="text-primary">01-5359548</span> (प्रशासनिक सहयोग), <span class="text-primary">०१-५908590</span> (प्राविधिक सहयोग) मा सम्पर्क गरी बुझ्न सकिनेछ ।</li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src='<?php echo base_url('assets/js/signup.js'); ?>'></script>
 <!-- captcha refresh code -->
 
@@ -136,5 +171,11 @@
         });
 
     });
+
+    $(window).on('load', function() {
+        $('.bd-example-modal-xl').modal('show');
+    });
+
+    // $('.modal').modal('show');
     
 </script>

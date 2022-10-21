@@ -108,7 +108,9 @@ $config['esewa_fail_page_url'] = $config['base_url'] . 'vacancy/payment_failed';
 | 
 |
 */
-$config['connectips_url'] = 'https://uat.connectips.com:7443/connectipswebgw/loginpage';
+// $config['connectips_url'] = 'https://uat.connectips.com:7443/connectipswebgw/loginpage';
+$config['connectips_url'] = 'https://login.connectips.com/connectipswebgw/loginpage';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -122,8 +124,9 @@ $config['connectips_url'] = 'https://uat.connectips.com:7443/connectipswebgw/log
 |   connectIPS Core Module on banks' request.
 |
 */
-$config['connectips_merchant_id'] = 498;
-// $config['connectips_merchant_id'] = 624;
+// $config['connectips_merchant_id'] = 498;
+$config['connectips_merchant_id'] = 212;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -139,8 +142,8 @@ $config['connectips_merchant_id'] = 498;
 | Application ID will be provided by NCHL after registration.
 |
 */
-$config['connectips_app_id'] = 'MER-498-APP-1';
-// $config['connectips_app_id'] = 'MER-624-APP-3';
+// $config['connectips_app_id'] = 'MER-498-APP-1';
+$config['connectips_app_id'] = 'NOC-212-REC-2';
 
 /*
 |--------------------------------------------------------------------------
@@ -151,7 +154,7 @@ $config['connectips_app_id'] = 'MER-498-APP-1';
 | 
 |
 */
-$config['connectips_appname'] = 'NOC';
+$config['connectips_appname'] = 'NOC Recruitment System';
 // $config['connectips_appname'] = 'Neo software';
 
 /*
@@ -241,7 +244,9 @@ $config['connectips_txn_date_for_system'] = $datetime->format('Y-m-d H:i:s.v');
 | 
 |
 */
-$config['connectips_payment_validation_url'] = 'https://uat.connectips.com:7443/connectipswebgw/api/creditor/validatetxn';
+// $config['connectips_payment_validation_url'] = 'https://uat.connectips.com:7443/connectipswebgw/api/creditor/validatetxn';
+$config['connectips_payment_validation_url'] = 'https://login.connectips.com:5443/connectipswebws/api/creditor/validatetxn';
+
 
 
 /*
@@ -257,7 +262,6 @@ $config['connectips_payment_validation_url'] = 'https://uat.connectips.com:7443/
 |
 */
 $config['ips_username'] = $config['connectips_app_id'];
-
 $config['ips_password'] = 'Abcd@123';
 // $config['ips_password'] = '1234';
 
@@ -279,18 +283,34 @@ $config['ips_password'] = 'Abcd@123';
 | false ->>>>>> testing khalti url
 |	
 */
-$config['debug'] = false;
+$config['debug'] = false; 
 
 $config['auto_redirect'] = true; // set false if you don't want khalti to auto redirect
-$config['website_url'] = $config['base_url'] . 'vacancy/payment_success_khalti'; // your website url
-$config['live_public_key'] = 'live_public_key_0f21d5e35209416b86a475714384f77c'; // public key from khalti
-$config['live_secret_key'] = 'live_secret_key_b8a9a4dc476c41eebc47ade40c52b3e1'; // secret key from khalti
-$config['test_public_key'] = 'test_public_key_01695a8fde494dd9bf6e673852e3679e'; // secret key from khalti
-$config['test_secret_key'] = 'test_secret_key_305e9938019a42f3a6602579099fda1a'; // secret key from khalti
+// your website url
+$config['website_url'] = $config['base_url'] . 'vacancy/payment_success_khalti';
 
-$config['khalti_request_url'] = 'https://a.khalti.com/api/v2/epayment/initiate/';
+/* LOCAL */
+// $config['live_public_key'] = 'live_public_key_0f21d5e35209416b86a475714384f77c';
+// $config['live_secret_key'] = 'live_secret_key_b8a9a4dc476c41eebc47ade40c52b3e1';
+// $config['test_public_key'] = 'test_public_key_01695a8fde494dd9bf6e673852e3679e'; 
+// $config['test_secret_key'] = 'test_secret_key_305e9938019a42f3a6602579099fda1a';
 
-$config['khalti_lookup_url']  = 'https://a.khalti.com/api/v2/epayment/lookup/';
+// $config['khalti_request_url'] = 'https://a.khalti.com/api/v2/epayment/initiate/';
+// $config['khalti_lookup_url']  = 'https://a.khalti.com/api/v2/epayment/lookup/';
+/* LOCAL */
+
+
+/* LIVE KHALTI*/
+$config['live_public_key'] = 'live_public_key_0c0ba6a6dc0147f8b214efe6911bbed8';
+$config['live_secret_key'] = 'live_secret_key_a7071610f28b47448abb9731884db925';
+$config['test_public_key'] = 'test_public_key_54083761793447c485754dec6a316504'; 
+$config['test_secret_key'] = 'test_secret_key_fb3a181c95444b6498b61e577db72fe6';
+
+
+$config['khalti_request_url'] = 'https://khalti.com/api/v2/epayment/initiate/';
+$config['khalti_lookup_url']  = 'https://khalti.com/api/v2/epayment/lookup/';
+/* LIVE KHALTI*/
+
 
 $config['khalti_return_url'] = $config['base_url'] . 'vacancy/khalti_return_success';
 

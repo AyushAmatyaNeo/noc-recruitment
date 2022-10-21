@@ -20,6 +20,33 @@ class Vacancy extends CI_Controller
         date_default_timezone_set("Asia/Kathmandu");
     }
 
+    public function paymentest()
+    {
+        $data['user'] = $this->userId;
+
+        
+        // $this->load->library('session');
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('pages/payment/success_test', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function paymentDownloadTest() {
+        $this->load->view('pages/payment/payment_print');
+
+        // $html = $this->output->get_output();
+
+                // Load pdf library
+        // $this->load->library('pdf');
+        // $this->pdf->set_option('isRemoteEnabled', TRUE);
+        // $this->pdf->loadHtml($html);
+        // $this->pdf->setPaper('A4', 'portrait');
+        // $this->pdf->render();
+        // // Output the generated PDF (1 = download and 0 = preview)
+        // $this->pdf->stream("download.pdf", array("Attachment"=> 0));
+    }
+
     public function index()
     {
         if ($this->isUserLoggedIn) 
@@ -140,14 +167,20 @@ class Vacancy extends CI_Controller
         ];
 
 
+
+
         // GET ALL DATA RELATED TO APPLICATION ID AND VACANCY ID
         $getDetailOfApplicant = $this->VacancyModel->fetchVacancyAndApplicationById($data['application_id'], $data['vacancy_id']);
+
 
         // GET ALL PAYMENT GATEWAY
         $availablePaymentGateway = assocArrayToArray($this->VacancyModel->fetchAllBySelect('HRIS_REC_PAYMENT_GATEWAY', 'GATEWAY_COMPANY'));
 
+
         // PROCEEDING AS PAYMENT GATEWAY
         if (in_array($data['payment_gateway'], $availablePaymentGateway, true)) {
+
+            
 
 
             if ($data['payment_gateway'] == 'khalti')
@@ -163,6 +196,7 @@ class Vacancy extends CI_Controller
                 return $this->khalti::initiate($data, $return_url, $purchase_order_id, $purchase_order_name,  $amount_in_paisa);
 
             } elseif ($data['payment_gateway'] == 'connectips') {
+
                 
                 $this->_connectips($data);
 
@@ -185,6 +219,7 @@ class Vacancy extends CI_Controller
          * */
 
         $application = $this->VacancyModel->fetchVacancyAndApplicationById($data['application_id'], $data['vacancy_id']);
+
 
         // print_r(array($data, $application));
 
@@ -216,17 +251,23 @@ class Vacancy extends CI_Controller
 
         ];
 
+
+
+
         /**
          * GENERATING HASH TOKEN
          * 
          * */
         $connectips_data['token'] = $this->_generateTokenConnectIPS($connectips_data);
 
+        
+
         /*
          * GETTING MAX ROW COUNT OF TABLE 
          *
          */
         $paymentId = $this->VacancyModel->getMaxIds('PAYMENT_ID','HRIS_REC_APPLICATION_PAYMENT');
+
 
         // GET PAYMENT GATEWAY ID
         $gatewayId = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_PAYMENT_GATEWAY', 'ID', 'GATEWAY_COMPANY', $data['payment_gateway'], 'row_array');
@@ -252,6 +293,8 @@ class Vacancy extends CI_Controller
             'token'          => $connectips_data['token'],
             'created_date'   => date('Y-m-d H:i:s.v')
         ];
+
+
 
         /**
          * INSERT ESEWA PAYMENT TRANSACTION BUT NOT VERIFIED YET
@@ -292,14 +335,17 @@ class Vacancy extends CI_Controller
 
         $hash = hash('sha256', $string);
 
+        
 
-        if (!$cert_store = file_get_contents("CREDITOR.pfx")) {
+
+        if (!$cert_store = file_get_contents("CREDITOR/NOC.pfx")) {
             echo "Error: Unable to read the cert file\n";
             exit;
         }
 
+        
 
-        if (openssl_pkcs12_read($cert_store, $cert_info, "123")) 
+        if (openssl_pkcs12_read($cert_store, $cert_info, "N0c@c3rt")) 
         {
            
             if($private_key = openssl_pkey_get_private($cert_info['pkey']))
