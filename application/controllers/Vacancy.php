@@ -898,8 +898,6 @@ class Vacancy extends CI_Controller
         $userRegistred = $this->UserModel->userRegistred($this->session->userdata('userId'));
         // $userApplied = $this->UserModel->userApplied($this->session->userdata('userId'));
 
-
-
         if ( $userRegistred == false ) {
 
             $this->session->set_flashdata('msg', 'You have not registred yet! Please register to apply.');
@@ -923,8 +921,6 @@ class Vacancy extends CI_Controller
             
             if ( $this->input->post('applySubmit') ) {
 
-// print_r('asdf');die;
-                
 
                 $vid     = base64_decode($this->uri->segment('3'));
                 $appId   = $this->VacancyModel->getMaxIds('APPLICATION_ID','HRIS_REC_VACANCY_APPLICATION');
@@ -1263,7 +1259,7 @@ class Vacancy extends CI_Controller
             );
             // echo('<pre>');print_r($data);die;
             $this->load->view('templates/header', $data);
-            $this->load->view('pages/apply/apply', $data);
+            $this->load->view('pages/apply/apply', $data); 
             $this->load->view('templates/footer');
         } else {
             redirect('users/login');

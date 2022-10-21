@@ -31,10 +31,10 @@ a, a:visited {
 .form-group > label.error {
     padding-top: 6px;
     color: red !important;
-    font-weight: 400;
+    font-weight: 300;
     font-size: 13px;
-	font-style: italic;
-    line-height: 16px;
+    font-style: italic;
+    line-height: 14px;
 }
 
 .form-group .desc_msg {
@@ -216,8 +216,8 @@ a, a:visited {
     background-color: #e9ecef;
     color: #495057;
     margin-bottom: 0;
-    padding: 10px 15px;
-    font-size: 14px;
+    padding: 12px 15px;
+    font-size: 18px;
 }
 
 
@@ -231,10 +231,11 @@ a, a:visited {
 }
 
 .recruitment-form-sec .card {
-    margin: 100px auto;
-    padding: 40px;
-    border-radius: 8px;
+    margin: 35px auto;
+    padding: 34px 20px;
+    border-radius: 6px;
     /*border: 1px solid #a0a0a0b2;*/
+    border: 1px solid rgb(207 224 232) !important;
 }
 
 .recruitment-form-sec .section-head {
@@ -296,13 +297,14 @@ a, a:visited {
 }
 
 .recruitment-form-sec .form-sub-title {
-    font-size: 12px;
+    font-size: 13px;
     color: #212529;
     font-weight: bold;
 }
 
 .main-recruit-application .table th {
-    font-size: 12px;
+    font-size: 13px;
+    padding: 12px 0;
 }
 
 .main-recruit-application .table thead th {
@@ -895,3 +897,12 @@ margin-right: 0.5rem;
     color: #333;
 }
 /*  POPUP  */
+
+.form-doc .form-check-input {
+    margin-top: 6.3rem;
+    margin-left: 3.25rem;
+}
+
+.form-doc-check .form-group {
+    margin-top: 48px;
+}
