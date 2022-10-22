@@ -927,7 +927,6 @@ class Vacancy extends CI_Controller
             if ( $this->input->post('applySubmit') ) {
 
 
-
                 $vid     = base64_decode($this->uri->segment('3'));
                 $appId   = $this->VacancyModel->getMaxIds('APPLICATION_ID','HRIS_REC_VACANCY_APPLICATION');
                 $perId   = $this->VacancyModel->getMaxIds('PERSONAL_ID','HRIS_REC_APPLICATION_PERSONAL');

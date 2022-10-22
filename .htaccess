@@ -1,7 +1,11 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /noc-recruitment/
+<<<<<<< HEAD
     # RewriteBase /GIT-NOC/noc-recuitment/noc-recruitment
+=======
+    #RewriteBase /GIT-NOC/noc-recuitment/noc-recruitment
+>>>>>>> origin/main
 
     #Removes access to the system folder by users.
     #Additionally this will allow you to create a System.php controller,
