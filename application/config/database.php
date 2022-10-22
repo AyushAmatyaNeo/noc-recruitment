@@ -75,13 +75,29 @@ $query_builder = TRUE;
 
 
 $db['default'] = array(
+
+	// 'database'=> 'NOCHR',
+// 'username'=> 'NOCHR',
+// 'password'=> 'Noc$%^@123',
+
+	// 'dsn'	   => 'NEW_TEST_DB',
+	// 'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHR;PWD=Noc$%^@123;Database=NOCHR;',
+	// 'username' => 'NOCHR',
+	// 'password' => 'Noc$%^@123',
 	
 	/* NOC */
 	'dsn'	   => 'SAPHANA',
 	'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHR;PWD=Noc$%^@123;Database=NOCHR;',
 	'username' => 'NOCHR',
 	'password' => 'Noc$%^@123',
-	/* NOC */
+	/* NOC_TEST */
+
+	/* NOC_LIVE */
+	// 'dsn'	   => 'NEW_TEST_DB',
+	// 'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHR;PWD=Noc$%^@123;Database=NOCHR;',
+	// 'username' => 'NOCHR',
+	// 'password' => 'Noc$%^@123',
+	/* NOC_LIVE */
 	
 	/* NEO */
 	// 'dsn'	=> 'SAPHANA',

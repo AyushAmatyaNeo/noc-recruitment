@@ -25,8 +25,8 @@
 
 									?>
 
-									<h5>User Login</h5>
-									<p>Login with your registered Email & Password.</p>
+									<h5>Resend Email</h5>
+									<p>Please enter registered email address</p>
 								</div>
 
 								<?php
@@ -43,36 +43,25 @@
 
     							?>
 
+    							<?php echo ($this->session->flashdata('error_msg') !== NULL) ? "<p class='alert alert-danger'>".$this->session->flashdata('error_msg')."</p>" : ''; ?>
+
 								<form method="post">
 									<div class="form-row">
 										<div class="form-group col-md-12 cstm-form-grp">
 											<i class="fa fa-envelope" aria-hidden="true"></i>
-											<input type="text" name="email" class="form-control" id="inputEmail" placeholder="Email | Username">
+											<input type="text" name="email" class="form-control" id="inputEmail" placeholder="enter registered email address" required>
 											<?php echo form_error('text','<p class="help-block">','</p>'); ?>
-										</div>
-										<div class="form-group col-md-12 cstm-form-grp">
-											<i class="fa fa-lock" aria-hidden="true"></i>
-											<input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password">
-											<?php echo form_error('password','<p class="help-block">','</p>'); ?>
-										</div>
-
-										<div class="form-group form-check pl-4">
-											<input type="checkbox" class="form-check-input" id="rememberMe">
-											<label class="form-check-label" for="rememberMe">Remember me</label>
-										</div>	
-										<div class="form-group col-md-12">
-											<a href="<?php echo base_url('users/forgotpassword'); ?>" style="font-style:italic;font-size:13px;color:#0749ab;padding-bottom:1rem">Forgot password?</a>
 										</div>
 
 										<div class=" form-group col-md-12">
 											<div class="send-button">
-												<input type="submit" class="btn btn-primary btn-noc" name="loginSubmit" value="Login">
+												<input type="submit" class="btn btn-primary btn-noc" name="loginSubmit" value="Resend Activation Email">
 											</div>
 										</div>
 
 										<!-- <button type="submit" class="btn btn-primary btn-noc" style="width: 100%;">Login</button> -->
 									</div>
-									<p style="padding-top: 10px;">If you are not yet registered, <a href="<?php echo base_url('users/signup'); ?>">please click here</a></p>
+									<p style="padding-top: 10px;">Back To Login , <a href="<?php echo base_url('users/login'); ?>">please click here</a></p>
 								</form>
 							</div>
 						</div>

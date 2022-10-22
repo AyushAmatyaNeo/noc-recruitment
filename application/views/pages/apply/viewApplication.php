@@ -186,7 +186,7 @@
 			<?php } ?>
 			<?php echo form_hidden('application_id', $applications[0]['APPLICATION_ID']) ?>
 		
-			<h6 class="form-table-title">Select inclusion</h6>
+			<h6 class="form-table-title bg-primary text-light">Select Inclusion</h6>
 			<div class="col-md-12">
 				<div class="row card-inner">
 					<div class="col-lg-2">
@@ -259,7 +259,7 @@
 			*/ ?>
 			<!-- G. Educational Qualification -->
 			<div class="card mt-3">
-			<h6 class="form-table-title">Education Description</h6>
+			<h6 class="form-table-title bg-primary text-light">Education Description</h6>
 					<div class="col-lg-12 my-3" id="max_education">
 						<div class="form-check form-check-inline">
 							<input disabled class="form-check-input" type="radio" name="max_education" value="1" <?php $checked =  ($applications[0]['MAX_QUALIFICATION_ID'] == '1') ? 'checked' : ''; echo $checked; ?> />
@@ -288,7 +288,7 @@
 					</div>
 			</div>
 			<div class="card mt-3">
-				<h6 class="form-table-title">Educational Qualification</h6>
+				<h6 class="form-table-title bg-primary text-light">Educational Qualification</h6>
 				<div class="card-body">
 					
 					<div class="col-md-12">
@@ -380,7 +380,7 @@
 			</div>
 			<!-- H. Experience Detail -->
 			<div class="card mt-3">
-				<h6 class="form-table-title">Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
+				<h6 class="form-table-title bg-primary text-light">Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
 				<div class="col-md-12 mt-3">
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>
@@ -416,7 +416,7 @@
 								</td>
 								<td>
 									<div for="org_level" class="form-group">
-										<input readonly type="number" name="org_level[]" id="org_level" class="form-control form-control-sm validate-field" value="<?php echo $experience['LEVEL_ID'] ?>">
+										<input readonly type="text" name="org_level[]" id="org_level" class="form-control form-control-sm validate-field" value="<?php echo $experience['LEVEL_ID'] ?>">
 									</div>
 								</td>
 								<td>
@@ -465,7 +465,7 @@
 			</div>
 			<!-- I. Training Detail -->
 			<div class="card mt-3">
-				<h6 class="form-table-title">Training Detail</h6>
+				<h6 class="form-table-title bg-primary text-light">Training Detail</h6>
 				<div class="col-md-12 mt-3">
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>
@@ -523,7 +523,7 @@
 		<!-- Photograph and signature Documents -->
 		<div class="tab">
 			<!-- Citizenship Documents -->
-			<h6 class="form-table-title">Citizenship of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Citizenship of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
@@ -540,7 +540,7 @@
 					</td>
 				</tr>
 			</table>
-			<h6 class="form-table-title">Photograph and signature of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Photograph and signature of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
@@ -570,13 +570,13 @@
 				</tr>
 			</table>
 			<!-- Academic Document Upload -->
-			<h6 class="form-table-title">Document and Certificate (JPG | PNG Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Document and Certificate (JPG | PNG Only)</h6>
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-8 col-md-12">
-						<div style="font-size: 12px;font-weight: bold;padding: 10px 0;">							
-							<h6>Note: This vacancy require up to <?= $vacancylist['ACADEMIC_DEGREE_NAME'];  ?> degree documents, please upload it all else your application will not get approved.</h6>
-							<h6>  2. Please upload all respective document in single a file.</h6>
+					<div class="col-lg-12 col-md-12">
+						<div class="alert-custom alert-custom-info d-flex align-items-center mt-4">
+							
+							<h6><strong>Note: </strong>This vacancy require <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents, Please upload  <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents ONLY</h6>
 						</div>
 						<table class="table table-responsive-lg table-striped table-bordered table-sm">
 							<thead>
@@ -602,9 +602,44 @@
 											<?php if(!empty($documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent']['DOC_PATH'])){ ?>
 											<a href="<?php echo $documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent']['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">Equivalent</a>
 											<?php } ?>
+											<?php if(!empty($documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council']['DOC_PATH'])){ ?>
+											<a href="<?php echo $documents['userdocnew'][strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council']['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">Council</a>
+											<?php } ?>
 										</td>
 									</tr>
 									<?php $c++; $d++;} ?>
+
+									<?php if (!empty($documents['experience'])) { ?>
+									<tr class="certificate">
+										<td><?php echo '2'; ?></td>
+										<td>											
+											<div class="form-group">
+												<p>Experience</p>										
+											</div>
+										</td>
+										<td colspan="7">
+											<?php  foreach($documents['experience'] as $experienceDoc){ ?>
+												<a href="<?php echo$experienceDoc['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">View</a>
+											<?php }  ?>
+										</td>
+									</tr>
+									<?php } ?>
+
+									<?php if (!empty($documents['training'])) { ?>
+									<tr class="certificate">
+										<td><?php echo '3'; ?></td>
+										<td>											
+											<div class="form-group">
+												<p>Training</p>										
+											</div>
+										</td>
+										<td colspan="7">
+											<?php foreach($documents['training'] as $experienceDoc){ ?>
+												<a href="<?php echo$experienceDoc['DOC_PATH']; ?>" target="_blank" class="btn btn-primary">View</a>
+											<?php }  ?>
+										</td>
+									</tr>
+									<?php } ?>
 								</tr>
 								<tr>
 									<!-- <td colspan="7">
@@ -623,10 +658,10 @@
 		</div>
 		<div style="overflow:auto;">
 			<div style="float:right; margin-top: 5px;">
-				<button type="button" class="previous">Previous</button>
-				<button type="button" class="next">Next</button>
-				<a  class="btn btn-primary submit" href="<?php echo base_url('vacancy');; ?>">
-				Back
+				<button type="button" class="previous btn btn-secondary">Previous</button>
+            	<button type="button" class="next btn btn-noc text-light">Next</button>
+				<a  class="btn btn-success submit" href="<?php echo base_url('vacancy');; ?>">
+				Back To Vacancy
 				</a>
 			</div>
 		</div>

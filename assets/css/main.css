@@ -9,6 +9,11 @@ a, a:visited {
     outline: 0;
 }
 
+.bg-primary {
+    background-color: #005a88 !important;
+    color: #fff !important;
+}
+
 .form-group > label {
 	font-weight: 700;
 }
@@ -26,10 +31,10 @@ a, a:visited {
 .form-group > label.error {
     padding-top: 6px;
     color: red !important;
-    font-weight: 400;
+    font-weight: 300;
     font-size: 13px;
-	font-style: italic;
-    line-height: 16px;
+    font-style: italic;
+    line-height: 14px;
 }
 
 .form-group .desc_msg {
@@ -211,8 +216,8 @@ a, a:visited {
     background-color: #e9ecef;
     color: #495057;
     margin-bottom: 0;
-    padding: 10px 15px;
-    font-size: 14px;
+    padding: 12px 15px;
+    font-size: 18px;
 }
 
 
@@ -226,10 +231,11 @@ a, a:visited {
 }
 
 .recruitment-form-sec .card {
-    margin: 100px auto;
-    padding: 40px;
-    border-radius: 8px;
+    margin: 35px auto;
+    padding: 34px 20px;
+    border-radius: 6px;
     /*border: 1px solid #a0a0a0b2;*/
+    border: 1px solid rgb(207 224 232) !important;
 }
 
 .recruitment-form-sec .section-head {
@@ -291,13 +297,14 @@ a, a:visited {
 }
 
 .recruitment-form-sec .form-sub-title {
-    font-size: 12px;
+    font-size: 13px;
     color: #212529;
     font-weight: bold;
 }
 
 .main-recruit-application .table th {
-    font-size: 12px;
+    font-size: 13px;
+    padding: 12px 0;
 }
 
 .main-recruit-application .table thead th {
@@ -835,4 +842,67 @@ margin-right: 0.5rem;
 
 .img-border-btn {
     margin-top: 25px;
+}
+
+.user-profile-sec {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.vacancy-btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.btn-success, .btn-secondary, .btn-primary {
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/*  POPUP  */
+.modal-notice {
+    padding: 20px;
+}
+
+.modal-notice h4{
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 34px;
+    letter-spacing: 0.3px;
+    color: #3a76a2;
+}
+
+.modal-notice ul {
+    list-style: none;
+    padding-left: 5px;
+}
+
+.modal-notice ul > li {
+    line-height: 30px;
+    margin-bottom: 6px;
+}
+
+.modal-notice ul > ul {
+    padding-left: 40px;
+    list-style: circle;
+}
+
+.modal-notice ul > ul li {
+    font-size: 15px;
+}
+
+.modal-notice span {
+    font-weight: 700;
+    color: #333;
+}
+/*  POPUP  */
+
+.form-doc .form-check-input {
+    margin-top: 6.3rem !important;
+    margin-left: 3.25rem !important;
+}
+
+.form-doc-check .form-group {
+    margin-top: 48px !important;
 }

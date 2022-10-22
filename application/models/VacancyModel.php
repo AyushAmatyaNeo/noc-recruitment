@@ -13,27 +13,93 @@ class VacancyModel extends CI_Model
 
     public function fetchvacancy()
     {
-        // $sql = "SELECT * FROM HRIS_REC_VACANCY";
+        // $query  = $this->db->query("
+        //     SELECT 
+        //     distinct HRO.OPENING_ID,
+        //     case 
+        //         when right(left(AD_NO,2),1)='/'
+        //         then left(AD_NO,1)
+        //         when right(left(AD_NO,3),1)='/'
+        //         then left(AD_NO,2)
+        //         when right(left(AD_NO,4),1)='/'
+        //         then left(AD_NO,3)
+        //         when right(left(AD_NO,5),1)='/'
+        //         then left(AD_NO,4)
+        //         else 9999
+        //     end as AD_NO_ORDER,
+        //     NV.VACANCY_ID,AD_NO,DESIGNATION_TITLE,HD.DESIGNATION_ID,
+        //     NV.STATUS,NV.VACANCY_RESERVATION_NO,DEPARTMENT_NAME,FILE_IN_DIR_NAME,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,SERVICE_EVENT_NAME,START_DATE,END_DATE,EXTENDED_DATE,
+        //     NV.INCLUSION_ID,STAGE_EDESC,FILE_NAME 
+        //     FROM $this->table NV 
+
+        // LEFT JOIN HRIS_DESIGNATIONS HD ON NV.POSITION_ID = HD.DESIGNATION_ID
+        // LEFT JOIN HRIS_DEPARTMENTS HVD ON NV.DEPARTMENT_ID = HVD.DEPARTMENT_ID
+        // LEFT JOIN HRIS_REC_OPENINGS_DOCUMENTS  HVF ON NV.OPENING_ID = HVF.OPENING_ID
+        // LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = NV.LEVEL_ID
+        // LEFT JOIN HRIS_SERVICE_TYPES  HST ON HST.SERVICE_TYPE_ID = NV.SERVICE_TYPES_ID
+        // LEFT JOIN HRIS_REC_SERVICE_EVENTS_TYPES HET ON HET.SERVICE_EVENT_ID = NV.SERVICE_EVENTS_ID
+        // LEFT JOIN HRIS_REC_OPENINGS HRO ON HRO.OPENING_ID = NV.OPENING_ID
+        // LEFT JOIN HRIS_REC_VACANCY_STAGES HVS ON HVS.VACANCY_ID = NV.VACANCY_ID
+        // LEFT JOIN HRIS_REC_STAGES HS ON HS.REC_STAGE_ID = HVS.REC_STAGE_ID
+
+        // WHERE NV.VACANCY_TYPE = 'OPEN' AND 
+        //       NV.STATUS = 'E' AND 
+        //       HS.ORDER_NO > 3 AND 
+        //       HVF.STATUS = 'E'
+        // order by HRO.OPENING_ID, AD_NO_ORDER");
+
         $query  = $this->db->query("
-            SELECT NV.VACANCY_ID,AD_NO,DESIGNATION_TITLE,HD.DESIGNATION_ID,
-            NV.STATUS,NV.VACANCY_RESERVATION_NO,DEPARTMENT_NAME,FILE_IN_DIR_NAME,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,SERVICE_EVENT_NAME,START_DATE,END_DATE,EXTENDED_DATE,
-            NV.INCLUSION_ID,STAGE_EDESC,FILE_NAME 
-            FROM $this->table NV 
-
-        LEFT JOIN HRIS_DESIGNATIONS HD ON NV.POSITION_ID = HD.DESIGNATION_ID
-        LEFT JOIN HRIS_DEPARTMENTS HVD ON NV.DEPARTMENT_ID = HVD.DEPARTMENT_ID
-        LEFT JOIN HRIS_REC_OPENINGS_DOCUMENTS  HVF ON NV.OPENING_ID = HVF.OPENING_ID
-        LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = NV.LEVEL_ID
-        LEFT JOIN HRIS_SERVICE_TYPES  HST ON HST.SERVICE_TYPE_ID = NV.SERVICE_TYPES_ID
-        LEFT JOIN HRIS_REC_SERVICE_EVENTS_TYPES HET ON HET.SERVICE_EVENT_ID = NV.SERVICE_EVENTS_ID
-        LEFT JOIN HRIS_REC_OPENINGS HRO ON HRO.OPENING_ID = NV.OPENING_ID
-        LEFT JOIN HRIS_REC_VACANCY_STAGES HVS ON HVS.VACANCY_ID = NV.VACANCY_ID
-        LEFT JOIN HRIS_REC_STAGES HS ON HS.REC_STAGE_ID = HVS.REC_STAGE_ID
-
-        WHERE NV.VACANCY_TYPE = 'OPEN' AND 
-              NV.STATUS = 'E' AND 
-              HS.ORDER_NO > 3 AND 
-              HVF.STATUS = 'E'");
+        SELECT min(VACANCY_ID) as VACANCY_ID,min(AD_NO_ORDER) as AD_NO_ORDER, OPENING_ID, VACANCY_NO, AD_NO,
+        DESIGNATION_TITLE,DESIGNATION_ID,STATUS,
+        sum(VACANCY_RESERVATION_NO) as VACANCY_RESERVATION_NO,
+        DEPARTMENT_NAME,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,
+        SERVICE_EVENT_NAME,START_DATE,END_DATE,EXTENDED_DATE,
+               INCLUSION_ID,STAGE_EDESC  FROM (
+           SELECT 
+               HRO.OPENING_ID,
+               case 
+                   when right(left(AD_NO,2),1)='/'
+                   then left(AD_NO,1)
+                   when right(left(AD_NO,3),1)='/'
+                   then left(AD_NO,2)
+                   when right(left(AD_NO,4),1)='/'
+                   then left(AD_NO,3)
+                   when right(left(AD_NO,5),1)='/'
+                   then left(AD_NO,4)
+                   else 9999
+               end as AD_NO_ORDER,
+               NV.VACANCY_NO,
+               NV.VACANCY_ID,
+               
+               GET_AD_NO(HRO.OPENING_ID,NV.VACANCY_NO) as
+               AD_NO,
+               
+               DESIGNATION_TITLE,HD.DESIGNATION_ID,
+               NV.STATUS,NV.VACANCY_RESERVATION_NO,DEPARTMENT_NAME,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,SERVICE_EVENT_NAME,START_DATE,END_DATE,EXTENDED_DATE,
+               (select STRING_AGG(inclusion_id, ',') from HRIS_REC_VACANCY where OPENING_ID = HRO.OPENING_ID and vacancy_no=NV.VACANCY_NO)
+               as INCLUSION_ID,
+               STAGE_EDESC 
+               FROM $this->table NV 
+       
+           LEFT JOIN HRIS_DESIGNATIONS HD ON NV.POSITION_ID = HD.DESIGNATION_ID
+           LEFT JOIN HRIS_DEPARTMENTS HVD ON NV.DEPARTMENT_ID = HVD.DEPARTMENT_ID
+           LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = NV.LEVEL_ID
+           LEFT JOIN HRIS_SERVICE_TYPES  HST ON HST.SERVICE_TYPE_ID = NV.SERVICE_TYPES_ID
+           LEFT JOIN HRIS_REC_SERVICE_EVENTS_TYPES HET ON HET.SERVICE_EVENT_ID = NV.SERVICE_EVENTS_ID
+           LEFT JOIN HRIS_REC_OPENINGS HRO ON HRO.OPENING_ID = NV.OPENING_ID
+           LEFT JOIN HRIS_REC_VACANCY_STAGES HVS ON HVS.VACANCY_ID = NV.VACANCY_ID
+           LEFT JOIN HRIS_REC_STAGES HS ON HS.REC_STAGE_ID = HVS.REC_STAGE_ID
+       
+           WHERE NV.VACANCY_TYPE = 'OPEN' AND 
+                 NV.STATUS = 'E' AND 
+                 HS.ORDER_NO > 3 
+                 )
+                 group by OPENING_ID, VACANCY_NO, AD_NO,
+        DESIGNATION_TITLE,DESIGNATION_ID,STATUS,
+        DEPARTMENT_NAME,FUNCTIONAL_LEVEL_EDESC,SERVICE_TYPE_NAME,
+        SERVICE_EVENT_NAME,START_DATE,END_DATE,EXTENDED_DATE,
+               INCLUSION_ID,STAGE_EDESC
+               order by OPENING_ID, AD_NO_ORDER");
 
         $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
         // echo '<pre>';print_r($result); die;
@@ -43,7 +109,7 @@ class VacancyModel extends CI_Model
     public function fetchinclusions($Incid)
     {   
         // echo '<pre>';print_r($Incid); die;
-        $query  = $this->db->query("SELECT OPTION_ID AS INCLUSION_ID,OPTION_EDESC, UPLOAD_FLAG FROM HRIS_REC_OPTIONS where OPTION_ID = $Incid");
+        $query  = $this->db->query("SELECT OPTION_ID AS INCLUSION_ID,OPTION_EDESC, UPLOAD_FLAG, ORDER_NO FROM HRIS_REC_OPTIONS where OPTION_ID = $Incid");
         $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
         return $result;
     }
@@ -113,6 +179,7 @@ class VacancyModel extends CI_Model
      *  */
     public function insert($data = array()) 
     { 
+
         if(!empty($data))
         { 
             $details     = $data['details'];            
@@ -155,8 +222,10 @@ class VacancyModel extends CI_Model
             if (!empty($experiences[0]['ORGANISATION_NAME'] && $experiences[0]['POST_NAME'] )) {
 
                 for($i=0; $i < count($experiences); $i++) {
-                    $experiences[$i] = implode('\',\'', $experiences[$i]);
-                    $sql = "INSERT INTO HRIS_REC_APPLICATION_EXPERIENCES values ('$experiences[$i]')";
+                    // $experiences[$i] = implode('\',\'', $experiences[$i]);
+                    $key = arrayKeyImplode($experiences[$i], 'c', 'key');
+                    $value = arrayKeyImplode($experiences[$i], 'qc', 'value');
+                    $sql = "INSERT INTO HRIS_REC_APPLICATION_EXPERIENCES ($key) values ('$value')";
                     // echo '<pre>'; print_r($sql); die;
                     $insert = $this->db->query($sql);          
                 }
@@ -165,8 +234,10 @@ class VacancyModel extends CI_Model
             if (!empty($training)) {
 
                 for($i=0; $i < count($training); $i++) {
-                    $training[$i] = implode('\',\'', $training[$i]);
-                    $sql = "INSERT INTO HRIS_REC_APPLICATION_TRAININGS values ('$training[$i]')";
+                    // $training[$i] = implode('\',\'', $training[$i]);
+                    $key = arrayKeyImplode($training[$i], 'c', 'key');
+                    $value = arrayKeyImplode($training[$i], 'qc', 'value');
+                    $sql = "INSERT INTO HRIS_REC_APPLICATION_TRAININGS ($key) values ('$value')";
                     // echo '<pre>'; print_r($sql); die;
                     $insert = $this->db->query($sql);          
                 }
@@ -354,11 +425,13 @@ class VacancyModel extends CI_Model
     }
     public function insertimg($image, $inclusionName = '')
     {
+        $inclusionNewName = str_replace("_"," ",$inclusionName);
+        // print_r(str_replace("_"," ",$inclusionName));die;
         if(!empty($image)){ 
             if($image['folder']=='inclusion'){
                 $image = implode('\',\'', $image);
                 $insert = $this->db->query("INSERT INTO HRIS_REC_APPLICATION_DOCUMENTS (REC_DOC_ID,APPLICATION_ID,VACANCY_ID,USER_ID,DOC_OLD_NAME,DOC_NEW_NAME,DOC_PATH,DOC_TYPE,DOC_FOLDER,VACANCY_INCLUSION_ID)
-                values ('$image', (select option_id from HRIS_REC_OPTIONS where option_edesc = '$inclusionName'))");
+                values ('$image', (select option_id from HRIS_REC_OPTIONS where option_edesc = '$inclusionNewName'))");
                 return true;
             }else{
                 $image = implode('\',\'', $image);
@@ -381,7 +454,10 @@ class VacancyModel extends CI_Model
     // Fetch Vacancy details as per Id
     function fetchVacancyById($id)
     {
-        $query = $this->db->query("SELECT NV.VACANCY_ID,NV.INCLUSION_ID,AD_NO,DESIGNATION_TITLE,HD.DESIGNATION_ID,NV.STATUS,DEPARTMENT_NAME,FUNCTIONAL_LEVEL_EDESC,FUNCTIONAL_LEVEL_ID,INSTRUCTION_EDESC,ACADEMIC_DEGREE_CODE,ACADEMIC_DEGREE_NAME,SKILL_ID,EXPERIENCE FROM $this->table NV 
+        $query = $this->db->query("SELECT NV.VACANCY_ID,
+        (select STRING_AGG(inclusion_id, ',') from HRIS_REC_VACANCY where OPENING_ID = NV.OPENING_ID and vacancy_no=NV.vacancy_no)
+        as INCLUSION_ID,GET_AD_NO(NV.OPENING_ID,NV.VACANCY_NO) as
+        AD_NO,DESIGNATION_TITLE,HD.DESIGNATION_ID,NV.STATUS,DEPARTMENT_NAME,FUNCTIONAL_LEVEL_EDESC,FUNCTIONAL_LEVEL_ID,INSTRUCTION_EDESC,ACADEMIC_DEGREE_CODE,ACADEMIC_DEGREE_ID,ACADEMIC_DEGREE_NAME,SKILL_ID,EXPERIENCE FROM $this->table NV 
         LEFT JOIN HRIS_DESIGNATIONS HD ON NV.POSITION_ID = HD.DESIGNATION_ID
         LEFT JOIN HRIS_DEPARTMENTS HVD ON NV.DEPARTMENT_ID = HVD.DEPARTMENT_ID
         LEFT JOIN HRIS_FUNCTIONAL_LEVELS  HFL ON HFL.FUNCTIONAL_LEVEL_ID = NV.LEVEL_ID
@@ -396,7 +472,9 @@ class VacancyModel extends CI_Model
 
 
     public function academicDegree($academicCode){
-        $query = $this->db->query("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_CODE <= '$academicCode'");
+        // print_r("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_ID = $academicCode");die;
+        $query = $this->db->query("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_ID = $academicCode");
+        // $query = $this->db->query("SELECT * from HRIS_ACADEMIC_DEGREES WHERE STATUS = 'E' AND ACADEMIC_DEGREE_CODE <= '$academicCode'");
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
         // echo '<pre>';print_r($result); die;
         return $result;

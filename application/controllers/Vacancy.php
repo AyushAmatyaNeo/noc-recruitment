@@ -20,6 +20,33 @@ class Vacancy extends CI_Controller
         date_default_timezone_set("Asia/Kathmandu");
     }
 
+    public function paymentest()
+    {
+        $data['user'] = $this->userId;
+
+        
+        // $this->load->library('session');
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('pages/payment/success_test', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function paymentDownloadTest() {
+        $this->load->view('pages/payment/payment_print');
+
+        // $html = $this->output->get_output();
+
+                // Load pdf library
+        // $this->load->library('pdf');
+        // $this->pdf->set_option('isRemoteEnabled', TRUE);
+        // $this->pdf->loadHtml($html);
+        // $this->pdf->setPaper('A4', 'portrait');
+        // $this->pdf->render();
+        // // Output the generated PDF (1 = download and 0 = preview)
+        // $this->pdf->stream("download.pdf", array("Attachment"=> 0));
+    }
+
     public function index()
     {
         if ($this->isUserLoggedIn) 
@@ -48,6 +75,7 @@ class Vacancy extends CI_Controller
         $con = ['id' => $this->session->userdata('userId')];
 
         $data['vacancylists']     = $this->VacancyModel->fetchvacancy();
+        // echo('<pre>');print_r($data['vacancylists']);die;
         $data['payment_gateways'] = $this->VacancyModel->fetchAllStatus('HRIS_REC_PAYMENT_GATEWAY');
 
 
@@ -140,14 +168,20 @@ class Vacancy extends CI_Controller
         ];
 
 
+
+
         // GET ALL DATA RELATED TO APPLICATION ID AND VACANCY ID
         $getDetailOfApplicant = $this->VacancyModel->fetchVacancyAndApplicationById($data['application_id'], $data['vacancy_id']);
+
 
         // GET ALL PAYMENT GATEWAY
         $availablePaymentGateway = assocArrayToArray($this->VacancyModel->fetchAllBySelect('HRIS_REC_PAYMENT_GATEWAY', 'GATEWAY_COMPANY'));
 
+
         // PROCEEDING AS PAYMENT GATEWAY
         if (in_array($data['payment_gateway'], $availablePaymentGateway, true)) {
+
+            
 
 
             if ($data['payment_gateway'] == 'khalti')
@@ -163,6 +197,7 @@ class Vacancy extends CI_Controller
                 return $this->khalti::initiate($data, $return_url, $purchase_order_id, $purchase_order_name,  $amount_in_paisa);
 
             } elseif ($data['payment_gateway'] == 'connectips') {
+
                 
                 $this->_connectips($data);
 
@@ -185,6 +220,7 @@ class Vacancy extends CI_Controller
          * */
 
         $application = $this->VacancyModel->fetchVacancyAndApplicationById($data['application_id'], $data['vacancy_id']);
+
 
         // print_r(array($data, $application));
 
@@ -216,17 +252,23 @@ class Vacancy extends CI_Controller
 
         ];
 
+
+
+
         /**
          * GENERATING HASH TOKEN
          * 
          * */
         $connectips_data['token'] = $this->_generateTokenConnectIPS($connectips_data);
 
+        
+
         /*
          * GETTING MAX ROW COUNT OF TABLE 
          *
          */
         $paymentId = $this->VacancyModel->getMaxIds('PAYMENT_ID','HRIS_REC_APPLICATION_PAYMENT');
+
 
         // GET PAYMENT GATEWAY ID
         $gatewayId = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_PAYMENT_GATEWAY', 'ID', 'GATEWAY_COMPANY', $data['payment_gateway'], 'row_array');
@@ -252,6 +294,8 @@ class Vacancy extends CI_Controller
             'token'          => $connectips_data['token'],
             'created_date'   => date('Y-m-d H:i:s.v')
         ];
+
+
 
         /**
          * INSERT ESEWA PAYMENT TRANSACTION BUT NOT VERIFIED YET
@@ -292,14 +336,17 @@ class Vacancy extends CI_Controller
 
         $hash = hash('sha256', $string);
 
+        
 
-        if (!$cert_store = file_get_contents("CREDITOR.pfx")) {
+
+        if (!$cert_store = file_get_contents("CREDITOR/NOC.pfx")) {
             echo "Error: Unable to read the cert file\n";
             exit;
         }
 
+        
 
-        if (openssl_pkcs12_read($cert_store, $cert_info, "123")) 
+        if (openssl_pkcs12_read($cert_store, $cert_info, "N0c@c3rt")) 
         {
            
             if($private_key = openssl_pkey_get_private($cert_info['pkey']))
@@ -349,6 +396,9 @@ class Vacancy extends CI_Controller
 
         $transactionDetail = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_APPLICATION_PAYMENT', '*', 'PAYMENT_TRANSACTION_ID', $transaction_id, 'row_array');
 
+        
+        
+
         /* HERE WE ARE CONFIRM PAYMENT HAS BEEN MADE BUT NOT VERIFIED */
         $payment_confirmed_data = [
 
@@ -370,7 +420,7 @@ class Vacancy extends CI_Controller
                                                  ['PAYMENT_ID' => $payment_confirmed_data['payment_id'], 'PAYMENT_PAID' => 'Y'], 
                                                  'APPLICATION_ID', $payment_confirmed_data['application_id']);
 
-
+                                                
         /* HERE WE ARE CONFIRM PAYMENT HAS BEEN MADE BUT NOT VERIFIED */
 
 
@@ -395,7 +445,6 @@ class Vacancy extends CI_Controller
         
         ];
 
-
         /* HERE STARTS PROCESS */
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
@@ -406,6 +455,8 @@ class Vacancy extends CI_Controller
         $curl = curl_init();
         $client_id   = $this->config->item('ips_username');
         $client_pass = $this->config->item('ips_password');
+
+       
         curl_setopt_array($curl, array(
             CURLOPT_URL => $this->config->item('connectips_payment_validation_url'),
             CURLOPT_RETURNTRANSFER => true,
@@ -848,11 +899,8 @@ class Vacancy extends CI_Controller
     public function apply()
     {
         $vid = base64_decode($this->uri->segment('3'));
-
         $userRegistred = $this->UserModel->userRegistred($this->session->userdata('userId'));
         // $userApplied = $this->UserModel->userApplied($this->session->userdata('userId'));
-
-
 
         if ( $userRegistred == false ) {
 
@@ -867,6 +915,7 @@ class Vacancy extends CI_Controller
                 'id' => $this->session->userdata('userId')
             );
 
+
             // Check if already applied to this vacancy.
             if ($this->VacancyModel->checkapplied($vid, $this->session->userdata('userId')) == true) {
 
@@ -877,8 +926,7 @@ class Vacancy extends CI_Controller
             
             if ( $this->input->post('applySubmit') ) {
 
-// print_r('asdf');die;
-                
+
 
                 $vid     = base64_decode($this->uri->segment('3'));
                 $appId   = $this->VacancyModel->getMaxIds('APPLICATION_ID','HRIS_REC_VACANCY_APPLICATION');
@@ -1060,6 +1108,9 @@ class Vacancy extends CI_Controller
 
                 }
                     
+                
+                
+
                 // Inserting Folder Names                
                 if ($this->form_validation->run('noc_apply_form') == true) {
 
@@ -1165,6 +1216,7 @@ class Vacancy extends CI_Controller
 
             $RegId = $this->VacancyModel->registerId($uid);
             $data['vacancylists'] = $this->VacancyModel->fetchVacancyById($vid);
+            // echo('<pre>');print_r($data['vacancylists']);die;
             $data['vacancylists'][0]['maxregId'] = $maxRegId['MAXID'];
             $data['options'] = $this->VacancyModel->options($vid);
             $data['proviences'] = $this->VacancyModel->fetch_provience();
@@ -1177,7 +1229,7 @@ class Vacancy extends CI_Controller
 
             $data['divisions'] = $this->VacancyModel->division();
             $data['user_details'] = $this->UserModel->user($uid);
-            $data['certificates'] = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_CODE']);
+            $data['certificates'] = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_ID']);
 
            
             $incData = array(); 
@@ -1190,7 +1242,11 @@ class Vacancy extends CI_Controller
                     $incData[] = $this->VacancyModel->fetchinclusions($inclusion);
                 }
                 $data['inclusions'] = $incData;
-            }       
+            }   
+            usort($data['inclusions'], function($a, $b) {
+                return $a['ORDER_NO'] <=> $b['ORDER_NO'];
+            });
+            // echo('<pre>');print_r($data['inclusions']);die;    
             
             $data['registration_no']  = ($this->VacancyModel->fetchvacancyByAdNo('HRIS_REC_VACANCY_APPLICATION',$vid)) + 1;
             if (isset($RegId['MAXID'])) {
@@ -1213,7 +1269,7 @@ class Vacancy extends CI_Controller
             );
             // echo('<pre>');print_r($data);die;
             $this->load->view('templates/header', $data);
-            $this->load->view('pages/apply/apply', $data);
+            $this->load->view('pages/apply/apply', $data); 
             $this->load->view('templates/footer');
         } else {
             redirect('users/login');
@@ -1974,8 +2030,11 @@ class Vacancy extends CI_Controller
             $data['documents']['inclusion']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','inclusion','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             $data['documents']['certificates']  = $this->VacancyModel->ApplicationDocument($vid,$uid,'like','certificates','HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             $data['documents']['userdoc']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'not in ',"certificates','skills",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['experience']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like ',"experienceDoc%",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
+            $data['documents']['training']    = $this->VacancyModel->ApplicationDocument($vid,$uid,'like ',"trainingDoc%",'HRIS_REC_APPLICATION_DOCUMENTS','REC_DOC_ID');
             // $data['inclusions']              = $this->VacancyModel->VacancyInclusions($data['applications'][0]['APPLICATION_ID'],$vid);  // Selected Inclusion per vacancies
-            $data['certificates']            = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_CODE']);
+            // echo('<pre>');print_r($data['documents']['experience']);die;
+            $data['certificates']            = $this->VacancyModel->academicDegree($data['vacancylists'][0]['ACADEMIC_DEGREE_ID']);
             //Inclusion Data 
             $Vacancyinclusions      = explode(',',$data['vacancylists'][0]['INCLUSION_ID'] );
             foreach($Vacancyinclusions as $datainc){
@@ -1991,16 +2050,22 @@ class Vacancy extends CI_Controller
             $data['vacancylists'][0]['SKILL_ID'] = $Vskills;
 
             $data['documents']['inclusionDocs'] = [];
-            foreach($data['documents']['inclusion'] as $incDocs){
-                $data['documents']['inclusionDocs'][$incDocs['VACANCY_INCLUSION_ID']] = $incDocs;
+            if($data['documents']['inclusion']){
+                foreach($data['documents']['inclusion'] as $incDocs){
+                    $data['documents']['inclusionDocs'][$incDocs['VACANCY_INCLUSION_ID']] = $incDocs;
+                }
             }
-            // echo '<pre>';print_r($data['documents']['inclusionDocs']); die;
+            
+            // echo '<pre>';print_r($data['documents']['inclusion']); die;
 
             $data['documents']['userdocnew'] = [];
-            foreach($data['documents']['userdoc'] as $userDocs){
-                $data['documents']['userdocnew'][$userDocs['DOC_FOLDER']] = $userDocs;
+
+            if ($data['documents']['userdoc']) {
+                foreach($data['documents']['userdoc'] as $userDocs){
+                    $data['documents']['userdocnew'][$userDocs['DOC_FOLDER']] = $userDocs;
+                }
             }
-            // echo '<pre>';print_r($data['documents']['certificates']); die;
+            // echo '<pre>';print_r($data); die;
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/apply/viewApplication', $data);

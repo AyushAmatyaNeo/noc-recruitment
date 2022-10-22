@@ -16,6 +16,7 @@
                   <h2>NOC | Registration Form</h2>
                   <?php echo '<p class="status-msg error">' . $this->session->flashdata('msg') . '</p>' ?>
 
+
                   <!-- ACCOUNT INFORMATION -->
                   <div class="tab mb-4">
                      <div class="account_information">
@@ -402,7 +403,7 @@
                               <div class="col-lg-3">
                                  <div class="form-group">
                                     <label for="age">Age <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="age" id="age" placeholder="enter age">
+                                    <input type="text" class="form-control" name="age" id="age" placeholder="age">
                                  </div>
                               </div>
 
@@ -689,21 +690,21 @@
                               <div class="col-lg-4">
                                  <div class="form-group">
                                     <label for="per_ward">Ward Number <span class="text-danger">*</span></label>
-                                    <input type="number" name="per_ward" class="form-control form-control-sm">
+                                    <input type="number" name="per_ward" id="per_ward" class="form-control form-control-sm">
                                  </div>
                               </div>
 
                               <div class="col-lg-4">
                                  <div class="form-group">
                                     <label for="per_tole">Tole Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="per_tole" class="form-control form-control-sm">
+                                    <input type="text" name="per_tole" id="per_tole" class="form-control form-control-sm">
                                  </div>
                               </div>
 
                               <div class="col-lg-4">
                                  <div class="form-group">
                                     <label for="per_house_no">House Number</label>
-                                    <input type="text" name="per_house_no" class="form-control form-control-sm">
+                                    <input type="text" name="per_house_no" id="per_house_no" class="form-control form-control-sm">
                                  </div>
                               </div>
 
@@ -715,6 +716,10 @@
                          <div class="col-md-12">
                            <div class="heading-line mb-2">
                              <h6>Mailing Address</h6>
+                           </div>
+                           <div class="form-check form-check-inline">
+                              <input class="form-check-input inclusion" type="checkbox" name="sameAsPermanent" id="sameAsPermanent" value="sameAsPermanent">
+                              <label class="form-check-label">Same as Permanent Address</label>
                            </div>
 
                            <div class="row card-inner">
@@ -754,21 +759,21 @@
                               <div class="col-lg-4">
                                  <div class="form-group">
                                     <label for="mail_ward">Ward Number <span class="text-danger">*</span></label>
-                                    <input type="number" name="mail_ward" class="form-control form-control-sm">
+                                    <input type="number" name="mail_ward" id="mail_ward" class="form-control form-control-sm">
                                  </div>
                               </div>
 
                               <div class="col-lg-4">
                                  <div class="form-group">
                                     <label for="mail_tole">Tole Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="mail_tole" class="form-control form-control-sm">
+                                    <input type="text" name="mail_tole" id="mail_tole" class="form-control form-control-sm">
                                  </div>
                               </div>
 
                               <div class="col-lg-4">
                                  <div class="form-group">
                                     <label for="mali_house_no">House Number</label>
-                                    <input type="text" name="mali_house_no" class="form-control form-control-sm">
+                                    <input type="text" name="mali_house_no" id="mali_house_no" class="form-control form-control-sm">
                                  </div>
                               </div>
 
@@ -861,7 +866,72 @@
       } else {
         $("input[name='fm_occupation_input']").removeAttr('required');
       }
+
     });
+
+      document.getElementById('sameAsPermanent').addEventListener('change', (event) => {
+         if (event.currentTarget.checked) {
+            $("#mail_province").val($("#per_province").val());
+            var province_id = $('#mail_province').val();
+            var base_url = $('#base').val();
+            
+            // var base_url = window.location;
+            
+            if(province_id != '')
+            {
+               $.ajax({
+                     url:base_url + "vacancy/fetch_district",
+                     method: "POST",
+                     data:{province_id:province_id},
+                     success:function(data) 
+                     {
+                        $('#mail_district').html(data);
+                        $("#mail_district").val($("#per_district").val());
+                        var district_id = $('#mail_district').val();
+                        var base_url = $('#base').val();
+                        
+                        // var base_url = window.location;
+                        
+                        if(district_id != '')
+                        {
+                           $.ajax({
+                                 url:base_url + "vacancy/fetch_vdc",
+                                 method: "POST",
+                                 data:{district_id:district_id},
+                                 success:function(data) 
+                                 {
+                                    $('#mail_vdc').html(data);
+                                    $("#mail_vdc").val($("#per_vdc").val());
+                                 }
+                           });
+                        }
+                        else
+                        {
+                           $('#mail_vdc').html('<option value=""> Select Municipality</option>');
+                        }
+                     }
+               });
+            }
+            else
+            {
+               $('#per_district').html('<option value=""> Select District</option>');
+            }
+
+            $("#mail_ward").val($("#per_ward").val());
+            $("#mail_tole").val($("#per_tole").val());
+            $("#mali_house_no").val($("#per_house_no").val());
+         } else {
+            $("#mail_province").val('');
+
+            $("#mail_district").val('');
+
+            $("#mail_vdc").val('');
+
+            $("#mail_ward").val('');
+            $("#mail_tole").val('');
+            $("#mali_house_no").val('');
+         }
+      });
 
   });
 </script>

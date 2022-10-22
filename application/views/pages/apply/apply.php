@@ -1,6 +1,5 @@
 <link href="<?= base_url(); ?>assets/css/apply.css" rel="stylesheet">
 <link href="<?= base_url(); ?>assets/global/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
-
 <main class="main-recruit-application bg-light sec-padd">
 	<section class="top-info-sec">
 		<div class="container">
@@ -28,9 +27,7 @@
 					<div class="card">
 						<form>
 							<?php foreach ($vacancylists as $vacancylist) { ?>
-								<?php
-								foreach ($user_details as $user_detail) {
-								?>
+								<?php foreach ($user_details as $user_detail) { ?>
 									<div class="card-body collapse" id="apply">
 										<section class="mb-3">
 											<div class="heading-line mt-3 mb-3">
@@ -302,6 +299,8 @@
 			</div>
 		</div>
 	</section>
+
+
 	<!-- Application Details -->
 	<section class="recruitment-form-sec">
 		<?php echo form_open_multipart('', ['name' => 'applyForm', 'id' => 'applyForm']); ?>
@@ -321,42 +320,49 @@
 		<div class="tab">
 			<h6 class="blockquote text-center">Please check above personal details to match vacancy description</h6>
 			
-			<?php foreach ($vacancylists as $vacancylist) { ?>
-				<?php echo form_hidden('vacancy_id', $vacancylist['VACANCY_ID']); ?>
-				<?php echo form_hidden('ad_no', $vacancylist['AD_NO']); ?>
-			<?php } ?>
+			<?php 
+				foreach ($vacancylists as $vacancylist) {
+				echo form_hidden('vacancy_id', $vacancylist['VACANCY_ID']); 
+				echo form_hidden('ad_no', $vacancylist['AD_NO']);
+				} 
+			?>
 			
 			<!-- Select inclusion -->
-			<?php
-				if ($inclusions != []) { ?>
+			<?php if ($inclusions != []) { ?>
 					
-			
-			<h6 class="form-table-title">Select</h6>
+			<h6 class="form-table-title bg-primary text-light">Select</h6>
+
 			<div class="col-md-12">
 				<div class="row card-inner">
 					<div class="col-lg-2">
 						<p class="sm-bold-text"></p>
 					</div>
-					<?php
-					   foreach($inclusions as $inclusion) {?>
-						<div class="col-lg-12">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>" inclusionName="<?php echo $inclusion['OPTION_EDESC'];?>">
-								<label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
-							</div>
-							<?php if($inclusion['UPLOAD_FLAG'] == 'Y'){ ?>
-								<input type="file" accept=".png,.jpg,.pdf" class="form-control-file inclusion_file" id="<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId ?>" name="<?php echo $inclusion['OPTION_EDESC'];?>" onchange="return fileValidation($id = '<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId  ?>')"/>								
-							<?php } ?>
-						</div>
-					<?php } ?>
-					<div class="col-lg-3">
-						<div class="form-group row">
-							<label class="col-lg-5">Total Amount:</label>
-							<div class="col-lg-7">
-								<input type="text" class="form-control form-control-sm" name="inclusion_amount" id="inclusion_amount" readonly>
-							</div>
-						</div>
-					</div>
+
+					<?php foreach($inclusions as $inclusion) { ?>
+                     <div class="col-lg-12 mt-3">
+                        <div class="form-check form-check-inline">
+                           <input class="form-check-input inclusion" type="checkbox" name="inclusion[]" value="<?php echo $inclusion['INCLUSION_ID'] ?>" inclusionName="<?php echo $inclusion['OPTION_EDESC'];?>">
+                           <label class="form-check-label"><?php echo $inclusion['OPTION_EDESC'] ?></label>
+                        </div>
+
+                        <div class="row mt-2">
+                           <div class="col-md-5">
+                              <?php if ($inclusion['UPLOAD_FLAG'] == 'Y') { ?>
+                                 <input type="file" accept=".png,.jpg,.pdf" class="form-control-file inclusion_file" id="<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId ?>" name="<?php echo $inclusion['OPTION_EDESC'];?>" onchange="return fileValidation($id = '<?php $inclusionId = str_replace(' ', '_', $inclusion['OPTION_EDESC']); echo $inclusionId  ?>')"/>								
+                              <?php } ?>
+                           </div>
+                        </div>
+                     </div>
+                  <?php } ?>
+
+				  <div class="col-lg-4 mt-4">
+                     <div class="form-group row">
+                        <label class="col-lg-5">Total Amount:</label>
+                        <div class="col-lg-7">
+                           <input type="text" class="form-control form-control-sm" name="inclusion_amount" id="inclusion_amount" readonly>
+                        </div>
+                     </div>
+                  </div>
 				</div>
 			</div>
 			<?php	}else { ?>
@@ -398,191 +404,210 @@
 			<?php } } }?>
 			*/ ?>
 			<!-- G. Educational Qualification -->
-			<div class="card mt-3">
-				<h6 class="form-table-title">Educational Qualification</h6>
-				<div class="card-body">
-					<div class="alert-custom alert-custom-info d-flex align-items-center">
-                      <i class="fa fa-info-circle mr-2" aria-hidden="true"></i> Please tick maximum level of education qualification 
-                   	</div>
-					<div class="col-lg-12 my-3" id="max_education">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="1">
-							<label class="form-check-label">SLC</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="2">
-							<label class="form-check-label">+2 / Intermediate</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="3">
-							<label class="form-check-label">Bachelors</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="4">
-							<label class="form-check-label">Masters</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="5">
-							<label class="form-check-label">M.phil</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="max_education" value="11">
-							<label class="form-check-label">others</label>
-						</div>
-					</div>
+			<div class="row">
+	            <div class="col-md-12">
+	               <div class="card mt-3">
+	                   <h6 class="form-table-title bg-primary text-light">Educational Qualification</h6>
+	                    <div class="card-body">
+		                    <div class="alert-custom alert-custom-info d-flex align-items-center">
+		                        <i class="fa fa-info-circle mr-2" aria-hidden="true"></i> Please tick maximum level of education qualification 
+		                     </div>
 
-					<div class="alert-custom alert-custom-info d-flex align-items-center">
-                      <i class="fa fa-info-circle mr-2" aria-hidden="true"></i>Add all relevant educational informational in below input section.
-                   	</div>
+	                     	<div class="row">
+		                        <div class="col-lg-12 my-3" id="max_education">
+		                           <div class="form-check form-check-inline">
+		                              <input class="form-check-input" type="radio" name="max_education" value="1">
+		                              <label class="form-check-label">SEE</label>
+		                           </div>
+		                           <div class="form-check form-check-inline">
+		                              <input class="form-check-input" type="radio" name="max_education" value="2">
+		                              <label class="form-check-label">+2 / Intermediate</label>
+		                           </div>
+		                           <div class="form-check form-check-inline">
+		                              <input class="form-check-input" type="radio" name="max_education" value="3">
+		                              <label class="form-check-label">Bachelors</label>
+		                           </div>
+		                           <div class="form-check form-check-inline">
+		                              <input class="form-check-input" type="radio" name="max_education" value="4">
+		                              <label class="form-check-label">Masters</label>
+		                           </div>
+		                           <div class="form-check form-check-inline">
+		                              <input class="form-check-input" type="radio" name="max_education" value="5">
+		                              <label class="form-check-label">M.phil</label>
+		                           </div>
+		                           <div class="form-check form-check-inline">
+		                              <input class="form-check-input" type="radio" name="max_education" value="11">
+		                              <label class="form-check-label">Others</label>
+		                           </div>
+		                        </div>
+	                     	</div>
+	                    </div>
+	                     
+	                  
+	                    <div class="alert-custom alert-custom-info d-flex align-items-center">
+		                     <i class="fa fa-info-circle mr-2" aria-hidden="true"></i>Add all relevant educational informational in below input section.
+		                 </div>
 
-                   	<div class="row">
-						<div class="col-md-12">
-							<table class="table table-responsive-md table-striped table-bordered table-sm" id="education">
-								<thead>
-									<tr>
-										<th rowspan="2" width="25%">Educational Institute</th>
-										<th rowspan="2">Level</th>
-										<th rowspan="2">Faculty</th>
-										<th colspan="2">Division</th>
-										<th rowspan="2">University/Board</th>
-										<th rowspan="2">Major Subject</th>
-										<th rowspan="2" width="10%">Passed Year (AD)</th>
-										<th rowspan="2"></th>
-									</tr>
-									<tr>
-										<th>Rank Type</th>
-										<th width="10%">Rank Value</th>
-									</tr>
-								</thead>
-								<tbody id="educationalbody">
-									<tr>
-										<td>
-											<div for="edu_institute" class="form-group">
-												<input type="text" name="edu_institute[]" id="edu_institute" class="form-control form-control-sm">
-											</div>
-											<?php echo form_error('edu_institute', '<p class="help-block error">', '</p>'); ?>
-										</td>
-										<td>
-											<div for="level_id" class="form-group">
-												<select class="form-control form-control-sm" name="level_id[]" id="level_id">
-													<option value="">-- Select Degree -- </option>
-													<?php foreach ($degrees as $degree) { ?>
-														<option value="<?php echo $degree['ACADEMIC_DEGREE_ID'] ?>"><?php echo $degree['ACADEMIC_DEGREE_NAME'] ?></option>
-													<?php } ?>
-												</select>
-												<?php echo form_error('level_id', '<p class="help-block error">', '</p>'); ?>
-											</div>
-										</td>
-										<td>
-											<div for="facalty" class="form-group">
-											
-												<select class="form-control form-control-sm" name="facalty[]" id="FACULTY_id">
-													<option value="">-- Select Program -- </option>
-													<?php foreach ($faculties as $faculty) { ?>
-														<option value="<?php echo $faculty['ACADEMIC_PROGRAM_ID'] ?>"><?php echo $faculty['ACADEMIC_PROGRAM_NAME'] ?></option>
-													<?php } ?>
-												</select>
-											</div>
-										</td>
-										<td>
-											<div class="form-group">
-												<select class="form-control form-control-sm" id="rank_type" name="rank_type[]">
-													<option value="">--Select Rank Type--</option>
-													<option value="GPA">GPA</option>
-													<option value="Percentage">Percentage</option>
-													<option value="Division/grade">Division/grade</option>
-												</select>
-											</div>
-										</td>									
-										<td>
-											<div for="rank_value" class="form-group" id="rank_value_error">
-												<input type="text" name="rank_value[]" id="rank_value" class="form-control form-control-sm">
-												<label id="rank_value-error" class="error" for="rank_value" style="display: none">Please enter above 32.</label>
-												<?php echo form_error('rank_value', '<p class="help-block error">', '</p>'); ?>
-											</div>
-										</td>
-										<td>
-											<div for="university_board" class="form-group" id="rank_value_error">
-												<select class="form-control form-control-sm" name="university_board[]" id="UNIV">
-													<option value="">-- Select University -- </option>
-													<?php foreach ($univs as $univ) { ?>
-														<option value="<?php echo $univ['ACADEMIC_UNIVERSITY_ID'] ?>"><?php echo $univ['ACADEMIC_UNIVERSITY_NAME'] ?></option>
-													<?php } ?>
-												</select>
-											</div>
-										</td>
-										<td>
-											<div for="major_subject" class="form-group">
-												<select class="form-control form-control-sm" name="major_subject[]" id="major_subject">
-													<option value="">-- Select Majors -- </option>
-													<?php foreach ($majors as $major) { ?>
-														<option value="<?php echo $major['ACADEMIC_COURSE_ID'] ?>"><?php echo $major['ACADEMIC_COURSE_NAME'] ?></option>
-													<?php } ?>
-												</select>
-											</div>
-										</td>
-										<td>
-											<div for="passed_year" class="form-group">
-												<input type="text" name="passed_year[]" id="passed_year" class="form-control form-control-sm">
-												<?php echo form_error('passed_year', '<p class="help-block error">', '</p>'); ?>
-											</div>
-										</td>
-										<td>
-											<i class="fa fa-plus-circle btn-add-edu" aria-hidden="true" style="color: green; cursor: pointer"></i>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
+		                <div class="row">
+		                    <div class="col-md-12">
+		                        <table class="table table-responsive-md table-striped table-bordered table-sm" id="education">
+		                           <thead>
+		                              <tr>
+		                                 <th rowspan="2" width="25%">Educational Institute</th>
+		                                 <th rowspan="2">Level</th>
+		                                 <th rowspan="2">Faculty</th>
+		                                 <th colspan="2">Division</th>
+		                                 <th rowspan="2">Board / University</th>
+		                                 <th rowspan="2">Major Subject</th>
+		                                 <th rowspan="2" width="10%">Passed Year (AD)</th>
+		                                 <th rowspan="2"></th>
+		                              </tr>
+		                              <tr>
+		                                 <th>Rank Type</th>
+		                                 <th width="10%">Rank Value</th>
+		                              </tr>
+		                           </thead>
+	                           	 <tbody id="educationalbody">
+	                              <tr>
+	                                 <td>
+	                                    <div for="edu_institute" class="form-group">
+	                                       <input type="text" name="edu_institute[]" id="edu_institute" class="form-control form-control-sm">
+	                                    </div>
+	                                    <?php echo form_error('edu_institute', '<p class="help-block error">', '</p>'); ?>
+	                                 </td>
+	                                 <td>
+	                                    <div for="level_id" class="form-group">
+	                                       <select class="form-control form-control-sm" name="level_id[]" id="level_id">
+	                                          <option value="">-- Select Degree -- </option>
+	                                          <?php foreach ($degrees as $degree) { ?>
+	                                          <option value="<?php echo $degree['ACADEMIC_DEGREE_ID'] ?>"><?php echo $degree['ACADEMIC_DEGREE_NAME'] ?></option>
+	                                          <?php } ?>
+	                                       </select>
+	                                       <?php echo form_error('level_id', '<p class="help-block error">', '</p>'); ?>
+	                                    </div>
+	                                 </td>
+	                                 <td>
+	                                    <div for="facalty" class="form-group">
+                                       <select class="form-control form-control-sm" name="facalty[]" id="FACULTY_id">
+                                          <option value="">-- Select Program -- </option>
+                                          <?php foreach ($faculties as $faculty) { ?>
+                                          <option value="<?php echo $faculty['ACADEMIC_PROGRAM_ID'] ?>"><?php echo $faculty['ACADEMIC_PROGRAM_NAME'] ?></option>
+                                          <?php } ?>
+                                       </select>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <div class="form-group">
+                                       <select class="form-control form-control-sm" id="rank_type" name="rank_type[]">
+                                          <option value="">--Select Rank Type--</option>
+                                          <option value="GPA">GPA</option>
+                                          <option value="Percentage">Percentage</option>
+                                          <option value="Division/grade">Division/grade</option>
+                                       </select>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <div for="rank_value" class="form-group" id="rank_value_error">
+                                       <input type="text" name="rank_value[]" id="rank_value" class="form-control form-control-sm">
+                                       <label id="rank_value-error" class="error" for="rank_value" style="display: none">Please enter above 32.</label>
+                                       <?php echo form_error('rank_value', '<p class="help-block error">', '</p>'); ?>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <div for="university_board" class="form-group" id="rank_value_error">
+                                       <select class="form-control form-control-sm" name="university_board[]" id="UNIV">
+                                          <option value="">-- Select University -- </option>
+                                          <?php foreach ($univs as $univ) { ?>
+                                          <option value="<?php echo $univ['ACADEMIC_UNIVERSITY_ID'] ?>"><?php echo $univ['ACADEMIC_UNIVERSITY_NAME'] ?></option>
+                                          <?php } ?>
+                                       </select>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <div for="major_subject" class="form-group">
+                                    <input type="text" class="form-control form-control-sm" name="major_subject[]" id="major_subject"> 
+                                       <?php /*<select class="form-control form-control-sm" name="major_subject[]" id="major_subject">
+                                          <option value="">-- Select Majors -- </option>
+                                          <?php foreach ($majors as $major) { ?>
+                                          <option value="<?php echo $major['ACADEMIC_COURSE_ID'] ?>"><?php echo $major['ACADEMIC_COURSE_NAME'] ?></option>
+                                          <?php } ?>
+                                       </select> */ ?>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <div for="passed_year" class="form-group">
+                                       <input type="text" name="passed_year[]" id="passed_year" class="form-control form-control-sm">
+                                       <?php echo form_error('passed_year', '<p class="help-block error">', '</p>'); ?>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <i class="fa fa-plus-circle btn-add-edu" aria-hidden="true" style="color: green; cursor: pointer"></i>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+         </div>
 			<!-- H. Experience Detail -->
 			<div class="card mt-3">
-				<h6 class="form-table-title">
+				<h6 class="form-table-title bg-primary text-light">
 				Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
+				
+				<div class="alert-custom alert-custom-info d-flex align-items-center mt-4">
+					<i class="fa fa-info-circle mr-2" aria-hidden="true"></i>Enter your experience and upload experience document on next page
+				</div>
 
-				<div class="col-md-12 mt-3">
-					<?php if(!empty($vacancylist['EXPERIENCE']) && $vacancylist['EXPERIENCE'] != 0){ echo '<p style="color:#c75216">This vacancy require <b> '. $vacancylist['EXPERIENCE']. ' </b>years of experiance, please add using <i class="fa fa-plus-circle" aria-hidden="true" style="color: green; cursor: pointer"></i> sign.</p>';
-					?>
-					<label for="yourExp">Your total Experience:</label>
-					<input class="form-control" type="text" val='0' style="height: 25px;width: 300px;" id="yourTotalExp" disabled>
-					<?php
-					} ?>
-					<table class="table table-responsive-md table-striped table-bordered table-sm">
-						<thead>
-							<tr>
-								<th width="20%">Organisation Name</th>
-								<th>Post</th>
-								<th>Service/Group</th>
-								<th>Level</th>
-								<th width="12%">Employee Type</th>
-								<th>Start From</th>
-								<th>Till Date</th>
-								<th><i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i></th>
-							</tr>
-						</thead>
-						<tbody id="experiancebody">
-							
-						</tbody>
-						<tfoot>
-							<tr>
-									<!-- <td colspan="8">
-										<div class="form-group row">
-											<label class="col-lg-4">Total Experience</label>
-											<div class="col-lg-8 d-flex">
-												<button type="button" class="btn btn-primary" id="expcalculate">Calculate</button>
-												<input type="number" class="form-control form-control-sm mr-1 years" placeholder="Years" readonly>
-												<input type="number" class="form-control form-control-sm mr-1 months" placeholder="Months" readonly>
-												<input type="number" class="form-control form-control-sm days" placeholder="Days" readonly>
+				<div class="row">
+               
+					<div class="col-md-12 mt-3">
+						<?php 
+							if ( !empty($vacancylist['EXPERIENCE'] ) && $vacancylist['EXPERIENCE'] != 0 ) { 
+								echo '<p class="text-danger">This vacancy require <b> '. $vacancylist['EXPERIENCE']. ' </b>years of experiance, please add using <i class="fa fa-plus-circle" aria-hidden="true" style="color: green; cursor: pointer"></i> sign.</p>';
+							?>
+						<label for="yourExp">Your total Experience:</label>
+						<input class="form-control" type="text" val='0' style="height: 30px;width: 150px;" id="yourTotalExp" disabled>
+						<?php } ?>
+
+						<table class="table table-responsive-md table-striped table-bordered table-sm">
+							<thead>
+								<tr>
+									<th width="20%">Organisation Name</th>
+									<th>Post</th>
+									<th>Service/Group</th>
+									<th>Level</th>
+									<th width="12%">Employee Type</th>
+									<th>Start From</th>
+									<th>Till Date</th>
+									<th><i class="fa fa-plus-circle btn-add-exp" id="btn-add-exp" aria-hidden="true" style="color: green; cursor: pointer"></i></th>
+								</tr>
+							</thead>
+							<tbody id="experiancebody">
+								
+							</tbody>
+							<tfoot>
+								<tr>
+										<!-- <td colspan="8">
+											<div class="form-group row">
+												<label class="col-lg-4">Total Experience</label>
+												<div class="col-lg-8 d-flex">
+													<button type="button" class="btn btn-primary" id="expcalculate">Calculate</button>
+													<input type="number" class="form-control form-control-sm mr-1 years" placeholder="Years" readonly>
+													<input type="number" class="form-control form-control-sm mr-1 months" placeholder="Months" readonly>
+													<input type="number" class="form-control form-control-sm days" placeholder="Days" readonly>
+												</div>
 											</div>
-										</div>
-									</td> -->
-							</tr>
-						</tfoot>
-					</table>
+										</td> -->
+								</tr>
+							</tfoot>
+						</table>
+					</div>
 				</div>
 			</div>
+
 			<!-- I. Training Detail -->
 			<div class="card mt-3">
 				<h6 class="form-table-title">Training Detail</h6>
@@ -601,16 +626,17 @@
 							</tr>
 						</thead>
 						<tbody id="trainingbody">
-							
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
+
+		 
 		<!-- Photograph and signature Documents -->
 		<div class="tab">
 			<!-- Citizenship Documents -->
-			<h6 class="form-table-title">Citizenship of Applicant (Maximum 1 mb - JPG | PNG Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Citizenship of Applicant (Maximum 1 mb - JPG | PNG Only)</h6>
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
@@ -700,13 +726,13 @@
 				</tr>
 			</table>
 			<!-- Academic Document Upload -->
-			<h6 class="form-table-title">Document and Certificate (JPG | PNG Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Document and Certificate (JPG | PNG | PDF Only)</h6>
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-8 col-md-12">
-						<div style="font-size: 12px;font-weight: bold;padding: 10px 0;">							
-							<h6>Note: 1. This vacancy require up to <strong> <?= $vacancylist['ACADEMIC_DEGREE_NAME'];  ?> </strong> degree documents, please upload it all else your application will not get approved.</h6>
-							<h6>  2. Please upload all respective document in single a file.</h6>
+					<div class="col-lg-12 col-md-12">
+						<div class="alert-custom alert-custom-info d-flex align-items-center mt-4">
+							
+							<h6><strong>Note: </strong>This vacancy require <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents, Please upload  <strong> <?= ucwords($vacancylist['ACADEMIC_DEGREE_NAME']);  ?> </strong> Degree Documents ONLY</h6>
 						</div>
 						<table class="table table-responsive-lg table-striped table-bordered table-sm">
 							<thead>
@@ -725,7 +751,7 @@
 										<td><?php echo $c; ?></td>
 										<td>											
 											<div class="form-group">
-												<p><?php echo ucfirst($certificate['ACADEMIC_DEGREE_NAME']);  ?></p>										
+												<p>Qualifications</p>										
 											</div>
 										</td>
 										<td class='certInput' id="td<?php echo $c; ?>">
@@ -735,17 +761,63 @@
 										?>
 											<div class="row">
 												<div class="col-md-10">
-													<label for="trascript">Trabscript/Grade Sheet/Marksheet <span style="color: red;">*</span></label>
+													<label for="trascript">Transcript/Grade Sheet/Marksheet <span style="color: red;">*</span></label>
 													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_trascript'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
 													<label style="margin-top:20px;" for="character">Character Certificate <span style="color: red;">*</span></label>
 													<input required type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_character'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
-													<label style="margin-top:20px;" for="equivalent">Equivalent Certificate</label>
+													<label style="margin-top:20px;" for="equivalent">Equivalent Certificate <span>(optional)</span></label>
 													<input type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_equivalent'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
+													<label style="margin-top:20px;" for="council">Council Certificate <span>(optional)</span></label>
+													<input type="file" class="form-control-file" id="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council'; echo $CertId;  ?>" name="<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council'; echo $CertId;  ?>" onchange="return fileValidation($id = '<?php $CertId = strtolower(str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME'])).'_council'; echo $CertId;  ?>')" accept=".png,.pdf,.jpg,.jpeg"/>
 												</div>
 											</div>
 										</td>										
 									</tr>
 									<?php $c++; } ?>
+									<tr class="certificate">
+										<td>2</td>
+										<td>											
+											<div class="form-group">
+												<p>Experience</p>										
+											</div>
+										</td>
+										<td class='certInput' id="td2">
+
+										<?php
+											// $b = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']);
+										?>
+											<div class="row">
+												<div class="col-md-10">
+													<input type="file" class="form-control-file" id="experienceDoc" name="experienceDoc" />
+												</div>
+												<div class="col-md-2">
+													<i class="fa fa-plus-circle" onclick="addNewImage('2','experienceDoc')" aria-hidden="true" style="color: green; cursor: pointer"></i>	
+												</div>
+											</div>
+										</td>										
+									</tr>
+									<tr class="certificate">
+										<td>3</td>
+										<td>											
+											<div class="form-group">
+												<p>Training</p>										
+											</div>
+										</td>
+										<td class='certInput' id="td3">
+
+										<?php
+											// $b = str_replace(' ', '_', $certificate['ACADEMIC_DEGREE_NAME']);
+										?>
+											<div class="row">
+												<div class="col-md-10">
+													<input type="file" class="form-control-file" id="trainingDoc" name="trainingDoc" />
+												</div>
+												<div class="col-md-2">
+													<i class="fa fa-plus-circle" onclick="addNewImage('3','trainingDoc')" aria-hidden="true" style="color: green; cursor: pointer"></i>	
+												</div>
+											</div>
+										</td>										
+									</tr>
 								</tr>								
 							</tbody>
 						</table>
@@ -756,14 +828,64 @@
 					<input type="text" name="" class="form-control form-control-sm">
 				</div> -->
 			</div>
-		</div>
-		<div style="overflow:auto;">
-			<div style="float:right; margin-top: 5px;">
-				<button type="button" class="previous ">Previous</button>
-				<button type="button" class="next ">Next</button>
-				<button type="submit" class="submit" name="applySubmit" value="submit">Submit</button>
+			<div class="row">
+				<div class="col-md-12">
+				<p class="text-danger">(required *)</p>
+				</div>
+				<div class="col-md-1">
+				<div class="form-group form-doc">
+					<input class="form-check-input declare_self" type="checkbox" name="declare_self" id="declare_self" value="declare_self" required>
+				</div>
+				</div>
+				<div class="col-md-11">
+				<div class="card-inner">
+					<div class="alert-custom alert-custom-info d-flex align-items-center mt-4">
+					मैले यस दरखास्तमा खुलाएका सम्पूर्ण विवरणहरु सत्य छन् । प्रचलित कानून बमोजिम सरकारी सेवाको निमित्त अयोग्य ठहरिने गरी सेवाबाट बर्खास्त भएको छैन 
+					र मेरो नियुक्तिको सम्बन्धमा असर पर्न सक्ने कामको अनुभव, वैयक्तिक विवरण, शैक्षिक योग्यता आदिका सम्बन्धमा कुनै कुरा ढाँटेको वा लुकाएको छैन । 
+					कुनै कुरा ढाँटेको वा लुकाएको ठहरेमा प्रचलित कानून बमोजिम सहनेछु, बुझाउनेछु । 
+					साथै पदपूर्ति समितिको परीक्षा संचालन सम्बन्धी कार्यविधी र परीक्षार्थीले पालना गर्नुपर्ने शर्तहरु बिपरीत हुने गरी परीक्षा भवन भित्र कुनै कार्य गरेमा तत्काल परीक्षाबाट 
+					निष्काशित गर्ने वा पदपूर्ति समितिबाट मेरो सम्पूर्ण परीक्षा रद्द गर्ने वा यसपछि संचालन हुने परीक्षामा सहभागी हुन नपाउने गरी निर्णय भएमा मेरो पूर्ण मञ्जुरी छ । 
+					उम्मेदवारले पालना गर्नुपर्ने भनी यस दरखास्त फारामका पृष्ठहरुमा उल्लिखित सबै निर्देशनहरु मैले राम्ररी पढेँ र म ती सबैको पालना गर्न मञ्जुर गर्दछु । 
+					यस पदको लागि दरखास्त दिन आवश्यक पर्ने योग्यता नपुगेमा जुनसुकै बखत  दरखास्त फारम रद्द गरेमा मेरो मन्जुरी छ ।
+					</div>
+				</div>
+				</div>
+			</div>
+
+
+			<div class="row form-doc-check">
+				<div class="col-md-12">
+				<p class="text-danger">(required *)</p>
+				</div>
+				<div class="col-md-6 offset-md-1">
+				<div class="card-inner">
+						<div class="alert-custom alert-custom-info d-flex align-items-center mt-4">
+							मैले यस अघि निगममा आरक्षण सुविधा लिएको
+						</div>
+				</div>
+				</div>
+				<div class="col-md-2">
+				<div class="form-group">
+					<label for="html">छु</label>
+					<input type="radio" id="applied_before" name="fav_language" value="1" required>
+				</div>
+				</div>
+				<div class="col-md-2">
+				<div class="form-group">
+					<label for="html">छैन्।</label>
+					<input type="radio" id="applied_before" name="fav_language" value="0s" required>
+				</div>
+				</div>
 			</div>
 		</div>
+		
+		<div style="overflow:auto;">
+         <div style="float:right; margin-top: 5px;">
+            <button type="button" class="previous btn btn-secondary">Previous</button>
+            <button type="button" class="next btn btn-noc text-light">Next</button>
+            <button type="submit" class="submit btn btn-success" name="applySubmit" value="submit">Submit</button>
+         </div>
+      </div>
 		<?= form_close(); ?>
 	</section>
 </main>
@@ -772,12 +894,11 @@
 <script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply_edit.js'); ?>'></script>
 <script type='text/javascript' src='<?php echo base_url('assets/js/apply/apply.js'); ?>'></script>
 <script type='text/javascript' src='<?php echo base_url('assets/global/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>'></script>
-
 <script>
-    document.levellist =<?=json_encode($degrees);?>;
-	document.faculties = <?=json_encode($faculties);?>;
-	document.univs = <?=json_encode($univs);?>;
-	document.majors = <?=json_encode($majors);?>;
+   document.levellist =<?=json_encode($degrees);?>;
+   document.faculties = <?=json_encode($faculties);?>;
+   document.univs = <?=json_encode($univs);?>;
+   document.majors = <?=json_encode($majors);?>;
 </script>
 <script type="text/javascript">
 	
@@ -839,10 +960,10 @@
 		// console.log(b);
 		$('#td'+params).append(`
 		 <div class = "row" id = "deleteAdded`+certIdImage+`" >
-			<div class="col-md-8">
+			<div class="col-md-10">
 				<input type = "file" name = "`+b+``+certIdImage+`" class="form-control-file" id="`+b+`" accept=".png,.pdf,.jpg,.jpeg">
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-2">
 				<i class="fa fa-minus-circle" onclick= "removeCertImage('`+certIdImage+`')" aria-hidden="true" style="color: red; cursor: pointer"></i>
 			</div>
 		 </div>

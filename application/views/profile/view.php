@@ -20,7 +20,19 @@
 						<div class="status-msg success" style="padding-bottom: 10px;"><?php echo $this->session->flashdata('success_msg'); ?></div>
 						<div class="d-flex" style="justify-content: space-between;align-items: baseline;">
 							<h5 class="main-title"><i class="fa fa-user pr-2" aria-hidden="true"></i>Welcome <?php echo $user['FIRST_NAME']; ?>!</h5>
-							<a href="<?php echo base_url('profile/edit') ?>"><i class="fa fa-pencil-square-o pr-1" aria-hidden="true"></i><small>Edit Profile</small></a>
+
+							<div>
+								<a href="<?php echo base_url('vacancy/vacancylist') ?>" class="btn btn-noc text-light">
+									<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+									<small>Back to Vacancy List</small>
+								</a>
+
+								<a href="<?php echo base_url('profile/edit') ?>" class="btn btn-success">
+									<i class="fa fa-pencil-square-o pr-1" aria-hidden="true"></i>
+									<small>Edit Profile</small>
+								</a>
+							</div>
+
 						</div>
 								<?php  
 									if(!empty($success_msg)){ 
@@ -31,7 +43,7 @@
     							?>
 								<?php echo '<p class="status-msg error">'. $this->session->flashdata('msg').'</p>' ?>
 						<form>
-							<h6 class="form-table-title">Personal Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Personal Information</h6>
 							<hr>
 							<div class="form-row">
 								<div class="form-group col-md-4">
@@ -73,7 +85,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title">Contact Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Contact Information</h6>
 							<hr>
 
 							<div class="form-row">
@@ -92,7 +104,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title">Citizenship Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Citizenship Information</h6>
 							<hr>
 
 							<div class="form-row">
@@ -111,7 +123,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title">Family Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Family Information</h6>
 							<hr>
 							<div class="form-row">
 								<div class="form-group col-md-4">
@@ -168,7 +180,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title">Extra Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Extra Information</h6>
 							<hr>
 
 							<div class="form-row">
@@ -267,7 +279,7 @@
 							</div>						
 							
 							<hr>
-							<h6 class="form-table-title">Address Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Address Information</h6>
 							<hr>
 							<label style="color: #47759e;"><u>Permanent Address</u></label>
 							<div class="form-row">
@@ -325,7 +337,12 @@
 							</div>
 						</form>
 
+
 					</div>
+				</div>
+
+				<div class="vacancy-btn mt-4 text-center">
+					<a href="<?php echo base_url('vacancy/vacancylist') ?>" class="btn btn-noc text-light">Back To Vacancy List </a>
 				</div>
 			</div>
 		</div>

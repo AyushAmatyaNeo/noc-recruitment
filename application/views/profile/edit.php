@@ -7,11 +7,8 @@
 				<div class="card">
 					<div class="left-form p-5">
 						<div class="d-flex" style="justify-content: space-between;align-items: baseline;">
-							<h5 class="main-title"><i class="fa fa-user pr-2" aria-hidden="true"></i>Welcome <?php
-																												// use Mpdf\Tag\Em;
-																												// use Mpdf\Tag\Input;
-																												echo $user['FIRST_NAME']; ?>!</h5>
-							<a href="<?php echo base_url('profile/view') ?>"><i class="fa fa-eye pr-1" aria-hidden="true"></i><small>View Profile</small></a>
+							<h5 class="main-title"><i class="fa fa-user pr-2" aria-hidden="true"></i>Welcome <?php echo $user['FIRST_NAME']; ?>!</h5>
+							<a href="<?php echo base_url('profile/view') ?>" class="btn btn-info"><i class="fa fa-eye pr-1" aria-hidden="true"></i><small>View Profile</small></a>
 						</div>
 
 
@@ -19,7 +16,7 @@
 
 						<!-- <form method="post" id="profileEdit"> -->
 						<?php echo form_open_multipart('profile/edit', ['method' => 'post', 'id' => 'profileEdit']); ?>
-						<h6 class="form-table-title">Personal Information</h6>
+						<h6 class="form-table-title bg-primary">Personal Information</h6>
 						<hr>
 						<div class="form-row">
 							<div class="form-group col-md-4">
@@ -88,7 +85,7 @@
 						</div>
 
 						<hr>
-						<h6 class="form-table-title">Contact Information</h6>
+						<h6 class="form-table-title bg-primary">Contact Information</h6>
 						<hr>
 
 						<div class="form-row">
@@ -107,7 +104,7 @@
 						</div>
 
 						<hr>
-						<h6 class="form-table-title">Citizenship Information</h6>
+						<h6 class="form-table-title bg-primary">Citizenship Information</h6>
 						<hr>
 
 						<div class="form-row">
@@ -145,7 +142,7 @@
 						</div>
 
 						<hr>
-						<h6 class="form-table-title">Family Information</h6>
+						<h6 class="form-table-title bg-primary">Family Information</h6>
 						<hr>
 
 
@@ -262,7 +259,7 @@
 
 
 						<hr>
-						<h6 class="form-table-title">Extra Information</h6>
+						<h6 class="form-table-title bg-primary">Extra Information</h6>
 						<hr>
 
 						<div class="form-row">
@@ -476,7 +473,7 @@
 
 						<hr>
 						<!-- Address Information -->
-						<h6 class="form-table-title">Address Information</h6>
+						<h6 class="form-table-title bg-primary">Address Information</h6>
 						<hr>
 						<label style="color: #47759e;"><u>Permanent Address</u></label>
 						<div class="row">
@@ -514,19 +511,24 @@
 						<div class="form-row">
 							<div class="form-group col-md-4">
 								<label for="">Ward Number</label>
-								<input type="text" class="form-control" name="per_ward_no" value="<?php echo $user['PER_WARD_NO']; ?>">
+								<input type="number" class="form-control" name="per_ward_no" id="per_ward" value="<?php echo $user['PER_WARD_NO']; ?>">
 
 							</div>
 							<div class="form-group col-4">
 								<label for="">Tole Name</label>
-								<input type="text" class="form-control" name="per_tole" value="<?php echo $user['PER_TOLE']; ?>">
+								<input type="text" class="form-control" name="per_tole" id="per_tole" value="<?php echo $user['PER_TOLE']; ?>">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">House Number</label>
-								<input type="text" class="form-control" name="per_house_no" value="<?php echo $user['PER_HOUSE_NO']; ?>" >
+								<input type="text" class="form-control" name="per_house_no" id="per_house" value="<?php echo $user['PER_HOUSE_NO']; ?>" >
 							</div>
 						</div>
 						<label style="color: #47759e;"><u>Mailling Address</u></label>
+						<br>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input inclusion" type="checkbox" name="sameAsPermanent" id="sameAsPermanent" value="sameAsPermanent">
+							<label class="form-check-label">Same as Permanent Address</label>
+						</div>
 						<div class="form-row">
 							<div class="form-group col-md-4">
 								<label for="">Province</label>
@@ -562,224 +564,18 @@
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">Ward Number</label>
-								<input type="text" class="form-control" name="mail_ward_no" value="<?php echo $user['MAIL_WARD_NO']; ?>">
+								<input type="number" class="form-control" name="mail_ward_no" id="mail_ward" value="<?php echo $user['MAIL_WARD_NO']; ?>">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">Tole Name</label>
-								<input type="text" class="form-control" name="mail_tole" value="<?php echo $user['MAIL_TOLE']; ?>">
+								<input type="text" class="form-control" name="mail_tole" id="mail_tole" value="<?php echo $user['MAIL_TOLE']; ?>">
 							</div>
 							<div class="form-group col-md-4">
 								<label for="">House Number</label>
-								<input type="text" class="form-control" name="mail_house_no" value="<?php echo $user['MAIL_HOUSE_NO']; ?>" >
+								<input type="text" class="form-control" name="mail_house_no" id="mail_house" value="<?php echo $user['MAIL_HOUSE_NO']; ?>" >
 							</div>
 						</div>
 
-
-
-
-
-
-
-
-						<!-- <h6 class="form-table-title">Personal Information</h6>
-						<hr>
-						<div class="form-row"> -->
-							<!-- <div class="form-group col-md-3">
-								<label for="">First Name</label>
-								<input type="text" class="form-control" name="first_name" value="<?php echo $user['FIRST_NAME']; ?>">
-							</div>
-							<div class="form-group col-md-3">
-								<label for="">Middle Name</label>
-								<input type="text" class="form-control" name="middle_name" value="<?php echo $user['MIDDLE_NAME']; ?>">
-							</div>
-							<div class="form-group col-md-3">
-								<label for="">Last Name</label>
-								<input type="text" class="form-control" name="last_name" value="<?php echo $user['LAST_NAME']; ?>">
-							</div> -->
-							
-						<!-- </div>
-						<div class="form-row">
-							
-							<div class="form-group col-md-3">
-								<label>Date of Birth</label>
-								<input class="form-control " name="dob_ad" id="dob" placeholder="Select dates" />
-								<input class="form-control " name="dob" id="dob_ad" value="<?php echo $user['DOB']; ?>" />
-							</div>
-							<div class="form-group col-md-3">
-								<label for="">Age</label>
-								<input class="form-control" name="age" id="age" value="<?php echo $user['AGE']; ?>">
-							</div>
-							<div class="form-group col-md-3">
-								<label>Marital Status</label>
-								<select class="form-control" id="marital" name="marital" placeholder="marital" style="margin-bottom:10px;" required>
-									<option value="Married" <?php if ($user['MARITAL_STATUS'] == 'Married') {
-																echo 'selected';
-															} ?>>Married</option>
-									<option value="Unmarried" <?php if ($user['MARITAL_STATUS'] == 'Unmarried') {
-																	echo 'selected';
-																} ?>>Unmarried</option>
-								</select>
-							</div> -->
-							
-
-							
-							<!-- <div class="form-group col-md-3">
-								<label for="">Email</label>
-								<input type="email" class="form-control" name="email_id" value="<?php echo $user['EMAIL_ID']; ?>">
-							</div>
-							<div class="form-group col-md-3">
-								<label>Gender</label>
-								<select class="form-control" id="gender" name="gender" placeholder="Gender" required>
-									<option value="">Gender</option>
-									<option value="1" <?php if ($user['GENDER_ID'] == '1') {
-															echo 'selected';
-														} ?>>Male</option>
-									<option value="2" <?php if ($user['GENDER_ID'] == '2') {
-															echo 'selected';
-														} ?>>Female</option>
-									<option value="3" <?php if ($user['GENDER_ID'] == '3') {
-															echo 'selected';
-														} ?>>Other</option>
-								</select>
-							</div>
-						</div> -->
-						<!-- >Citizenship Number -->
-						<!-- <div class="form-row">
-							<div class="form-group col-md-3">
-								<label for="">Citizenship Number</label>
-								<input type="text" class="form-control" name="citizenship_no" value="<?php echo $user['CITIZENSHIP_NO']; ?>">
-							</div>
-							<div class="form-group col-md-3">
-								<label for="">Issue Date</label>
-								<input type="text" class="form-control selectNepaliDate" id="issue_date" name="ctz_issue_date_ad" placeholder="Select dates">
-								<input type="text" placeholder="YYYY-MM-DD" class="form-control " id="issue_date_ad" name="ctz_issue_date" value="<?php echo $user['CTZ_ISSUE_DATE']; ?>">
-							</div>
-							<div class=" form-group col-md-3">
-								<label for="">Issue District</label>
-								<input type="hidden" class="form-control" name="ctz_issue_district_id" value="<?php echo $user['DISTRICT_ID']; ?>">
-								<select class="form-control" name="ctz_issue_district_id">
-									<?php
-									foreach ($districts as $district) {
-										$selected = ($district['DISTRICT_ID'] == $user['CTZ_ISSUE_DISTRICT_ID']) ? 'selected' : "";
-										echo '<option ' . $selected . ' value="' . $district['DISTRICT_ID'] . '">' . $district['DISTRICT_NAME'] . '</option>';
-									}
-									?>
-								</select>
-							</div>
-							
-						</div> -->
-						
-						<!-- <hr> -->
-						<!-- Family Information -->
-						<!-- <h6 class="form-table-title">Family Information</h6>
-						<hr>
-						<div class="form-row">
-							<div class="form-group col-md-4">
-								<label for="">Father Name</label>
-								<input type="text" class="form-control" name="father_name" value="<?php echo $user['FATHER_NAME']; ?>">
-							</div>
-							<div class="form-group col-md-4">
-								<label for="">Father Qualification</label>
-								<select class="form-control" name="father_qualification" required>
-									<option value="Literate" <?php if ($user['FATHER_QUALIFICATION'] == 'Literate') {
-																	echo 'selected';
-																} ?>>Literate</option>
-									<option value="Illiterate" <?php if ($user['FATHER_QUALIFICATION'] == 'Illiterate') {
-																	echo 'selected';
-																} ?>>Illiterate</option>
-									<option value="Upto SLC" <?php if ($user['FATHER_QUALIFICATION'] == 'Upto SLC') {
-																	echo 'Upto SLC';
-																} ?>>Upto SLC</option>
-									<option value="Higher Education" <?php if ($user['FATHER_QUALIFICATION'] == 'Higher Education') {
-																			echo 'selected';
-																		} ?>>Higher Education</option>
-								</select>
-							</div>
-							<div class="form-group col-md-4">
-								<label for="">Father Mother Occupation</label>
-								<select class="form-control" id="fm_occupation" name="fm_occupation" placeholder="occupation" onchange='checkvalue(this.value,"fm_occupation_input")' style="margin-bottom: 5px;" required>
-									<option value="Agriculture" <?php if ($user['FM_OCCUPATION'] == 'Agriculture') {
-																	echo 'selected';
-																} ?>>Agriculture</option>
-									<option value="Business" <?php if ($user['FM_OCCUPATION'] == 'Business') {
-																	echo 'selected';
-																} ?>>Business</option>
-									<option value="Teaching (Private/Government)" <?php if ($user['FM_OCCUPATION'] == 'Teaching (Private/Government)') {
-																						echo 'selected';
-																					} ?>>Teaching (Private/Government)</option>
-									<option value="Non-Government" <?php if ($user['FM_OCCUPATION'] == 'Non-Government') {
-																		echo 'selected';
-																	} ?>>Non-Government</option>
-									<option value="Government service" <?php if ($user['FM_OCCUPATION'] == 'Government service') {
-																			echo 'selected';
-																		} ?>>Government service</option>
-									<option value="others" <?php if ($user['FM_OCCUPATION'] == 'others') {
-																echo 'selected';
-															} ?>><?php echo $user['FM_OCCUPATION_INPUT']; ?></option>
-									<option value="other">others</option>
-								</select>
-								<input class="form-control btn-input" placeholder="fm_occupation" type="text" name="fm_occupation_input" value="<?php echo $user['FM_OCCUPATION_INPUT']; ?>" id="fm_occupation_input" style='display:none;' />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-md-4">
-								<label for="">Mother Name</label>
-								<input type="text" class="form-control" name="mother_name" value="<?php echo $user['MOTHER_NAME']; ?>">
-							</div>
-							<div class="form-group col-md-4">
-								<label for="">Mother Qualification</label>
-								<select class="form-control" name="mother_qualification" required>
-									<option value="Literate" <?php if ($user['MOTHER_QUALIFICATION'] == 'Literate') {
-																	echo 'selected';
-																} ?>>Literate</option>
-									<option value="Illiterate" <?php if ($user['MOTHER_QUALIFICATION'] == 'Illiterate') {
-																	echo 'selected';
-																} ?>>Illiterate</option>
-									<option value="Upto SLC" <?php if ($user['MOTHER_QUALIFICATION'] == 'Upto SLC') {
-																	echo 'Upto SLC';
-																} ?>>Upto SLC</option>
-									<option value="Higher Education" <?php if ($user['MOTHER_QUALIFICATION'] == 'Higher Education') {
-																			echo 'selected';
-																		} ?>>Higher Education</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-md-4">
-								<label for=""> Grandfather Name</label>
-								<input type="text" class="form-control" name="grandfather_name" value="<?php echo $user['GRANDFATHER_NAME']; ?>">
-							</div>
-							<div class="form-group col-md-4">
-								<label for="">Grandfather Nationality</label>
-								<select class="form-control" name="grandfather_nationality" required>
-									<option value="Nepali" <?php if ($user['GRANDFATHER_NATIONALITY'] == 'Nepali') {
-																echo 'selected';
-															} ?>>Nepali</option>
-									<option value="others" <?php if ($user['GRANDFATHER_NATIONALITY'] == 'others') {
-																echo 'selected';
-															} ?>>others</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-md-4">
-								<label for="">Spouse Name</label>
-								<input type="text" class="form-control" name="spouse_name" id="spouse_name" value="<?php echo $user['SPOUSE_NAME']; ?>">
-							</div>
-							<div class="form-group col-md-4">
-								<label for="">Spouse Nationality</label>
-								<select class="form-control" name="spouse_nationality" id="spouse_nationality">
-									<option value="">---</option>
-									<option value="Nepali" <?php if ($user['SPOUSE_NATIONALITY'] == 'Nepali') {
-																echo 'selected';
-															} ?>>Nepali</option>
-									<option value="others" <?php if ($user['SPOUSE_NATIONALITY'] == 'others') {
-																echo 'selected';
-															} ?>>others</option>
-								</select>
-							</div>
-						</div> -->
-						
 						<div class="send-button">
 							<input type="submit" class="btn btn-primary btn-noc" name="profilupdate" value="Update">
 						</div>
@@ -831,6 +627,70 @@
 		}
 	});
 	app.startEndDatePickerWithNepali('dob_ad', 'dob', 'issue_date_ad', 'issue_date');
+
+	document.getElementById('sameAsPermanent').addEventListener('change', (event) => {
+         if (event.currentTarget.checked) {
+            $("#mail_province").val($("#per_province").val());
+            var province_id = $('#mail_province').val();
+            var base_url = $('#base').val();
+            
+            // var base_url = window.location;
+            
+            if(province_id != '')
+            {
+               $.ajax({
+                     url:base_url + "vacancy/fetch_district",
+                     method: "POST",
+                     data:{province_id:province_id},
+                     success:function(data) 
+                     {
+                        $('#mail_district').html(data);
+                        $("#mail_district").val($("#per_district").val());
+                        var district_id = $('#mail_district').val();
+                        var base_url = $('#base').val();
+                        
+                        // var base_url = window.location;
+                        
+                        if(district_id != '')
+                        {
+                           $.ajax({
+                                 url:base_url + "vacancy/fetch_vdc",
+                                 method: "POST",
+                                 data:{district_id:district_id},
+                                 success:function(data) 
+                                 {
+                                    $('#mail_vdc').html(data);
+                                    $("#mail_vdc").val($("#per_vdc").val());
+                                 }
+                           });
+                        }
+                        else
+                        {
+                           $('#mail_vdc').html('<option value=""> Select Municipality</option>');
+                        }
+                     }
+               });
+            }
+            else
+            {
+               $('#per_district').html('<option value=""> Select District</option>');
+            }
+
+            $("#mail_ward").val($("#per_ward").val());
+            $("#mail_tole").val($("#per_tole").val());
+            $("#mail_house").val($("#per_house").val());
+         } else {
+            $("#mail_province").val('');
+
+            $("#mail_district").val('');
+
+            $("#mail_vdc").val('');
+
+            $("#mail_ward").val('');
+            $("#mail_tole").val('');
+            $("#mail_house").val('');
+         }
+      });
 </script>
 
 <script src="<?php echo base_url(); ?>assets/js/profile/edit.js"></script>
