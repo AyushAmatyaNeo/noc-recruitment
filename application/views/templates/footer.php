@@ -87,7 +87,7 @@
 		            <p>
 		                <i class="fa fa-envelope mr-3"></i> info@noc.org.np</p>
 		            <p>
-		                <i class="fa fa-phone mr-3"></i> 4262780, 4263481</p>
+		                <i class="fa fa-phone mr-3"></i> 977-1-5364975, 5364974, 5359548</p>
 		            <p>
 		                <i class="fa fa-print mr-3"></i> (977-1) 4263499</p>
 

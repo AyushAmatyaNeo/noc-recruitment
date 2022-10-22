@@ -43,7 +43,7 @@
     							?>
 								<?php echo '<p class="status-msg error">'. $this->session->flashdata('msg').'</p>' ?>
 						<form>
-							<h6 class="form-table-title bg-primary">Personal Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Personal Information</h6>
 							<hr>
 							<div class="form-row">
 								<div class="form-group col-md-4">
@@ -85,7 +85,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title bg-primary">Contact Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Contact Information</h6>
 							<hr>
 
 							<div class="form-row">
@@ -104,7 +104,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title bg-primary">Citizenship Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Citizenship Information</h6>
 							<hr>
 
 							<div class="form-row">
@@ -123,7 +123,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title bg-primary">Family Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Family Information</h6>
 							<hr>
 							<div class="form-row">
 								<div class="form-group col-md-4">
@@ -180,7 +180,7 @@
 							</div>
 
 							<hr>
-							<h6 class="form-table-title bg-primary">Extra Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Extra Information</h6>
 							<hr>
 
 							<div class="form-row">
@@ -279,7 +279,7 @@
 							</div>						
 							
 							<hr>
-							<h6 class="form-table-title bg-primary">Address Information</h6>
+							<h6 class="form-table-title bg-primary text-light">Address Information</h6>
 							<hr>
 							<label style="color: #47759e;"><u>Permanent Address</u></label>
 							<div class="form-row">

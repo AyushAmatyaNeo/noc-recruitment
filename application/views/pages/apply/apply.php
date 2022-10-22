@@ -330,7 +330,7 @@
 			<!-- Select inclusion -->
 			<?php if ($inclusions != []) { ?>
 					
-			<h6 class="form-table-title bg-primary">Select</h6>
+			<h6 class="form-table-title bg-primary text-light">Select</h6>
 
 			<div class="col-md-12">
 				<div class="row card-inner">
@@ -407,7 +407,7 @@
 			<div class="row">
 	            <div class="col-md-12">
 	               <div class="card mt-3">
-	                   <h6 class="form-table-title bg-primary">Educational Qualification</h6>
+	                   <h6 class="form-table-title bg-primary text-light">Educational Qualification</h6>
 	                    <div class="card-body">
 		                    <div class="alert-custom alert-custom-info d-flex align-items-center">
 		                        <i class="fa fa-info-circle mr-2" aria-hidden="true"></i> Please tick maximum level of education qualification 
@@ -554,7 +554,7 @@
          </div>
 			<!-- H. Experience Detail -->
 			<div class="card mt-3">
-				<h6 class="form-table-title bg-primary">
+				<h6 class="form-table-title bg-primary text-light">
 				Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
 				
 				<div class="alert-custom alert-custom-info d-flex align-items-center mt-4">
@@ -636,7 +636,7 @@
 		<!-- Photograph and signature Documents -->
 		<div class="tab">
 			<!-- Citizenship Documents -->
-			<h6 class="form-table-title bg-primary">Citizenship of Applicant (Maximum 1 mb - JPG | PNG Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Citizenship of Applicant (Maximum 1 mb - JPG | PNG Only)</h6>
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
@@ -726,7 +726,7 @@
 				</tr>
 			</table>
 			<!-- Academic Document Upload -->
-			<h6 class="form-table-title bg-primary">Document and Certificate (JPG | PNG Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Document and Certificate (JPG | PNG | PDF Only)</h6>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 col-md-12">
@@ -788,7 +788,7 @@
 										?>
 											<div class="row">
 												<div class="col-md-10">
-													<input required type="file" class="form-control-file" id="experienceDoc" name="experienceDoc" />
+													<input type="file" class="form-control-file" id="experienceDoc" name="experienceDoc" />
 												</div>
 												<div class="col-md-2">
 													<i class="fa fa-plus-circle" onclick="addNewImage('2','experienceDoc')" aria-hidden="true" style="color: green; cursor: pointer"></i>	
@@ -810,7 +810,7 @@
 										?>
 											<div class="row">
 												<div class="col-md-10">
-													<input required type="file" class="form-control-file" id="trainingDoc" name="trainingDoc" />
+													<input type="file" class="form-control-file" id="trainingDoc" name="trainingDoc" />
 												</div>
 												<div class="col-md-2">
 													<i class="fa fa-plus-circle" onclick="addNewImage('3','trainingDoc')" aria-hidden="true" style="color: green; cursor: pointer"></i>	

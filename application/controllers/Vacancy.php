@@ -396,6 +396,9 @@ class Vacancy extends CI_Controller
 
         $transactionDetail = $this->VacancyModel->fetchAllOrRowSelectWhere('HRIS_REC_APPLICATION_PAYMENT', '*', 'PAYMENT_TRANSACTION_ID', $transaction_id, 'row_array');
 
+        
+        
+
         /* HERE WE ARE CONFIRM PAYMENT HAS BEEN MADE BUT NOT VERIFIED */
         $payment_confirmed_data = [
 
@@ -417,7 +420,7 @@ class Vacancy extends CI_Controller
                                                  ['PAYMENT_ID' => $payment_confirmed_data['payment_id'], 'PAYMENT_PAID' => 'Y'], 
                                                  'APPLICATION_ID', $payment_confirmed_data['application_id']);
 
-
+                                                
         /* HERE WE ARE CONFIRM PAYMENT HAS BEEN MADE BUT NOT VERIFIED */
 
 
@@ -442,7 +445,6 @@ class Vacancy extends CI_Controller
         
         ];
 
-
         /* HERE STARTS PROCESS */
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
@@ -453,6 +455,8 @@ class Vacancy extends CI_Controller
         $curl = curl_init();
         $client_id   = $this->config->item('ips_username');
         $client_pass = $this->config->item('ips_password');
+
+       
         curl_setopt_array($curl, array(
             CURLOPT_URL => $this->config->item('connectips_payment_validation_url'),
             CURLOPT_RETURNTRANSFER => true,
@@ -911,6 +915,7 @@ class Vacancy extends CI_Controller
                 'id' => $this->session->userdata('userId')
             );
 
+
             // Check if already applied to this vacancy.
             if ($this->VacancyModel->checkapplied($vid, $this->session->userdata('userId')) == true) {
 
@@ -1102,6 +1107,9 @@ class Vacancy extends CI_Controller
 
                 }
                     
+                
+                
+
                 // Inserting Folder Names                
                 if ($this->form_validation->run('noc_apply_form') == true) {
 
@@ -2050,10 +2058,13 @@ class Vacancy extends CI_Controller
             // echo '<pre>';print_r($data['documents']['inclusion']); die;
 
             $data['documents']['userdocnew'] = [];
-            foreach($data['documents']['userdoc'] as $userDocs){
-                $data['documents']['userdocnew'][$userDocs['DOC_FOLDER']] = $userDocs;
+
+            if ($data['documents']['userdoc']) {
+                foreach($data['documents']['userdoc'] as $userDocs){
+                    $data['documents']['userdocnew'][$userDocs['DOC_FOLDER']] = $userDocs;
+                }
             }
-            // echo '<pre>';print_r($data['documents']['userdocnew']); die;
+            // echo '<pre>';print_r($data); die;
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/apply/viewApplication', $data);

@@ -70,9 +70,9 @@
 		} else { ?>
 		<nav role="navigation" id="secondary-nav" class="dont-show-on-phone">
 	    	<ul id="main-menu" class="sm sm-blue" style="z-index: 2;margin-top: -10px" data-smartmenus-id="16133656154335908">
-			<li><a href="<?php echo base_url('users/registration')  ?>" class="nav-link">Registration</a></li>
+				<li><a href="<?php echo base_url('users/registration')  ?>" class="nav-link">Registration</a></li>
+				<li><a href="<?php echo base_url('profile/view') ?>" class="nav-link">My Profile</a></li>
 	    		<li><a href="<?php echo base_url('vacancy/vacancylist') ?>" class="nav-link">Vacancy List</a></li>
-	    		<li><a href="<?php echo base_url('profile/view') ?>" class="nav-link">My Profile</a></li>
 	    		<li><a href="<?php echo base_url('users/updatepassword') ?>" class="nav-link">Password Change</a></li>
 	    		<li>
 	    			<a href="" class="nav-link">New release</a>

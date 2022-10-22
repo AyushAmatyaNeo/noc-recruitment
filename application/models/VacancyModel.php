@@ -180,6 +180,7 @@ class VacancyModel extends CI_Model
      *  */
     public function insert($data = array()) 
     { 
+
         if(!empty($data))
         { 
             $details     = $data['details'];            
@@ -222,8 +223,10 @@ class VacancyModel extends CI_Model
             if (!empty($experiences[0]['ORGANISATION_NAME'] && $experiences[0]['POST_NAME'] )) {
 
                 for($i=0; $i < count($experiences); $i++) {
-                    $experiences[$i] = implode('\',\'', $experiences[$i]);
-                    $sql = "INSERT INTO HRIS_REC_APPLICATION_EXPERIENCES values ('$experiences[$i]')";
+                    // $experiences[$i] = implode('\',\'', $experiences[$i]);
+                    $key = arrayKeyImplode($experiences[$i], 'c', 'key');
+                    $value = arrayKeyImplode($experiences[$i], 'qc', 'value');
+                    $sql = "INSERT INTO HRIS_REC_APPLICATION_EXPERIENCES ($key) values ('$value')";
                     // echo '<pre>'; print_r($sql); die;
                     $insert = $this->db->query($sql);          
                 }
@@ -232,8 +235,10 @@ class VacancyModel extends CI_Model
             if (!empty($training)) {
 
                 for($i=0; $i < count($training); $i++) {
-                    $training[$i] = implode('\',\'', $training[$i]);
-                    $sql = "INSERT INTO HRIS_REC_APPLICATION_TRAININGS values ('$training[$i]')";
+                    // $training[$i] = implode('\',\'', $training[$i]);
+                    $key = arrayKeyImplode($training[$i], 'c', 'key');
+                    $value = arrayKeyImplode($training[$i], 'qc', 'value');
+                    $sql = "INSERT INTO HRIS_REC_APPLICATION_TRAININGS ($key) values ('$value')";
                     // echo '<pre>'; print_r($sql); die;
                     $insert = $this->db->query($sql);          
                 }

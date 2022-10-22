@@ -186,7 +186,7 @@
 			<?php } ?>
 			<?php echo form_hidden('application_id', $applications[0]['APPLICATION_ID']) ?>
 		
-			<h6 class="form-table-title bg-primary">Select Inclusion</h6>
+			<h6 class="form-table-title bg-primary text-light">Select Inclusion</h6>
 			<div class="col-md-12">
 				<div class="row card-inner">
 					<div class="col-lg-2">
@@ -259,7 +259,7 @@
 			*/ ?>
 			<!-- G. Educational Qualification -->
 			<div class="card mt-3">
-			<h6 class="form-table-title bg-primary">Education Description</h6>
+			<h6 class="form-table-title bg-primary text-light">Education Description</h6>
 					<div class="col-lg-12 my-3" id="max_education">
 						<div class="form-check form-check-inline">
 							<input disabled class="form-check-input" type="radio" name="max_education" value="1" <?php $checked =  ($applications[0]['MAX_QUALIFICATION_ID'] == '1') ? 'checked' : ''; echo $checked; ?> />
@@ -288,7 +288,7 @@
 					</div>
 			</div>
 			<div class="card mt-3">
-				<h6 class="form-table-title bg-primary">Educational Qualification</h6>
+				<h6 class="form-table-title bg-primary text-light">Educational Qualification</h6>
 				<div class="card-body">
 					
 					<div class="col-md-12">
@@ -380,7 +380,7 @@
 			</div>
 			<!-- H. Experience Detail -->
 			<div class="card mt-3">
-				<h6 class="form-table-title bg-primary">Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
+				<h6 class="form-table-title bg-primary text-light">Experience Detail (Mention only if experience is required for the advertisement of the post filled in the application form)</h6>
 				<div class="col-md-12 mt-3">
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>
@@ -416,7 +416,7 @@
 								</td>
 								<td>
 									<div for="org_level" class="form-group">
-										<input readonly type="number" name="org_level[]" id="org_level" class="form-control form-control-sm validate-field" value="<?php echo $experience['LEVEL_ID'] ?>">
+										<input readonly type="text" name="org_level[]" id="org_level" class="form-control form-control-sm validate-field" value="<?php echo $experience['LEVEL_ID'] ?>">
 									</div>
 								</td>
 								<td>
@@ -465,7 +465,7 @@
 			</div>
 			<!-- I. Training Detail -->
 			<div class="card mt-3">
-				<h6 class="form-table-title bg-primary">Training Detail</h6>
+				<h6 class="form-table-title bg-primary text-light">Training Detail</h6>
 				<div class="col-md-12 mt-3">
 					<table class="table table-responsive-md table-striped table-bordered table-sm">
 						<thead>
@@ -523,7 +523,7 @@
 		<!-- Photograph and signature Documents -->
 		<div class="tab">
 			<!-- Citizenship Documents -->
-			<h6 class="form-table-title bg-primary">Citizenship of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Citizenship of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
@@ -540,7 +540,7 @@
 					</td>
 				</tr>
 			</table>
-			<h6 class="form-table-title bg-primary">Photograph and signature of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Photograph and signature of Applicant (Maximum 1 mb - JPG | PNG | PDF Only)</h6>
 			<table class="table table-responsive-lg table-sm form-cstm-table">
 				<tr>
 					<td>
@@ -570,7 +570,7 @@
 				</tr>
 			</table>
 			<!-- Academic Document Upload -->
-			<h6 class="form-table-title bg-primary">Document and Certificate (JPG | PNG Only)</h6>
+			<h6 class="form-table-title bg-primary text-light">Document and Certificate (JPG | PNG Only)</h6>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 col-md-12">

@@ -237,7 +237,23 @@ class UserModel extends CI_Model{
 
         $email = $data['EMAIL_ID'];
 
-        $findEmail = $this->db->query("SELECT *  from $this->table where EMAIL_ID = '".$email."' ");
+        // $findEmail = $this->db->query("SELECT *  from $this->table where EMAIL_ID = '".$email."' ");
+        $findEmail = $this->db->query("SELECT 
+        USER_ID,
+        FIRST_NAME,
+        MIDDLE_NAME,
+        LAST_NAME,
+        MOBILE_NO,
+        EMAIL_ID,
+        USERNAME,
+        PASSWORD,
+        CREATED_DT,
+        MODIFIED_DT,
+        RESET_STATUS,
+        ACTIVE_STATUS,
+        EMAIL_VERIFICATION_CODE
+          from $this->table where EMAIL_ID = '".$email."' ");
+
 
         $result = $findEmail->row_array();
 
@@ -263,22 +279,40 @@ class UserModel extends CI_Model{
             $mail = new PHPMailer;
             $mail->isSMTP();
             $mail->Priority = 1;
-            $mail->SMTPSecure = "tls"; 
+            $mail->SMTPSecure = "ssl"; 
             $mail->Debugoutput = 'html';
-            $mail->Host = "smtp.ionos.com";
-            $mail->Port = 587;
+            $mail->Host = "smtppro.zoho.com";
+            $mail->Port = 465;
             $mail->SMTPAuth = true;   
-            $mail->Username = "bidhya.singh@neosoftware.com.np";
-            // $mail->Username = "jasmin.tamang@neosoftware.com.np";
-            $mail->Password = "Bidhya@@Singh123";
-            // $mail->Password = "Jasmin@12345#";
-            $mail->setFrom('bidhya.singh@neosoftware.com.np', 'NOC');
-            // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
+            $mail->Username = "noreply@nepaloil.org.np";
+            $mail->Password = "Erpnocnepal@1";
+            $mail->setFrom('noreply@nepaloil.org.np', 'NOC');
             $mail->IsHTML(true);
             $mail->addAddress($email);
             $mail->Subject = 'OTP from NOC';
             $mail->Body    = $mail_message;
             $mail->AltBody = $mail_message;
+
+            // date_default_timezone_set('Asia/Kathmandu');
+            // $mail = new PHPMailer;
+            // $mail->isSMTP();
+            // $mail->Priority = 1;
+            // $mail->SMTPSecure = "tls"; 
+            // $mail->Debugoutput = 'html';
+            // $mail->Host = "smtp.ionos.com";
+            // $mail->Port = 587;
+            // $mail->SMTPAuth = true;   
+            // $mail->Username = "ayush.amatya@neosoftware.com.np";
+            //     // $mail->Username = "jasmin.tamang@neosoftware.com.np";
+            // $mail->Password = "russellayush@12345";
+            // // $mail->Password = "Jasmin@12345#";
+            // $mail->setFrom('ayush.amatya@neosoftware.com.np', 'Nepal Oil Corporation');
+            //     // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
+            // $mail->IsHTML(true);
+            // $mail->addAddress($email);
+            // $mail->Subject = 'Verification Link | NOC';
+            // $mail->Body    = $mail_message;
+            // $mail->AltBody = $mail_message;
 
 
             if (!$mail->send()) 
@@ -653,41 +687,73 @@ class UserModel extends CI_Model{
     public function sendVerificationEmail($email)
     {
 
-        $findEmailQuery = $this->db->query("SELECT * from $this->table where EMAIL_ID = '".$email."' ");
+        // $findEmailQuery = $this->db->query("SELECT * from $this->table where EMAIL_ID = '".$email."' ");
+        $findEmailQuery = $this->db->query("SELECT 
+        USER_ID,
+        FIRST_NAME,
+        MIDDLE_NAME,
+        LAST_NAME,
+        MOBILE_NO,
+        EMAIL_ID,
+        USERNAME,
+        PASSWORD,
+        CREATED_DT,
+        MODIFIED_DT,
+        RESET_STATUS,
+        ACTIVE_STATUS,
+        EMAIL_VERIFICATION_CODE
+          from $this->table where EMAIL_ID = '".$email."' ");
         
         $row            = $findEmailQuery->result_array();
                 
-        $textplain      = $this->EmailrandomText();
-
+        $textplain  = $this->EmailrandomText();
         if ( $row ) {
+        $query = $this->db->query("UPDATE $this->table SET EMAIL_VERIFICATION_CODE = '$textplain' , ACTIVE_STATUS = 'D' where EMAIL_ID = '$email'");
+        $mail_message='Dear '.$row[0]['FIRST_NAME'].','. "<br \><br \>";
+        $mail_message.='Thanks for signup to Nepal Oil Corporation,<br> Your <b> verification link </b> is below : <br \><br \><a href="'.base_url('users/verify?evc='.$textplain.'&email='.$row[0]['EMAIL_ID']).'">Activate Account</a>';
+        // $mail_message.='<br>Please Update your password.';
+        $mail_message.='<br>Thanks & Regards';
+        $mail_message.='<br>Nepal Oil Corporation';        
+        // date_default_timezone_set('Asia/Kathmandu');
 
-            $query     = $this->db->query("UPDATE $this->table SET (EMAIL_VERIFICATION_CODE, ACTIVE_STATUS) = ('$textplain','D') WHERE EMAIL_ID = '$email'");
-            $mail_message='Dear '.$row[0]['FIRST_NAME'].','. "<br \><br \>";
-            $mail_message.='Thanks for signup to Nepal Oil Corporation,<br> Your <b> verification link </b> is below : <br \><br \><a href="'.base_url('users/verify?evc='.$textplain.'&email='.$row[0]['EMAIL_ID']).'">Activate Account</a>';
-            // $mail_message.='<br>Please Update your password.';
-            $mail_message.='<br>Thanks & Regards';
-            $mail_message.='<br>Nepal Oil Corporation';        
-            date_default_timezone_set('Asia/Kathmandu');
             $mail = new PHPMailer;
             $mail->isSMTP();
             $mail->Priority = 1;
-            $mail->SMTPSecure = "tls"; 
+            $mail->SMTPSecure = "ssl"; 
             $mail->Debugoutput = 'html';
-            $mail->Host = "smtp.ionos.com";
-            $mail->Port = 587;
+            $mail->Host = "smtppro.zoho.com";
+            $mail->Port = 465;
             $mail->SMTPAuth = true;   
-            $mail->Username = "bidhya.singh@neosoftware.com.np";
-                // $mail->Username = "jasmin.tamang@neosoftware.com.np";
-            $mail->Password = "Bidhya@@Singh123";
-            // $mail->Password = "Jasmin@12345#";
-            $mail->setFrom('bidhya.singh@neosoftware.com.np', 'Nepal Oil Corporation');
-                // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
+            $mail->Username = "noreply@nepaloil.org.np";
+            $mail->Password = "Erpnocnepal@1";
+            $mail->setFrom('noreply@nepaloil.org.np', 'NOC');
             $mail->IsHTML(true);
             $mail->addAddress($email);
-            $mail->Subject = 'Verification Link | NOC';
-            $mail->Body    = $mail_message;
+            $mail->Subject = 'OTP from NOC';
+            $mail->Body    = $mail_message; 
             $mail->AltBody = $mail_message;
 
+        // date_default_timezone_set('Asia/Kathmandu');
+        //     $mail = new PHPMailer;
+        //     $mail->isSMTP();
+        //     $mail->Priority = 1;
+        //     $mail->SMTPSecure = "tls"; 
+        //     $mail->Debugoutput = 'html';
+        //     $mail->Host = "smtp.ionos.com";
+        //     $mail->Port = 587;
+        //     $mail->SMTPAuth = true;   
+        //     $mail->Username = "ayush.amatya@neosoftware.com.np";
+        //         // $mail->Username = "jasmin.tamang@neosoftware.com.np";
+        //     $mail->Password = "russellayush@12345";
+        //     // $mail->Password = "Jasmin@12345#";
+        //     $mail->setFrom('ayush.amatya@neosoftware.com.np', 'Nepal Oil Corporation');
+        //         // $mail->setFrom('jasmin.tamang@neosoftware.com.np', 'NOC');
+        //     $mail->IsHTML(true);
+        //     $mail->addAddress($email);
+        //     $mail->Subject = 'Verification Link | NOC';
+        //     $mail->Body    = $mail_message;
+        //     $mail->AltBody = $mail_message;
+// print_r($mail);die;
             return (!$mail->send()) ? false : true;
         } 
 

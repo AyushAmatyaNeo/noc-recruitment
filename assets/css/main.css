@@ -899,10 +899,10 @@ margin-right: 0.5rem;
 /*  POPUP  */
 
 .form-doc .form-check-input {
-    margin-top: 6.3rem;
-    margin-left: 3.25rem;
+    margin-top: 6.3rem !important;
+    margin-left: 3.25rem !important;
 }
 
 .form-doc-check .form-group {
-    margin-top: 48px;
+    margin-top: 48px !important;
 }

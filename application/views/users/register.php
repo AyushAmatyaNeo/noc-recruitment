@@ -403,7 +403,7 @@
                               <div class="col-lg-3">
                                  <div class="form-group">
                                     <label for="age">Age <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="age" id="age" placeholder="enter age">
+                                    <input type="text" class="form-control" name="age" id="age" placeholder="age">
                                  </div>
                               </div>
 

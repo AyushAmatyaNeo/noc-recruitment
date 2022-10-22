@@ -34,11 +34,23 @@ Class Users extends CI_Controller
         
         }
     }
-
-    public function login() { 
+	
+	public function login() { 
 
         $data = array();
+		
+		$data['meta'] = ['title' => 'Noc | Login'];
+		$this->load->view('templates/header', $data); 
+		$this->load->view('users/login_coming'); 
+		$this->load->view('templates/footer', $data); 
+        
+        
+    }
 
+    public function login_live() { 
+
+        $data = array();
+        
         /**
          * ON FINDING USER SESSION ID
          * */
@@ -100,7 +112,7 @@ Class Users extends CI_Controller
                 
                     if ( $checkactiveStatus['ACTIVE_STATUS'] == 'D' ) {
                     
-                        $this->session->set_flashdata('msg', 'Please verify your Email before enter! <br><a href="'.base_url().'users/resend">Resend Activation Email</a>');
+                        $this->session->set_flashdata('msg', 'Please verify your Email before enter!');
                             redirect('users/login');
                     
                     }
@@ -143,19 +155,6 @@ Class Users extends CI_Controller
                                 redirect('users/updatepassword');
 
                         }
-
-
-                        /**
-                         *  CHECKING USER REGISTERED OR NOT
-                         * 
-                         * */
-                        $isUserRegistered = $this->UserModel->userRegistred($this->session->userdata('userId'));
-
-                        if ( $isUserRegistered ) {
-
-                            redirect('users/registration');
-
-                        }
                         
                         redirect('vacancy/vacancylist'); 
                     
@@ -184,76 +183,6 @@ Class Users extends CI_Controller
     }
 
     /**
-     *  RESEND ACTIVATE EMAIL
-     * 
-     * */
-    public function resend()
-    {
-
-        // If login request submitted 
-        if ($this->input->post('loginSubmit')) { 
-
-            // echo $this->input->post('email'); die;
-
-
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email'); 
-            
-            if ( $this->form_validation->run() == true ) {     
-                
-                // check active status
-                if ( !emailCheckValid($this->input->post('email')) ) {
-                    
-                    $this->session->set_flashdata('msg', 'Please enter valid email');
-                    redirect('users/resend');
-
-                } 
-                
-                $cond['email']['EMAIL_ID'] = $this->input->post('email');
-            
-                $checkactiveStatus = $this->UserModel->checkactivestatus($cond);
-
-                /**
-                 *  ACTIVE STATUS ->>>>>> D : 'NOT EMAIL VERIFIED' || E:  'EMAIL VERIFIED'
-                 * */
-            
-                if ( $checkactiveStatus['ACTIVE_STATUS'] == 'E' ) {
-                
-                    $this->session->set_flashdata('msg', 'Email Already Verified! Please login');
-                        redirect('users/login');
-                
-                }
-
-                $emailsend = $this->UserModel->sendVerificationEmail($cond['email']['EMAIL_ID']);
-
-                if ( $emailsend ) {
-                    
-                    $this->session->set_flashdata('success_msg', 'Verification Email Send ! Please check your email');
-                    redirect('users/login');
-                
-                } else {
-
-                    $this->session->set_flashdata('error_msg', 'Entered EMAIL does not exist'); 
-                    redirect('users/resend'); 
-
-                }
-                
-            } else { 
-                
-                $data['error_msg'] = 'Please fill the mandatory fields.'; 
-            
-            } 
-        
-        } 
-
-       $data['meta'] = ['title' => 'Noc | Login'];
-
-        // Load view 
-        $this->load->view('templates/header', $data); 
-        $this->load->view('users/resend', $data); 
-        $this->load->view('templates/footer'); 
-    }
-
-    /**
      * CREATE NEW USER REGISTRATION
      * 
      * 
@@ -276,6 +205,12 @@ Class Users extends CI_Controller
         if ( $this->isUserLoggedIn ) {
 
             if ( $this->input->post('registration') ) {
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "<br>";
+        // print_r($_FILES);
+        // die;
 
                 $this->form_validation->set_rules('religion', 'religion', 'required');
 
@@ -743,7 +678,7 @@ Class Users extends CI_Controller
 
         if ( $this->isUserLoggedIn ) { 
         
-            redirect('vacancy/vacancylist');
+            redirect('vacancy/vacancylist'); 
         
         } else {
 
@@ -755,7 +690,7 @@ Class Users extends CI_Controller
                 $this->form_validation->set_rules('email_id', 'Email Id', 'required'); 
                 $this->form_validation->set_rules('username', 'Username', 'required'); 
                 $this->form_validation->set_rules('password', 'Password', 'required');
-                $this->form_validation->set_rules('name_nepali', 'Name in Nepali', 'required');
+                // $this->form_validation->set_rules('name_nepali', 'Name in Nepali', 'required');
 
 
                 /* EXTRA LEVEL OF VERIFICATION */
@@ -851,9 +786,9 @@ Class Users extends CI_Controller
                 'img_path'      => 'assets/captcha/',
                 'img_url'       => base_url('assets/captcha/'),
                 'font_path'     => '../../assets/fonts/OpenSans.ttf', 
-                'font_size'     => 100,
-                'img_width'     => '160',
-                'img_height'    => 40,
+                'font_size'     => '300px',
+                'img_width'     => 250,
+                'img_height'    => 70,
                 'word_length'   => 4,
                 'expiration'    => 7200
             );
@@ -881,25 +816,24 @@ Class Users extends CI_Controller
 
     //Captcha Refresh
     public function refresh(){
-       // Captcha configuration
-       $config = array(
-        'img_path'      => 'assets/captcha/',
-        'img_url'       => base_url().'assets/captcha/',
-        'font_path'     => '../../system/fonts/ttfont.ttf',
-        'img_width'     => '160',
-        'img_height'    => 50,
-        'word_length'   => 4,
-        'font_size'     => 72
-    );
-    $captcha = create_captcha($config);
-    
-    // Unset previous captcha and set new captcha word
-    $this->session->unset_userdata('captchaCode');
-    $this->session->set_userdata('captchaCode',$captcha['word']);
-     
-    // Display captcha image
-    echo $captcha['image'];;
+        // Captcha configuration
+        $config = array(
+            'img_path'      => 'assets/captcha/',
+            'img_url'       => base_url().'assets/captcha/',
+            'font_path'     => '../../system/fonts/ttfont.ttf',
+            'img_width'     => '160',
+            'img_height'    => 50,
+            'word_length'   => 4,
+            'font_size'     => 72
+        );
+        $captcha = create_captcha($config);
         
+        // Unset previous captcha and set new captcha word
+        $this->session->unset_userdata('captchaCode');
+        $this->session->set_userdata('captchaCode',$captcha['word']);
+         
+        // Display captcha image
+        echo $captcha['image'];
     }
 
     public function logout()
@@ -909,7 +843,6 @@ Class Users extends CI_Controller
         $this->session->sess_destroy();
         redirect('users/login/');
     }
-
     // Profile Edit page Address district & vdc populate
     public function fetch_district()
     {
@@ -954,5 +887,4 @@ Class Users extends CI_Controller
          redirect('users/login'); 
         }         
     }
-
 }
