@@ -80,16 +80,16 @@ $db['default'] = array(
 // 'username'=> 'NOCHR',
 // 'password'=> 'Noc$%^@123',
 
-	// 'dsn'	   => 'NEW_TEST_DB',
-	// 'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHR;PWD=Noc$%^@123;Database=NOCHR;',
-	// 'username' => 'NOCHR',
-	// 'password' => 'Noc$%^@123',
+	'dsn'	   => 'NEW_TEST_DB',
+	'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHR;PWD=Noc$%^@123;Database=NOCHR;',
+	'username' => 'NOCHR',
+	'password' => 'Noc$%^@123',
 	
 	/* NOC_TEST */
-	'dsn'	   => 'NEW_TEST_DB',
-	'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHRTEST;PWD=Noc$%^@123;Database=NOCHRTEST;',
-	'username' => 'NOCHRTEST',
-	'password' => 'Noc$%^@123',
+	// 'dsn'	   => 'NEW_TEST_DB',
+	// 'hostname' => 'Driver={HDBODBC};ServerNode=172.16.100.1;UID=NOCHRTEST;PWD=Noc$%^@123;Database=NOCHRTEST;',
+	// 'username' => 'NOCHRTEST',
+	// 'password' => 'Noc$%^@123',
 	/* NOC_TEST */
 
 	/* NOC_LIVE */
